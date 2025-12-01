@@ -2,9 +2,15 @@ import StorySlider from "./components/StorySlider";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
 
+// 🟢 URL bazaviy qiymati (Vercel yoki local)
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.VERCEL_URL ||
+  "http://localhost:3000";
+
 // 🟢 Kinolarni olish
 async function getMovies() {
-  const res = await fetch("http://localhost:3000/api/movies", {
+  const res = await fetch(`${BASE_URL}/api/movies`, {
     cache: "no-store",
   });
 
@@ -14,13 +20,14 @@ async function getMovies() {
 
 // 🟢 Seriallarni olish
 async function getSeries() {
-  const res = await fetch("http://localhost:3000/api/series", {
+  const res = await fetch(`${BASE_URL}/api/series`, {
     cache: "no-store",
   });
 
   if (!res.ok) return [];
   return res.json();
 }
+
 
 export default async function Page() {
   const movies = await getMovies();   // REAL MOVIES
