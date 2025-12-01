@@ -57,7 +57,7 @@ export default async function Page() {
             className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
             <img
-              src={`https://via.placeholder.com/150?text=${g}`}
+              src="/tez-orada.jpg"
               className="w-full h-24 object-cover"
             />
             <p className="text-center py-2 text-sm truncate">{g}</p>
