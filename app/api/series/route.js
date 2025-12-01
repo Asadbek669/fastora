@@ -1,7 +1,5 @@
-// app/api/series/route.js
-import { pool } from "@/services/db"; // agar default bo‘lsa db qilib oling
+import { pool } from "@/services/db";
 
-// 🔹 GET — barcha seriallarni olish
 export async function GET() {
   try {
     const result = await pool.query(`
@@ -10,15 +8,15 @@ export async function GET() {
       ORDER BY id DESC
     `);
 
-    return Response.json(result.rows);
+    return Response.json({ series: result.rows });  // ⭐ TO‘G‘RI FORMAT
   } catch (error) {
     console.error("GET series error:", error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
 
-// 🔹 POST — yangi serial qo‘shish
-// POST — yangi serial qo‘shish
+
+// POST – yangi serial qo‘shish
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -34,7 +32,7 @@ export async function POST(req) {
       description,
       category,
       genres,
-      age,   // ⭐ YANGI QO‘SHILDI
+      age
     } = body;
 
     const result = await pool.query(
@@ -53,7 +51,7 @@ export async function POST(req) {
         description,
         category,
         genres,
-        age, // ⭐
+        age
       ]
     );
 
@@ -64,4 +62,3 @@ export async function POST(req) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 }
-
