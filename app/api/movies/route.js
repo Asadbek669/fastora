@@ -8,7 +8,7 @@ export async function GET() {
       ORDER BY id DESC
     `);
 
-    return Response.json(result.rows);
+    return Response.json({ movies: result.rows });  // ⭐ TO‘G‘RI FORMAT
   } catch (err) {
     console.error("DB error:", err);
     return Response.json({ error: "Server error" }, { status: 500 });
