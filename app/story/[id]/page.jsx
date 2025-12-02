@@ -25,7 +25,7 @@ export default function StoryPage(props) {
     if (!id) return;
 
     async function load() {
-      const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+      const base = process.env.NEXT_PUBLIC_BASE_URL || "https://fastora.vercel.app";
 
       const res = await fetch(`${base}/api/stories/${id}`, {
         cache: "no-store",
@@ -79,3 +79,4 @@ export default function StoryPage(props) {
     </div>
   );
 }
+
