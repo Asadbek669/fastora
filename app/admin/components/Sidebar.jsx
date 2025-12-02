@@ -20,19 +20,27 @@ export default function Sidebar() {
           Add Series
         </Link>
 
-		<Link
-		  href="/admin/series/manage"
-		  className="block px-4 py-2 rounded hover:bg-white/10"
-		>
-		  Serial boshqaruvi
-		</Link>
+        <Link
+          href="/admin/series/manage"
+          className="block px-4 py-2 rounded hover:bg-white/10"
+        >
+          Serial boshqaruvi
+        </Link>
 
-		<Link
-		  href="/admin/comments"
-		  className="block px-4 py-2 hover:bg-white/10 rounded"
-		>
-		  Kommentlar
-		</Link>
+        <Link
+          href="/admin/comments"
+          className="block px-4 py-2 hover:bg-white/10 rounded"
+        >
+          Kommentlar
+        </Link>
+
+        {/* 👉 Hero Slider Manager yangi link */}
+        <Link
+          href="/admin/heroes"
+          className="block p-2 hover:bg-[#1b1b1b] rounded"
+        >
+          Hero Slider
+        </Link>
 
         <Link href="/admin/settings" className="block p-2 hover:bg-[#1b1b1b] rounded">
           Settings
