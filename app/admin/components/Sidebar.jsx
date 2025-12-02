@@ -1,48 +1,38 @@
 import Link from "next/link";
 
-export default function Sidebar() {
+export default function Sidebar({ onLinkClick }) {
   return (
-    <div className="w-60 bg-[#0d0d0d] h-screen p-6 border-r border-gray-800">
+    <div className="w-60 bg-[#0d0d0d] h-full p-6 overflow-y-auto">
 
       <h1 className="text-2xl font-bold mb-8">Fastora Admin</h1>
 
       <nav className="space-y-4 text-gray-300">
 
-        <Link href="/admin" className="block p-2 hover:bg-[#1b1b1b] rounded">
+        <Link href="/admin" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Dashboard
         </Link>
 
-        <Link href="/admin/movies/add" className="block p-2 hover:bg-[#1b1b1b] rounded">
+        <Link href="/admin/movies/add" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Add Movie
         </Link>
 
-        <Link href="/admin/series/add" className="block p-2 hover:bg-[#1b1b1b] rounded">
+        <Link href="/admin/series/add" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Add Series
         </Link>
 
-        <Link
-          href="/admin/series/manage"
-          className="block px-4 py-2 rounded hover:bg-white/10"
-        >
+        <Link href="/admin/series/manage" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Serial boshqaruvi
         </Link>
 
-        <Link
-          href="/admin/comments"
-          className="block px-4 py-2 hover:bg-white/10 rounded"
-        >
+        <Link href="/admin/comments" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Kommentlar
         </Link>
 
-        {/* 👉 Hero Slider Manager yangi link */}
-        <Link
-          href="/admin/heroes"
-          className="block p-2 hover:bg-[#1b1b1b] rounded"
-        >
+        <Link href="/admin/heroes" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Hero Slider
         </Link>
 
-        <Link href="/admin/settings" className="block p-2 hover:bg-[#1b1b1b] rounded">
+        <Link href="/admin/settings" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Settings
         </Link>
 
