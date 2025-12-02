@@ -32,6 +32,11 @@ export default function Sidebar({ onLinkClick }) {
           Hero Slider
         </Link>
 
+        {/* 🔥 Yangi Story qo'shish bo‘limi */}
+        <Link href="/admin/stories/add" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
+          Add Story
+        </Link>
+
         <Link href="/admin/settings" onClick={onLinkClick} className="block p-2 hover:bg-[#1b1b1b] rounded">
           Settings
         </Link>
