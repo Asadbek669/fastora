@@ -11,7 +11,9 @@ export default function ClientWrapper({ children }) {
   return (
     <>
       <TopBar />
+
       {children}
+
       {!isAdmin && <BottomNav />}
     </>
   );
