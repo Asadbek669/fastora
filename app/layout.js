@@ -3,10 +3,11 @@ import ClientWrapper from "./components/ClientWrapper";
 
 export const metadata = {
   title: "Fastora",
-  description: "Fastora platformasi",
+  description: "Fastora — multfilm, anime, kino va drama platformasi",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
+    apple: "/icons/icon-192.png"
   }
 };
 
@@ -18,6 +19,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
-
 }
