@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://fastora.vercel.app
+
+# Sitemaps
+Sitemap: https://fastora.vercel.app/sitemap.xml
