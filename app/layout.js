@@ -2,25 +2,24 @@ import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
 
 export const metadata = {
-  // --- Basic SEO ---
   title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
   description:
-    "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalarni bepul tomosha qiling. Eng so‘nggi premyeralar, dramalar va anime loyihalar birinchi bo‘lib Fastorada!",
-
-  // --- PWA manifest ---
+    "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalarni bepul tomosha qiling.",
   manifest: "/manifest.json",
 
-  // --- Favicon + Apple Touch ---
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/icons/icon-192.png",
   },
 
-  // --- OpenGraph (Telegram, Facebook, Instagram, Google) ---
   openGraph: {
     title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
     description:
-      "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar platformasi. Yangiliklarni birinchi bo‘lib tomosha qiling!",
+      "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar platformasi.",
     url: "https://fastora.vercel.app",
     siteName: "Fastora",
     type: "website",
@@ -35,7 +34,6 @@ export const metadata = {
     ],
   },
 
-  // --- Twitter Cards (X tarmog‘i) ---
   twitter: {
     card: "summary_large_image",
     title: "Fastora — Multfilmlar, Animelar, Kinolar",
@@ -45,7 +43,6 @@ export const metadata = {
     creator: "@fastora",
   },
 
-  // --- Theme Colors (Android Chrome yuqori panel rangi) ---
   themeColor: "#000000",
 };
 
@@ -58,4 +55,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
