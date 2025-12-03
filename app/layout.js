@@ -2,28 +2,51 @@ import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
 
 export const metadata = {
-  title: "Fastora — Multfilmlar, Animelar, Kinolar",
-  description: "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar.",
+  // --- Basic SEO ---
+  title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
+  description:
+    "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalarni bepul tomosha qiling. Eng so‘nggi premyeralar, dramalar va anime loyihalar birinchi bo‘lib Fastorada!",
+
+  // --- PWA manifest ---
   manifest: "/manifest.json",
+
+  // --- Favicon + Apple Touch ---
   icons: {
     icon: "/favicon.ico",
     apple: "/icons/icon-192.png",
   },
+
+  // --- OpenGraph (Telegram, Facebook, Instagram, Google) ---
   openGraph: {
-    title: "Fastora",
-    description: "Multfilmlar, animelar, kinolar va dramalar.",
+    title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
+    description:
+      "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar platformasi. Yangiliklarni birinchi bo‘lib tomosha qiling!",
     url: "https://fastora.vercel.app",
     siteName: "Fastora",
+    type: "website",
+    locale: "uz_UZ",
     images: [
       {
-        url: "https://fastora.vercel.app/icons/icon-512.png",
-        width: 512,
-        height: 512,
-      }
+        url: "https://fastora.vercel.app/icons/icon-192.png",
+        width: 1200,
+        height: 630,
+        alt: "Fastora — Multfilmlar, Animelar, Kinolar",
+      },
     ],
-    locale: "uz_UZ",
-    type: "website",
-  }
+  },
+
+  // --- Twitter Cards (X tarmog‘i) ---
+  twitter: {
+    card: "summary_large_image",
+    title: "Fastora — Multfilmlar, Animelar, Kinolar",
+    description:
+      "Fastora — eng zo‘r multfilmlar, animelar, kinolar va dramalar platformasi!",
+    images: ["https://fastora.vercel.app/icons/icon-192.png"],
+    creator: "@fastora",
+  },
+
+  // --- Theme Colors (Android Chrome yuqori panel rangi) ---
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }) {
