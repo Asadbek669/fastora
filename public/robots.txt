@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fastora-frontend.vercel.app/sitemap.xml
+Sitemap: https://fastora.vercel.app/sitemap.xml
+
