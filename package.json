@@ -14,11 +14,11 @@
     "cookie": "^1.1.1",
     "jose": "^6.1.2",
     "jsonwebtoken": "^9.0.2",
-    "next": "16.0.5",
+    "next": "latest",
     "next-sitemap": "^4.2.3",
     "pg": "^8.16.3",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react": "latest",
+    "react-dom": "latest"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
