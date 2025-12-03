@@ -11,7 +11,7 @@ export const metadata = {
     siteName: "Fastora",
     images: [
       {
-        url: "https://fastora.vercel.app/icons/icon-512.png",
+        url: "https://fastora.vercel.app/icons/icon-192.png",
         width: 512,
         height: 512,
       }
