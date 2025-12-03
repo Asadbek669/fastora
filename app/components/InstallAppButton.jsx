@@ -7,6 +7,17 @@ export default function InstallAppButton() {
   const [showButton, setShowButton] = useState(true);
 
   useEffect(() => {
+    // 1) Agar ilova o‘rnatilgan bo‘lsa — umuman tugmani ko‘rsatmaymiz
+    const isInstalled =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      localStorage.getItem("fastora_installed") === "true";
+
+    if (isInstalled) {
+      setShowButton(false);
+      return; // boshqa tekshiruvlarni ham o‘tkazmaymiz
+    }
+
+    // 2) Chrome install eventni ushlaymiz
     const handler = (e) => {
       e.preventDefault();
       setPromptEvent(e);
@@ -14,7 +25,7 @@ export default function InstallAppButton() {
 
     window.addEventListener("beforeinstallprompt", handler);
 
-    // tugma 5 sekund ko‘rinib turadi
+    // 3) Tugma 5 soniya ko‘rinadi
     const hideTimer = setTimeout(() => {
       setShowButton(false);
     }, 5000);
@@ -30,11 +41,16 @@ export default function InstallAppButton() {
       promptEvent.prompt();
       const res = await promptEvent.userChoice;
 
-      console.log("User choice:", res.outcome);
+      console.log("Install result:", res.outcome);
+
+      if (res.outcome === "accepted") {
+        localStorage.setItem("fastora_installed", "true");
+      }
+
       setPromptEvent(null);
       setShowButton(false);
     } else {
-      alert("📱 Ilovani o‘rnatish uchun brauzer menyusidan 'Add to Home Screen'ni bosing.");
+      alert("📱 Ilovani o‘rnatish uchun brauzer menyusidan 'Add to Home Screen' tugmasini bosing.");
     }
   };
 
