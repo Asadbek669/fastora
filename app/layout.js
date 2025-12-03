@@ -3,27 +3,26 @@ import ClientWrapper from "./components/ClientWrapper";
 
 export const metadata = {
   title: "Fastora — Multfilmlar, Animelar, Kinolar",
-  description:
-    "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalarni bepul tomosha qiling.",
+  description: "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
-    apple: "/icons/icon-192.png"
+    apple: "/icons/icon-192.png",
   },
   openGraph: {
-    title: "Fastora — Multfilmlar, Animelar, Kinolar",
-    description: "Fastora — eng yaxshi media platforma.",
+    title: "Fastora",
+    description: "Multfilmlar, animelar, kinolar va dramalar.",
     url: "https://fastora.vercel.app",
     siteName: "Fastora",
     images: [
       {
-        url: "/icons/icon-512.png",
+        url: "https://fastora.vercel.app/icons/icon-512.png",
         width: 512,
-        height: 512
+        height: 512,
       }
     ],
     locale: "uz_UZ",
-    type: "website"
+    type: "website",
   }
 };
 
@@ -36,3 +35,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
