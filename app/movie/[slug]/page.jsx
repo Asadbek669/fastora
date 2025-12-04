@@ -7,7 +7,7 @@ import AgeModal from "@/components/AgeModal";
 
 
 async function getMovie(slug) {
-  const res = await fetch(`http://localhost:3000/api/movies/${slug}`, {
+  const res = await fetch(`https://fastora.vercel.app/api/movies/${slug}`, {
     cache: "no-store",
   });
 
