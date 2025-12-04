@@ -42,9 +42,14 @@ export const metadata = {
     images: ["https://fastora.vercel.app/icons/icon-192.png"],
     creator: "@fastora",
   },
-
-  themeColor: "#000000",
 };
+
+// ✅ themeColor faqat shu yerda bo‘ladi!
+export function generateViewport() {
+  return {
+    themeColor: "#000000",
+  };
+}
 
 export default function RootLayout({ children }) {
   return (
