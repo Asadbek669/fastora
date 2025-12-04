@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function MovieRow({ title, movies = [], link = "/" }) {
+export default function MovieRow({ title, movies = [], link = "/", badgeType = "bepul" }) {
   const limited = movies.slice(0, 7);
 
   const isSeries = (item) =>
@@ -12,6 +12,9 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
       "turk-seriallar",
       "multfilmlar",
     ].includes(item.category);
+
+  // Badge yozuvi
+  const badgeText = badgeType === "premyera" ? "PREMYERA" : "BEPUL";
 
   return (
     <div className="w-full mb-6">
@@ -29,7 +32,7 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
         </Link>
       </div>
 
-      {/* POSTER SLIDER */}
+      {/* MOVIE LIST */}
       <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
 
         {limited.map((m) => {
@@ -45,9 +48,9 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
             >
               <div className="w-full h-[190px] rounded-xl overflow-hidden shadow-lg bg-[#111] relative">
 
-                {/* BEPUL BADGE – har doim chiqadi */}
+                {/* BADGE — Yangi.TV style */}
                 <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-[#FFD54F] font-semibold text-[11px] px-2 py-1 rounded-md">
-                  BEPUL
+                  {badgeText}
                 </div>
 
                 <img
@@ -62,7 +65,7 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
           );
         })}
 
-        {/* VIEW ALL */}
+        {/* VIEW ALL CARD */}
         <Link
           href={link}
           className="w-[130px] h-[190px] flex-shrink-0 rounded-xl 
