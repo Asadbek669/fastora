@@ -5,7 +5,6 @@ import Link from "next/link";
 export default function MovieRow({ title, movies = [], link = "/" }) {
   const limited = movies.slice(0, 7);
 
-  // Serial ekanligini aniqlovchi helper
   const isSeries = (item) =>
     [
       "xorij-seriallar",
@@ -21,7 +20,10 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
       <div className="flex items-center justify-between mb-3 px-1">
         <h2 className="text-[20px] font-semibold">{title}</h2>
 
-        <Link href={link} className="text-sm text-white/80 flex items-center gap-1">
+        <Link
+          href={link}
+          className="text-sm text-white/80 flex items-center gap-1"
+        >
           Barchasini ko‘rish
           <span className="text-lg">➤</span>
         </Link>
@@ -41,8 +43,13 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
               href={href}
               className="w-[130px] flex-shrink-0 relative"
             >
-              {/* POSTER */}
-              <div className="w-full h-[190px] rounded-xl overflow-hidden shadow-lg bg-[#111]">
+              <div className="w-full h-[190px] rounded-xl overflow-hidden shadow-lg bg-[#111] relative">
+
+                {/* BEPUL BADGE – har doim chiqadi */}
+                <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-[#FFD54F] font-semibold text-[11px] px-2 py-1 rounded-md">
+                  BEPUL
+                </div>
+
                 <img
                   src={m.poster}
                   className="w-full h-full object-cover"
@@ -50,7 +57,6 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
                 />
               </div>
 
-              {/* TITLE */}
               <p className="mt-2 text-sm px-1 truncate">{m.title}</p>
             </Link>
           );
@@ -60,7 +66,7 @@ export default function MovieRow({ title, movies = [], link = "/" }) {
         <Link
           href={link}
           className="w-[130px] h-[190px] flex-shrink-0 rounded-xl 
-                   bg-[#2c2c2c] flex flex-col items-center justify-center"
+                     bg-[#2c2c2c] flex flex-col items-center justify-center"
         >
           <div className="w-10 h-10 border border-gray-300 rounded-full flex items-center justify-center text-white text-xl">
             ›
