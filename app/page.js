@@ -7,21 +7,21 @@ const BASE_URL =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
   "http://localhost:3000";
 
+// 🔥 Kinolarni olish
 async function getMovies() {
   const res = await fetch(`${BASE_URL}/api/movies`, { cache: "no-store" });
   if (!res.ok) return [];
 
   const data = await res.json();
-
   return Array.isArray(data) ? data : data.movies ?? [];
 }
 
+// 🔥 Seriallarni olish
 async function getSeries() {
   const res = await fetch(`${BASE_URL}/api/series`, { cache: "no-store" });
   if (!res.ok) return [];
 
   const data = await res.json();
-
   return Array.isArray(data) ? data : data.series ?? [];
 }
 
@@ -29,16 +29,23 @@ export default async function Page() {
   const movies = await getMovies();
   const series = await getSeries();
 
+  // Premyera sifatida eng oxirgi yuklangan kinolar
+  const premyeraMovies = [...movies].reverse().slice(0, 10);
+
   return (
     <div className="pb-24">
+
+      {/* STORY SLIDER */}
       <div className="px-4 pt-4">
         <StorySlider testData={movies} />
       </div>
 
+      {/* HERO SLIDER */}
       <div className="mt-3 px-4">
         <HeroSlider testData={movies} />
       </div>
 
+      {/* JANRLAR */}
       <h2 className="text-xl font-semibold mt-6 mb-3 px-4">Janrlar</h2>
 
       <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
@@ -56,61 +63,73 @@ export default async function Page() {
             key={index}
             className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
-            <img
-              src="/tez-orada.jpg"
-              className="w-full h-24 object-cover"
-            />
+            <img src="/tez-orada.jpg" className="w-full h-24 object-cover" />
             <p className="text-center py-2 text-sm truncate">{g}</p>
           </div>
         ))}
       </div>
 
+      {/* MOVIE ROWS */}
       <div className="mt-8 px-4 space-y-10">
 
-        <MovieRow title="Premyera" movies={movies} link="/premyera" />
+        {/* 🟨 PREMYERA — badge PREMYERA bo‘ladi */}
+        <MovieRow
+          title="Premyera"
+          movies={premyeraMovies}
+          link="/premyera"
+          badgeType="premyera"
+        />
 
+        {/* 🟩 Tarjima kinolar — badge BEPUL */}
         <MovieRow
           title="Tarjima kinolar"
           movies={movies.filter((m) => m.category === "tarjima")}
           link="/tarjima"
         />
 
+        {/* 🟩 Xorij seriallari */}
         <MovieRow
           title="Xorij seriallari"
           movies={series.filter((s) => s.category === "xorij-seriallar")}
           link="/xorij-seriallar"
         />
 
+        {/* 🟩 Koreya seriallari */}
         <MovieRow
           title="Koreya seriallari"
           movies={series.filter((s) => s.category === "korea-seriallari")}
           link="/korea-seriallari"
         />
 
+        {/* 🟩 Hind kinolar */}
         <MovieRow
           title="Hind kinolar"
           movies={movies.filter((m) => m.category === "hind")}
           link="/hind"
         />
 
+        {/* 🟩 Turk seriallari */}
         <MovieRow
           title="Turk seriallari"
           movies={series.filter((s) => s.category === "turk-seriallar")}
           link="/turk-seriallar"
         />
 
+        {/* 🟩 Anime */}
         <MovieRow
           title="Anime"
           movies={movies.filter((m) => m.category === "anime")}
           link="/anime"
         />
 
+        {/* 🟩 Multfilmlar */}
         <MovieRow
           title="Multfilmlar"
           movies={series.filter((s) => s.category === "multfilmlar")}
           link="/multfilmlar"
         />
 
+        {/* 🟩 O‘zbek filmlar */}
         <MovieRow
           title="O‘zbek filmlar"
           movies={movies.filter((m) => m.category === "uzbek-film")}
