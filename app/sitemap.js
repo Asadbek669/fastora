@@ -1,181 +1,199 @@
 import { Pool } from "pg";
 
+
+
 const pool = new Pool({
 
-connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 
 });
 
+
+
 export default async function sitemap() {
 
-const baseUrl = "https://fastora.uz";
+  const baseUrl = "https://fastora.uz";
 
-// 📌 1) Filmlar
 
-const movies = await pool.query(SELECT slug FROM movies);
 
-// 📌 2) Seriallar
+  // 📌 1) Filmlar
 
-const series = await pool.query(SELECT id, slug FROM series);
+  const movies = await pool.query(`SELECT slug FROM movies`);
 
-// 📌 3) Sezonlar
 
-const seasons = await pool.query(`
 
-SELECT id, series_id, season_number
+  // 📌 2) Seriallar
 
-FROM seasons
+  const series = await pool.query(`SELECT id, slug FROM series`);
 
-`);
 
-// 📌 4) Epizodlar
 
-const episodes = await pool.query(`
+  // 📌 3) Sezonlar
 
-SELECT season_id, episode_number
+  const seasons = await pool.query(`
 
-FROM episodes
+    SELECT id, series_id, season_number
 
-`);
+    FROM seasons
 
-// 📌 5) Kategoriya sahifalari (asosiy sahifadagi bo‘limlar)
+  `);
 
-const categories = [
 
-"premyera",
 
-"tarjima",
+  // 📌 4) Epizodlar
 
-"xorij-seriallar",
+  const episodes = await pool.query(`
 
-"korea-seriallari",
+    SELECT season_id, episode_number
 
-"hind",
+    FROM episodes
 
-"turk-seriallar",
+  `);
 
-"anime",
 
-"multfilmlar",
 
-"uzbek-film",
+  // 📌 5) Kategoriya sahifalari (asosiy sahifadagi bo‘limlar)
 
-];
+  const categories = [
 
-const urls = [
+    "premyera",
 
-// 🏠 Asosiy sahifa
+    "tarjima",
 
-{
+    "xorij-seriallar",
 
-  url: baseUrl,
+    "korea-seriallari",
 
-  lastModified: new Date(),
+    "hind",
 
-  changefreq: "daily",
+    "turk-seriallar",
 
-  priority: 1.0,
+    "anime",
 
-},
+    "multfilmlar",
 
+    "uzbek-film",
 
+  ];
 
-// 📂 Kategoriya sahifalari
 
-...categories.map((cat) => ({
 
-  url: `${baseUrl}/${cat}`,
+  const urls = [
 
-  lastModified: new Date(),
+    // 🏠 Asosiy sahifa
 
-  changefreq: "daily",
+    {
 
-  priority: 0.9,
+      url: baseUrl,
 
-})),
+      lastModified: new Date(),
 
+      changefreq: "daily",
 
+      priority: 1.0,
 
-// 🎬 Filmlar
+    },
 
-...movies.rows.map((m) => ({
 
-  url: `${baseUrl}/movie/${m.slug}`,
 
-  lastModified: new Date(),
+    // 📂 Kategoriya sahifalari
 
-  changefreq: "weekly",
+    ...categories.map((cat) => ({
 
-  priority: 0.8,
+      url: `${baseUrl}/${cat}`,
 
-})),
+      lastModified: new Date(),
 
+      changefreq: "daily",
 
+      priority: 0.9,
 
-// 📺 Seriallar
+    })),
 
-...series.rows.map((s) => ({
 
-  url: `${baseUrl}/serial/${s.slug}`,
 
-  lastModified: new Date(),
+    // 🎬 Filmlar
 
-  changefreq: "weekly",
+    ...movies.rows.map((m) => ({
 
-  priority: 0.8,
+      url: `${baseUrl}/movie/${m.slug}`,
 
-})),
+      lastModified: new Date(),
 
+      changefreq: "weekly",
 
+      priority: 0.8,
 
-// 📦 Sezonlar
+    })),
 
-...seasons.rows.map((season) => {
 
-  const s = series.rows.find((sr) => sr.id === season.series_id);
 
-  return {
+    // 📺 Seriallar
 
-    url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}`,
+    ...series.rows.map((s) => ({
 
-    lastModified: new Date(),
+      url: `${baseUrl}/serial/${s.slug}`,
 
-    changefreq: "weekly",
+      lastModified: new Date(),
 
-    priority: 0.7,
+      changefreq: "weekly",
 
-  };
+      priority: 0.8,
 
-}),
+    })),
 
 
 
-// 🎞 Epizodlar
+    // 📦 Sezonlar
 
-...episodes.rows.map((ep) => {
+    ...seasons.rows.map((season) => {
 
-  const season = seasons.rows.find((se) => se.id === ep.season_id);
+      const s = series.rows.find((sr) => sr.id === season.series_id);
 
-  const s = series.rows.find((sr) => sr.id === season.series_id);
+      return {
 
+        url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}`,
 
+        lastModified: new Date(),
 
-  return {
+        changefreq: "weekly",
 
-    url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}/episode/${ep.episode_number}`,
+        priority: 0.7,
 
-    lastModified: new Date(),
+      };
 
-    changefreq: "weekly",
+    }),
 
-    priority: 0.6,
 
-  };
 
-}),
+    // 🎞 Epizodlar
 
-];
+    ...episodes.rows.map((ep) => {
 
-return urls;
+      const season = seasons.rows.find((se) => se.id === ep.season_id);
+
+      const s = series.rows.find((sr) => sr.id === season.series_id);
+
+
+
+      return {
+
+        url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}/episode/${ep.episode_number}`,
+
+        lastModified: new Date(),
+
+        changefreq: "weekly",
+
+        priority: 0.6,
+
+      };
+
+    }),
+
+  ];
+
+
+
+  return urls;
 
 }
