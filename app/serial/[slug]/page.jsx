@@ -22,12 +22,40 @@ export default async function SeriesPage({ params }) {
 
   if (!series) return <div className="text-white p-4">Serial topilmadi</div>;
 
+  // ⭐⭐⭐ TV SERIES SCHEMA ⭐⭐⭐
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "TVSeries",
+    "name": series.title,
+    "image": series.poster,
+    "description": series.description,
+    "genre": series.genres,
+    "countryOfOrigin": series.country,
+    "startDate": series.year,
+    "numberOfSeasons": seasons.length,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": series.imdb,
+      "bestRating": "10",
+      "ratingCount": series.comments_count ?? 1
+    }
+  };
+
   return (
-    <div className="bg-black text-white pb-24">
-      <SeriesDetail series={series} />
-      <div className="px-4 mt-6">
-        <SeasonList slug={slug} seasons={seasons} />
+    <>
+      {/* GOOGLE RICH RESULTS uchun */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
+      {/* ASOSIY SERIAL PAGE */}
+      <div className="bg-black text-white pb-24">
+        <SeriesDetail series={series} />
+        <div className="px-4 mt-6">
+          <SeasonList slug={slug} seasons={seasons} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
