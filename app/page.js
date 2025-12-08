@@ -29,7 +29,6 @@ export default async function Page() {
   const movies = await getMovies();
   const series = await getSeries();
 
-  // Premyera sifatida eng oxirgi yuklangan kinolar
   const premyeraMovies = [...movies].reverse().slice(0, 10);
 
   return (
@@ -72,7 +71,6 @@ export default async function Page() {
       {/* MOVIE ROWS */}
       <div className="mt-8 px-4 space-y-10">
 
-        {/* 🟨 PREMYERA — badge PREMYERA bo‘ladi */}
         <MovieRow
           title="Premyera"
           movies={premyeraMovies}
@@ -80,62 +78,114 @@ export default async function Page() {
           badgeType="premyera"
         />
 
-        {/* 🟩 Tarjima kinolar — badge BEPUL */}
         <MovieRow
           title="Tarjima kinolar"
           movies={movies.filter((m) => m.category === "tarjima")}
           link="/tarjima"
         />
 
-        {/* 🟩 Xorij seriallari */}
         <MovieRow
           title="Xorij seriallari"
           movies={series.filter((s) => s.category === "xorij-seriallar")}
           link="/xorij-seriallar"
         />
 
-        {/* 🟩 Koreya seriallari */}
         <MovieRow
           title="Koreya seriallari"
           movies={series.filter((s) => s.category === "korea-seriallari")}
           link="/korea-seriallari"
         />
 
-        {/* 🟩 Hind kinolar */}
         <MovieRow
           title="Hind kinolar"
           movies={movies.filter((m) => m.category === "hind")}
           link="/hind"
         />
 
-        {/* 🟩 Turk seriallari */}
         <MovieRow
           title="Turk seriallari"
           movies={series.filter((s) => s.category === "turk-seriallar")}
           link="/turk-seriallar"
         />
 
-        {/* 🟩 Anime */}
         <MovieRow
           title="Anime"
           movies={movies.filter((m) => m.category === "anime")}
           link="/anime"
         />
 
-        {/* 🟩 Multfilmlar */}
         <MovieRow
           title="Multfilmlar"
           movies={series.filter((s) => s.category === "multfilmlar")}
           link="/multfilmlar"
         />
 
-        {/* 🟩 O‘zbek filmlar */}
         <MovieRow
           title="O‘zbek filmlar"
           movies={movies.filter((m) => m.category === "uzbek-film")}
           link="/uzbek-film"
         />
       </div>
+
+      {/* ============================
+          ⭐ RESPONSIVE SOCIAL FOOTER 
+          ============================ */}
+      <div className="mt-12 px-4 pb-10">
+        <h2 className="text-lg font-semibold mb-3">Bizni kuzating</h2>
+
+        <div className="flex items-center justify-between gap-4">
+
+          {/* Instagram */}
+          <a
+            href="https://instagram.com/fastora_uz"
+            target="_blank"
+            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+          >
+            <img
+              src="/icons/instagram.svg"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+            />
+          </a>
+
+          {/* Telegram */}
+          <a
+            href="https://t.me/fastora_uz"
+            target="_blank"
+            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+          >
+            <img
+              src="/icons/telegram.svg"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+            />
+          </a>
+
+          {/* YouTube */}
+          <a
+            href="https://youtube.com/@fastora_uz"
+            target="_blank"
+            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+          >
+            <img
+              src="/icons/youtube.svg"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+            />
+          </a>
+
+          {/* TikTok */}
+          <a
+            href="https://tiktok.com/@fastora"
+            target="_blank"
+            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+          >
+            <img
+              src="/icons/tiktok.svg"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+            />
+          </a>
+
+        </div>
+      </div>
+
     </div>
   );
 }
