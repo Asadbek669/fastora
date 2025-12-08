@@ -36,7 +36,7 @@ export default function StoryPage(props) {
   useEffect(() => {
     async function loadAll() {
       const base =
-        process.env.NEXT_PUBLIC_BASE_URL || "https://fastora.uz";
+        process.env.NEXT_PUBLIC_BASE_URL || "http://www.fastora.uz";
       const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
       const data = await res.json();
       setAllStories(data);
@@ -50,7 +50,7 @@ export default function StoryPage(props) {
 
     async function load() {
       const base =
-        process.env.NEXT_PUBLIC_BASE_URL || "https://fastora.uz";
+        process.env.NEXT_PUBLIC_BASE_URL || "http://www.fastora.uz";
       const res = await fetch(`${base}/api/stories/${id}`, {
         cache: "no-store",
       });
@@ -182,3 +182,4 @@ export default function StoryPage(props) {
     </div>
   );
 }
+
