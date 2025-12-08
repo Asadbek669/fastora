@@ -24,10 +24,8 @@ export default async function EpisodePage({ params }) {
   const selectedSeason = seasons.find((s) => Number(s.season_number) === Number(season));
   if (!selectedSeason) return <div className="text-white p-4">Sezon topilmadi</div>;
 
-  // 1 – shu seasonning epizodlari
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  // 2 – episode_number bo‘yicha epizod topamiz
   const currentEpisode = episodes.find(
     (e) => Number(e.episode_number) === Number(episode)
   );
@@ -36,17 +34,61 @@ export default async function EpisodePage({ params }) {
     return <div className="text-white p-4">Epizod topilmadi</div>;
   }
 
+  // ⭐⭐⭐ TV EPISODE + VIDEOOBJECT SCHEMA ⭐⭐⭐
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "TVEpisode",
+    "name": currentEpisode.title,
+    "episodeNumber": currentEpisode.episode_number,
+    "description": series.description,
+    "image": series.poster,
+    "partOfSeason": {
+      "@type": "TVSeason",
+      "seasonNumber": selectedSeason.season_number,
+      "name": `${series.title} — ${selectedSeason.season_number}-sezon`
+    },
+    "partOfSeries": {
+      "@type": "TVSeries",
+      "name": series.title,
+      "image": series.poster,
+      "genre": series.genres,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": series.imdb,
+        "bestRating": "10",
+        "ratingCount": series.comments_count ?? 1
+      }
+    },
+    "video": {
+      "@type": "VideoObject",
+      "name": currentEpisode.title,
+      "description": `Epizod ${currentEpisode.episode_number}`,
+      "thumbnailUrl": series.backdrop,
+      "uploadDate": series.year + "-01-01",
+      "contentUrl": currentEpisode.video_url,
+      "embedUrl": `${base}/serial/${slug}/season/${season}/episode/${episode}`
+    }
+  };
+
   return (
-    <div className="bg-black text-white pb-24">
-      <SeriesDetail series={series} />
+    <>
+      {/* SEO — Google Rich Video & Episode Result uchun */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
 
-      {/* 🚀 BU YERDA VIDEO URL BOR */}
-      <Player src={currentEpisode.video_url} title={currentEpisode.title} />
+      {/* ASOSIY UI */}
+      <div className="bg-black text-white pb-24">
+        <SeriesDetail series={series} />
 
-      <div className="px-4 mt-6">
-        <SeasonList slug={slug} seasons={seasons} activeSeason={season} />
-        <EpisodeList slug={slug} season={season} episodes={episodes} activeEpisode={episode} />
+        <Player src={currentEpisode.video_url} title={currentEpisode.title} />
+
+        <div className="px-4 mt-6">
+          <SeasonList slug={slug} seasons={seasons} activeSeason={season} />
+          <EpisodeList slug={slug} season={season} episodes={episodes} activeEpisode={episode} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
