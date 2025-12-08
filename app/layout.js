@@ -5,10 +5,10 @@ import ClientWrapper from "./components/ClientWrapper";
 const DOMAIN =
   process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
 
-// Asosiy logo (Google rich result uchun)
-const LOGO_URL = `${DOMAIN}/icon.png`; // <-- Logo PNG bo‘lishi kerak
+// Google Rich Logo uchun asosiy rasm
+const LOGO_URL = `${DOMAIN}/icon.png`;
 
-// OpenGraph uchun rasm
+// OpenGraph uchun preview rasm
 const OG_IMAGE = `${DOMAIN}/icons/icon-192.png`;
 
 export const metadata = {
@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
       <body>
 
         {/* ================================
-            GOOGLE LOGO / ORGANIZATION SCHEMA
+            GOOGLE ORGANIZATION LOGO SCHEMA
         ================================= */}
         <script
           type="application/ld+json"
@@ -86,7 +86,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* ================================
-            WEBSITE SCHEMA (Google uchun muhim)
+            WEBSITE SCHEMA
         ================================= */}
         <script
           type="application/ld+json"
@@ -110,7 +110,6 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* MAIN APP */}
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
