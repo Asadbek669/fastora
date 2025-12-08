@@ -36,7 +36,7 @@ export default function StoryPage(props) {
   useEffect(() => {
     async function loadAll() {
       const base =
-        process.env.NEXT_PUBLIC_BASE_URL || "https://fastora.vercel.app";
+        process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.vercel.app";
       const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
       const data = await res.json();
       setAllStories(data);
@@ -182,4 +182,5 @@ export default function StoryPage(props) {
     </div>
   );
 }
+
 
