@@ -1,6 +1,13 @@
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
 
+// Domenni avtomatik tanlash (SSR / Build time)
+const DOMAIN =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
+
+// Ikkala domen uchun logotip
+const OG_IMAGE = `${DOMAIN}/icons/icon-192.png`;
+
 export const metadata = {
   title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
   description:
@@ -20,13 +27,13 @@ export const metadata = {
     title: "Fastora — Multfilmlar, Animelar, Kinolar, Dramalar",
     description:
       "Fastora — eng yangi multfilmlar, animelar, kinolar va dramalar platformasi.",
-    url: "https://fastora.vercel.app",
+    url: DOMAIN,
     siteName: "Fastora",
     type: "website",
     locale: "uz_UZ",
     images: [
       {
-        url: "https://fastora.vercel.app/icons/icon-192.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Fastora — Multfilmlar, Animelar, Kinolar",
@@ -39,12 +46,11 @@ export const metadata = {
     title: "Fastora — Multfilmlar, Animelar, Kinolar",
     description:
       "Fastora — eng zo‘r multfilmlar, animelar, kinolar va dramalar platformasi!",
-    images: ["https://fastora.vercel.app/icons/icon-192.png"],
+    images: [OG_IMAGE],
     creator: "@fastora",
   },
 };
 
-// ✅ themeColor faqat shu yerda bo‘ladi!
 export function generateViewport() {
   return {
     themeColor: "#000000",
