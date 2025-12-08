@@ -1,5 +1,9 @@
+import { pool } from "@/services/db";
+
 export async function GET(req, { params }) {
-  let id = params.id;
+  const p = await params; // ← NEXT.JS 16 uchun majburiy
+
+  let id = p.id;
   if (Array.isArray(id)) id = id[0];
 
   console.log("REAL STORY ID:", id);
