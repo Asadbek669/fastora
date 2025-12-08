@@ -37,33 +37,29 @@ export default async function sitemap() {
       lastModified: new Date(),
     })),
 
-    // 📺 Seriallar
+    // 📺 Seriallar — TO‘G‘RI YO‘L
     ...series.rows.map((s) => ({
-      url: `${baseUrl}/series/${s.slug}`,
+      url: `${baseUrl}/serial/${s.slug}`,
       lastModified: new Date(),
     })),
 
-    // 📦 Sezonlar
+    // 📦 Sezonlar — TO‘G‘RI YO‘L
     ...seasons.rows.map((season) => {
-      // Sezon qaysi serialga tegishli?
       const s = series.rows.find((sr) => sr.id === season.series_id);
 
       return {
-        url: `${baseUrl}/series/${s.slug}/season-${season.season_number}`,
+        url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}`,
         lastModified: new Date(),
       };
     }),
 
-    // 🎞 Epizodlar
+    // 🎞 Epizodlar — TO‘G‘RI YO‘L
     ...episodes.rows.map((ep) => {
-      // Epizod qaysi sezonga tegishli?
       const season = seasons.rows.find((se) => se.id === ep.season_id);
-
-      // Sezon qaysi serialga tegishli?
       const s = series.rows.find((sr) => sr.id === season.series_id);
 
       return {
-        url: `${baseUrl}/series/${s.slug}/season-${season.season_number}/episode-${ep.episode_number}`,
+        url: `${baseUrl}/serial/${s.slug}/season/${season.season_number}/episode/${ep.episode_number}`,
         lastModified: new Date(),
       };
     }),
@@ -71,4 +67,3 @@ export default async function sitemap() {
 
   return urls;
 }
-
