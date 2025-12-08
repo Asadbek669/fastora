@@ -1,24 +1,20 @@
-import { pool } from "../services/db";
+import { Pool } from "pg";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 export default async function sitemap() {
-  // Filmlar
+  const baseUrl = "https://fastora.uz";
+
   const movies = await pool.query("SELECT slug FROM movies");
-
-  // Seriallar
   const series = await pool.query("SELECT slug FROM series");
-
-  // Epizodlar
   const episodes = await pool.query(
     "SELECT series_slug, season_slug, episode_slug FROM episodes"
   );
 
-  const baseUrl = "https://fastora.uz";
-
-  const urls = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-    },
+  return [
+    { url: baseUrl, lastModified: new Date() },
 
     ...movies.rows.map((m) => ({
       url: `${baseUrl}/movie/${m.slug}`,
@@ -35,6 +31,5 @@ export default async function sitemap() {
       lastModified: new Date(),
     })),
   ];
-
-  return urls;
 }
+
