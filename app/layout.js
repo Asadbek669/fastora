@@ -1,11 +1,14 @@
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
 
-// Domenni avtomatik tanlash (SSR / Build time)
+// Domen avtomatik aniqlanadi
 const DOMAIN =
   process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
 
-// Ikkala domen uchun logotip
+// Asosiy logo (Google rich result uchun)
+const LOGO_URL = `${DOMAIN}/icon.png`; // <-- Logo PNG bo‘lishi kerak
+
+// OpenGraph uchun rasm
 const OG_IMAGE = `${DOMAIN}/icons/icon-192.png`;
 
 export const metadata = {
@@ -61,6 +64,53 @@ export default function RootLayout({ children }) {
   return (
     <html lang="uz">
       <body>
+
+        {/* ================================
+            GOOGLE LOGO / ORGANIZATION SCHEMA
+        ================================= */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Fastora",
+              "url": DOMAIN,
+              "logo": LOGO_URL,
+              "sameAs": [
+                "https://t.me/fastora",
+                "https://instagram.com/fastora"
+              ]
+            }),
+          }}
+        />
+
+        {/* ================================
+            WEBSITE SCHEMA (Google uchun muhim)
+        ================================= */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Fastora",
+              "url": DOMAIN,
+              "publisher": {
+                "@type": "Organization",
+                "name": "Fastora",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": LOGO_URL,
+                  "width": 512,
+                  "height": 512,
+                },
+              },
+            }),
+          }}
+        />
+
+        {/* MAIN APP */}
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
