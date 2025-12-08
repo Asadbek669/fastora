@@ -6,7 +6,7 @@ import convertToEmbed from "@/utils/convertEmbed";
 
 export default function StoryPage() {
   const router = useRouter();
-  const { id } = useParams(); // 🔥 props.params o‘rniga TO‘G‘RI USUL
+  const { id } = useParams();
 
   const [story, setStory] = useState(null);
   const [allStories, setAllStories] = useState([]);
@@ -16,6 +16,7 @@ export default function StoryPage() {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
+
     return () => {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
@@ -25,8 +26,7 @@ export default function StoryPage() {
   // Load all stories
   useEffect(() => {
     async function loadAll() {
-      const base = "https://www.fastora.uz"; // 🔥 HTTPS + WWW
-
+      const base = "https://www.fastora.uz";
       const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
       const data = await res.json();
       setAllStories(data);
@@ -38,9 +38,8 @@ export default function StoryPage() {
   useEffect(() => {
     if (!id) return;
 
-    async function load() {
-      const base = "https://www.fastora.uz"; // 🔥 redirect muammosiga yechim
-
+    async function loadStory() {
+      const base = "https://www.fastora.uz";
       const res = await fetch(`${base}/api/stories/${id}`, {
         cache: "no-store",
       });
@@ -53,46 +52,51 @@ export default function StoryPage() {
       const data = await res.json();
       setStory(data);
 
-      const index = allStories.findIndex((s) => s.id == id);
+      const index = allStories.findIndex((s) => String(s.id) === String(id));
       setCurrentIndex(index >= 0 ? index : 0);
     }
 
-    load();
+    loadStory();
   }, [id, allStories]);
 
   // Next/Prev
-  function gotoNextStory() {
+  const gotoNextStory = () => {
     const next = allStories[currentIndex + 1];
     if (next) router.push(`/story/${next.id}`);
-  }
+  };
 
-  function gotoPrevStory() {
+  const gotoPrevStory = () => {
     const prev = allStories[currentIndex - 1];
     if (prev) router.push(`/story/${prev.id}`);
-  }
+  };
 
   if (!id || !story)
-    return <div className="text-white p-6">Yuklanmoqda...</div>;
+    return (
+      <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>
+    );
 
   if (story.error)
-    return <h1 className="text-red-500 text-center text-xl">Story topilmadi</h1>;
+    return (
+      <h1 className="text-red-500 text-center text-xl mt-10">Story topilmadi</h1>
+    );
 
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < allStories.length - 1;
 
   return (
     <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
-      {/* TOP INDICATORS */}
+
+      {/* TOP PROGRESS BARS */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
-          <div key={s.id} className="w-full h-[3px] bg-white/30 rounded">
+          <div key={s.id} className="w-full h-[3px] bg-white/30 rounded overflow-hidden">
             <div
               className="h-full bg-white"
               style={{
                 width: i === currentIndex ? "100%" : "0%",
                 transition: "width .3s",
               }}
-            />
+            ></div>
           </div>
         ))}
       </div>
@@ -100,7 +104,10 @@ export default function StoryPage() {
       {/* BACK BUTTON */}
       <button
         onClick={() => router.push("/")}
-        className="absolute top-4 left-4 z-50 bg-white/20 text-white px-3 py-2 rounded-full"
+        className="absolute top-4 left-4 z-50
+        bg-black/60 hover:bg-black/80 
+        text-white rounded-full px-4 py-3
+        text-xl backdrop-blur-md shadow-xl transition-all"
       >
         ←
       </button>
@@ -114,43 +121,64 @@ export default function StoryPage() {
           className="absolute inset-0 w-full h-full rounded-xl"
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
           allow="autoplay; encrypted-media"
-        />
+        ></iframe>
       </div>
 
-      {/* TITLE */}
-      <div className="absolute bottom-32 text-white text-center text-lg px-4">
+      {/* TITLE with GRADIENT BACKGROUND */}
+      <div
+        className="absolute bottom-32 w-full text-center text-white text-xl font-semibold px-6
+        bg-gradient-to-t from-black/70 to-transparent py-4"
+      >
         {story.title}
       </div>
 
-      {/* CONTROLS */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+      {/* CONTROL BUTTONS */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-5 z-50">
+
+        {/* PREVIOUS */}
         <button
-          disabled={!hasPrev}
           onClick={gotoPrevStory}
-          className={`w-12 h-12 rounded-full text-white text-2xl ${
-            hasPrev ? "bg-white/20" : "bg-white/10 opacity-40"
+          disabled={!hasPrev}
+          className={`w-14 h-14 flex justify-center items-center
+          rounded-full text-white text-3xl font-bold
+          backdrop-blur-md shadow-xl transition-all
+          ${
+            hasPrev
+              ? "bg-black/60 hover:bg-black/80"
+              : "bg-black/30 opacity-40 pointer-events-none"
           }`}
         >
           ‹
         </button>
 
+        {/* DETAILS */}
         <button
           onClick={() => (window.location.href = story.page_url)}
-          className="bg-red-600 text-white px-6 py-3 rounded-full"
+          className="bg-gradient-to-r from-red-600 to-red-700
+          text-white px-8 py-4 rounded-full text-lg font-semibold
+          shadow-xl active:scale-95 backdrop-blur-md transition-all"
         >
           Batafsil
         </button>
 
+        {/* NEXT */}
         <button
-          disabled={!hasNext}
           onClick={gotoNextStory}
-          className={`w-12 h-12 rounded-full text-white text-2xl ${
-            hasNext ? "bg-white/20" : "bg-white/10 opacity-40"
+          disabled={!hasNext}
+          className={`w-14 h-14 flex justify-center items-center
+          rounded-full text-white text-3xl font-bold
+          backdrop-blur-md shadow-xl transition-all
+          ${
+            hasNext
+              ? "bg-black/60 hover:bg-black/80"
+              : "bg-black/30 opacity-40 pointer-events-none"
           }`}
         >
           ›
         </button>
       </div>
+
     </div>
   );
 }
+
