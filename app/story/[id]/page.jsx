@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import convertToEmbed from "@/utils/convertEmbed";
-import { useRouter } from "next/navigation";
 
-export default function StoryPage(props) {
+export default function StoryPage() {
   const router = useRouter();
-  const [id, setId] = useState(null);
+  const { id } = useParams(); // 🔥 Correct param for client component
+
   const [story, setStory] = useState(null);
   const [allStories, setAllStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Disable scrolling
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
@@ -21,16 +23,7 @@ export default function StoryPage(props) {
     };
   }, []);
 
-  useEffect(() => {
-    const unwrap = async () => {
-      const p = await props.params;
-      let _id = p.id;
-      if (Array.isArray(_id)) _id = _id[0];
-      setId(_id);
-    };
-    unwrap();
-  }, [props.params]);
-
+  // Load ALL STORIES (for prev/next)
   useEffect(() => {
     async function loadAll() {
       const base =
@@ -43,6 +36,7 @@ export default function StoryPage(props) {
     loadAll();
   }, []);
 
+  // Load CURRENT STORY (does NOT wait for allStories)
   useEffect(() => {
     if (!id) return;
 
@@ -62,7 +56,8 @@ export default function StoryPage(props) {
       const data = await res.json();
       setStory(data);
 
-      const index = allStories.findIndex((s) => s.id == id);
+      // Update index when allStories arrives
+      const index = allStories.findIndex((s) => String(s.id) === String(id));
       setCurrentIndex(index >= 0 ? index : 0);
     }
 
@@ -79,14 +74,16 @@ export default function StoryPage(props) {
     if (prev) router.push(`/story/${prev.id}`);
   }
 
+  // Loading screen
   if (!id || !story)
     return (
-      <div className="text-white p-6 text-center">Yuklanmoqda...</div>
+      <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>
     );
 
+  // Not found
   if (story.error)
     return (
-      <h1 className="text-red-500 text-center text-xl">
+      <h1 className="text-red-500 text-center text-xl mt-10">
         Story topilmadi
       </h1>
     );
@@ -96,23 +93,26 @@ export default function StoryPage(props) {
 
   return (
     <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
+
+      {/* Top segment indicator */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
           <div
-            key={s.id ?? i}
+            key={s.id}
             className="w-full h-[3px] rounded bg-white/30 overflow-hidden"
           >
             <div
               className="h-full bg-white"
               style={{
                 width: i === currentIndex ? "100%" : "0%",
-                transition: "width 0.25s",
+                transition: "width 0.3s",
               }}
             ></div>
           </div>
         ))}
       </div>
 
+      {/* Back button */}
       <button
         onClick={() => router.push("/")}
         className="absolute top-4 left-4 z-50 bg-white/20 text-white px-3 py-2 rounded-full"
@@ -120,6 +120,7 @@ export default function StoryPage(props) {
         ←
       </button>
 
+      {/* Story player */}
       <div
         className="relative w-full max-w-[430px] mx-auto"
         style={{ paddingTop: "177.77%" }}
@@ -129,15 +130,19 @@ export default function StoryPage(props) {
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          title={story.title || "Story video"}
+          title={story.title}
         />
       </div>
 
+      {/* Title */}
       <div className="absolute bottom-32 w-full text-center text-white text-lg font-semibold px-4">
         {story.title}
       </div>
 
+      {/* Controls (Prev - More - Next) */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3">
+
+        {/* Prev */}
         <button
           onClick={gotoPrevStory}
           disabled={!hasPrev}
@@ -150,15 +155,15 @@ export default function StoryPage(props) {
           ‹
         </button>
 
+        {/* More */}
         <button
-          onClick={() =>
-            story.page_url && (window.location.href = story.page_url)
-          }
-          className="bg-red-600 text-white px-6 py-3 rounded-full text-lg font-medium shadow-xl active:scale-95"
+          onClick={() => story.page_url && (window.location.href = story.page_url)}
+          className="bg-red-600 text-white px-6 py-3 rounded-full text-lg font-medium shadow-lg active:scale-95"
         >
           Batafsil
         </button>
 
+        {/* Next */}
         <button
           onClick={gotoNextStory}
           disabled={!hasNext}
@@ -170,6 +175,7 @@ export default function StoryPage(props) {
         >
           ›
         </button>
+
       </div>
     </div>
   );
