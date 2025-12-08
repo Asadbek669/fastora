@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import convertToEmbed from "@/utils/convertEmbed";
-import { useRouter } from "next/navigation";
 
-export default function StoryPage(props) {
+export default function StoryPage() {
   const router = useRouter();
+  const { id } = useParams(); // 🔥 props.params o‘rniga TO‘G‘RI USUL
+
   const [story, setStory] = useState(null);
-  const [id, setId] = useState(null);
   const [allStories, setAllStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Disable scroll (player mode)
+  // Disable scroll
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
@@ -21,22 +22,11 @@ export default function StoryPage(props) {
     };
   }, []);
 
-  // Get ID from params
-  useEffect(() => {
-    async function unwrap() {
-      const p = await props.params;
-      let _id = p.id;
-      if (Array.isArray(_id)) _id = _id[0];
-      setId(_id);
-    }
-    unwrap();
-  }, [props.params]);
-
   // Load all stories
   useEffect(() => {
     async function loadAll() {
-      const base =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://www.fastora.uz";
+      const base = "https://www.fastora.uz"; // 🔥 HTTPS + WWW
+
       const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
       const data = await res.json();
       setAllStories(data);
@@ -44,13 +34,13 @@ export default function StoryPage(props) {
     loadAll();
   }, []);
 
-  // Load current story based on ID
+  // Load current story
   useEffect(() => {
-    if (!id || allStories.length === 0) return;
+    if (!id) return;
 
     async function load() {
-      const base =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://www.fastora.uz";
+      const base = "https://www.fastora.uz"; // 🔥 redirect muammosiga yechim
+
       const res = await fetch(`${base}/api/stories/${id}`, {
         cache: "no-store",
       });
@@ -63,7 +53,6 @@ export default function StoryPage(props) {
       const data = await res.json();
       setStory(data);
 
-      // Current story index
       const index = allStories.findIndex((s) => s.id == id);
       setCurrentIndex(index >= 0 ? index : 0);
     }
@@ -71,13 +60,12 @@ export default function StoryPage(props) {
     load();
   }, [id, allStories]);
 
-  // NEXT story (by button)
+  // Next/Prev
   function gotoNextStory() {
     const next = allStories[currentIndex + 1];
     if (next) router.push(`/story/${next.id}`);
   }
 
-  // PREVIOUS story (by button)
   function gotoPrevStory() {
     const prev = allStories[currentIndex - 1];
     if (prev) router.push(`/story/${prev.id}`);
@@ -85,96 +73,80 @@ export default function StoryPage(props) {
 
   if (!id || !story)
     return <div className="text-white p-6">Yuklanmoqda...</div>;
-  if (story.error)
-    return (
-      <h1 className="text-red-500 text-center text-xl">Story topilmadi</h1>
-    );
 
-  // whether prev/next exist (used for disabled state)
+  if (story.error)
+    return <h1 className="text-red-500 text-center text-xl">Story topilmadi</h1>;
+
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < allStories.length - 1;
 
   return (
     <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
-
-      {/* TOP SEGMENT INDICATOR */}
+      {/* TOP INDICATORS */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
-          <div
-            key={s.id ?? i}
-            className="w-full h-[3px] rounded bg-white/30 overflow-hidden"
-          >
+          <div key={s.id} className="w-full h-[3px] bg-white/30 rounded">
             <div
               className="h-full bg-white"
               style={{
                 width: i === currentIndex ? "100%" : "0%",
-                transition: "width 0.2s",
+                transition: "width .3s",
               }}
-            ></div>
+            />
           </div>
         ))}
       </div>
 
-      {/* BACK (top-left) */}
-	  <button
-	    onClick={() => router.push("/")}
-	    className="absolute top-4 left-4 z-50 bg-white/20 text-white px-3 py-2 rounded-full"
-	  >
-	    ←
-	  </button>
+      {/* BACK BUTTON */}
+      <button
+        onClick={() => router.push("/")}
+        className="absolute top-4 left-4 z-50 bg-white/20 text-white px-3 py-2 rounded-full"
+      >
+        ←
+      </button>
 
-      {/* STORY PLAYER (9:16) */}
+      {/* VIDEO PLAYER */}
       <div
-        className="relative w-full max-w-[430px] mx-auto"
+        className="relative w-full max-w-[430px]"
         style={{ paddingTop: "177.77%" }}
       >
-        {/* Iframe unmuted (note: some browsers block autoplay with sound) */}
         <iframe
-          className="absolute inset-0 w-full h-full object-cover rounded-xl"
-          src={convertToEmbed(story.youtube_url) + "?autoplay=1"}
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title={story.title || "Story video"}
+          className="absolute inset-0 w-full h-full rounded-xl"
+          src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
+          allow="autoplay; encrypted-media"
         />
       </div>
 
       {/* TITLE */}
-      <div className="absolute bottom-32 w-full text-center text-white text-lg font-semibold drop-shadow-lg px-4">
+      <div className="absolute bottom-32 text-white text-center text-lg px-4">
         {story.title}
       </div>
 
-      {/* BOTTOM CONTROL GROUP: Prev - Batafsil - Next */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3">
-        {/* Prev button */}
+      {/* CONTROLS */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
         <button
-          onClick={gotoPrevStory}
           disabled={!hasPrev}
-          className={`flex items-center justify-center w-12 h-12 rounded-full text-white text-2xl shadow-lg ${
-            hasPrev ? "bg-white/20 hover:bg-white/30" : "bg-white/10 opacity-40 pointer-events-none"
+          onClick={gotoPrevStory}
+          className={`w-12 h-12 rounded-full text-white text-2xl ${
+            hasPrev ? "bg-white/20" : "bg-white/10 opacity-40"
           }`}
-          aria-label="Oldingi story"
-          title={hasPrev ? "Oldingi" : "Oldingi yo'q"}
         >
           ‹
         </button>
 
-        {/* Batafsil button */}
         <button
-          onClick={() => story.page_url && (window.location.href = story.page_url)}
-          className="bg-red-600 text-white px-6 py-3 rounded-full text-lg font-medium shadow-xl active:scale-95"
+          onClick={() => (window.location.href = story.page_url)}
+          className="bg-red-600 text-white px-6 py-3 rounded-full"
         >
           Batafsil
         </button>
 
-        {/* Next button */}
         <button
-          onClick={gotoNextStory}
           disabled={!hasNext}
-          className={`flex items-center justify-center w-12 h-12 rounded-full text-white text-2xl shadow-lg ${
-            hasNext ? "bg-white/20 hover:bg-white/30" : "bg-white/10 opacity-40 pointer-events-none"
+          onClick={gotoNextStory}
+          className={`w-12 h-12 rounded-full text-white text-2xl ${
+            hasNext ? "bg-white/20" : "bg-white/10 opacity-40"
           }`}
-          aria-label="Keyingi story"
-          title={hasNext ? "Keyingi" : "Keyingi yo'q"}
         >
           ›
         </button>
@@ -182,4 +154,3 @@ export default function StoryPage(props) {
     </div>
   );
 }
-
