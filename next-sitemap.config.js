@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: "https://fastora.vercel.app",
+  siteUrl: "https://fastora.uz",
   generateRobotsTxt: true,
   sitemapSize: 5000,
   changefreq: "daily",
