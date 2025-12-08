@@ -1,8 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export default function DonatePage() {
+  // 👉 Xabarlarni qo‘lda shu yerga kiritasiz
+  const messages = [
+    "Аноним 5000: Omad -- Rahmat Anonim",
+    "Аноним 5000: Avatar 2 sezonni qachon quyasila -- Netflix 2026 yil boshida premyera bolishini aytyapti",
+    "Feruza 7350: Dramalani kopro chiqazila 😍❤️ -- Hop boladi😀🌹",
+    "⭐ Loyihani rivojlanishiga hissa qoshganilar uchun rahmat sizlarni qadrlaymiz ❤️❤️❤️",
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % messages.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="p-4 pt-6 text-white">
+
+      {/* 🔥 Pastki avtomatik xabar paneli */}
+	  {messages.length > 0 && (
+	    <div
+		  className="
+		    fixed bottom-14 left-1/2 -translate-x-1/2 z-40
+		    px-4 py-2 rounded-xl text-white
+		    bg-[#000000bb] backdrop-blur-md shadow-lg
+		    text-sm select-none transition-all duration-500
+		  "
+	    >
+		  {messages[index]}
+	    </div>
+	  )}
+
       <h1 className="text-xl font-semibold mb-4">Homiylik</h1>
 
       {/* Tirikchilik statistikasi */}
@@ -41,3 +76,4 @@ export default function DonatePage() {
     </div>
   );
 }
+
