@@ -14,8 +14,40 @@ async function getSeasons(slug) {
   return res.json();
 }
 
+// ⭐⭐⭐ DYNAMIC METADATA ⭐⭐⭐
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+
+  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+  const series = await res.json();
+
+  return {
+    title: `${series.title} — Serial | Fastora`,
+    description: series.description?.slice(0, 150),
+    openGraph: {
+      title: `${series.title} — Serial | Fastora`,
+      description: series.description?.slice(0, 200),
+      url: `https://fastora.uz/serial/${slug}`,
+      siteName: "Fastora",
+      type: "video.tv_show",
+      images: [
+        {
+          url: series.poster,
+          width: 800,
+          height: 1200,
+          alt: series.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [series.poster],
+    },
+  };
+}
+
 export default async function SeriesPage({ params }) {
-  const { slug } = await params;
+  const { slug } = params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
@@ -43,13 +75,11 @@ export default async function SeriesPage({ params }) {
 
   return (
     <>
-      {/* GOOGLE RICH RESULTS uchun */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY SERIAL PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
