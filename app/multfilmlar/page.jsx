@@ -1,5 +1,19 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Multfilmlar — Eng yaxshi multfilmlar | Fastora",
+  description:
+    "Bolalar va kattalar uchun eng qiziqarli multfilmlar o‘zbek tilida. Kartonlar, 3D multfilmlar, komedik multfilmlar.",
+  openGraph: {
+    title: "Multfilmlar — Fastora",
+    description: "Eng yaxshi multfilmlarni bepul tomosha qiling.",
+    url: "https://fastora.uz/multfilmlar",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getSeries() {
   const res = await fetch("https://fastora.vercel.app/api/series", {
     cache: "no-store",
@@ -39,3 +53,4 @@ export default async function Page() {
     </div>
   );
 }
+
