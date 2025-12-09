@@ -1,10 +1,23 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Anime — Eng yangi anime va epizodlar | Fastora",
+  description:
+    "Eng mashhur anime, yangi epizodlar va sevimli seriallaringizni o‘zbek tilida Fastorada tomosha qiling.",
+  openGraph: {
+    title: "Anime — Eng yangi anime | Fastora",
+    description:
+      "Eng mashhur anime va yangi epizodlarni Fastorada HD sifatda tomosha qiling.",
+    url: "https://fastora.uz/anime",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
 async function getMovies() {
   const res = await fetch("https://fastora.vercel.app/api/movies", {
     cache: "no-store",
   });
-
   if (!res.ok) return [];
   return res.json();
 }
@@ -17,7 +30,9 @@ export default async function Page() {
     <div className="p-4 pb-32">
       <h1 className="text-2xl font-semibold mb-4">Anime</h1>
 
-      {movies.length === 0 && <p className="text-gray-400">Hozircha anime mavjud emas.</p>}
+      {movies.length === 0 && (
+        <p className="text-gray-400">Hozircha anime mavjud emas.</p>
+      )}
 
       <div className="grid grid-cols-3 gap-3 mt-4">
         {movies.map((m) => (
