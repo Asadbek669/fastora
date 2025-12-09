@@ -1,5 +1,20 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Tarjima kinolar — O‘zbek tilida filmlar | Fastora",
+  description:
+    "Eng mashhur tarjima kinolar, jangari, drama, triller, komediya filmlari o‘zbek tilida Fastorada.",
+  openGraph: {
+    title: "Tarjima kinolar — Fastora",
+    description:
+      "Eng mashhur tarjima kinolarni HD sifatda tomosha qiling.",
+    url: "https://fastora.uz/tarjima",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getTarjimaMovies() {
   const res = await fetch("https://fastora.vercel.app/api/movies", {
     cache: "no-store",
