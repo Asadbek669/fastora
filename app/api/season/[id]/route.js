@@ -1,5 +1,24 @@
 import { pool } from "@/services/db";
 
+// 🔍 SEASON BY ID GET
+export async function GET(_, { params }) {
+  const { id } = params;
+
+  try {
+    const season = await pool.query(
+      "SELECT * FROM seasons WHERE id = $1 LIMIT 1",
+      [id]
+    );
+
+    if (season.rows.length === 0)
+      return Response.json({ error: "Season not found" }, { status: 404 });
+
+    return Response.json(season.rows[0]);
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}
+
 // 🗑 SEASON DELETE
 export async function DELETE(_, { params }) {
   const { id } = params;
@@ -42,3 +61,4 @@ export async function PUT(req, { params }) {
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
+
