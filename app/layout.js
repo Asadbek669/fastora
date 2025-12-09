@@ -64,52 +64,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="uz">
       <body>
-
-        {/* ================================
-            GOOGLE ORGANIZATION LOGO SCHEMA
-        ================================= */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Fastora",
-              "url": DOMAIN,
-              "logo": LOGO_URL,
-              "sameAs": [
-                "https://t.me/fastora",
-                "https://instagram.com/fastora"
-              ]
-            }),
-          }}
-        />
-
-        {/* ================================
-            WEBSITE SCHEMA
-        ================================= */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Fastora",
-              "url": DOMAIN,
-              "publisher": {
-                "@type": "Organization",
-                "name": "Fastora",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": LOGO_URL,
-                  "width": 512,
-                  "height": 512,
-                },
-              },
-            }),
-          }}
-        />
-
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
