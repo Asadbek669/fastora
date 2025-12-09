@@ -1,5 +1,19 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Hind kinolari — Bollywood filmlari | Fastora",
+  description:
+    "Eng yaxshi hind kinolari, melodrama, romantika va jangari janrlaridagi filmlar o‘zbek tilida.",
+  openGraph: {
+    title: "Hind kinolari — Fastora",
+    description: "Hind kinolarini bepul tomosha qiling.",
+    url: "https://fastora.uz/hind",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getMovies() {
   const res = await fetch("https://fastora.vercel.app/api/movies", {
     cache: "no-store",
@@ -37,3 +51,4 @@ export default async function Page() {
     </div>
   );
 }
+
