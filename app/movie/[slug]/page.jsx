@@ -4,45 +4,8 @@ import Link from "next/link";
 import Player from "@/components/Player";
 import AgeModal from "@/components/AgeModal";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL;
-
-// ⭐⭐⭐ MOVIE METADATA (POSTERLI KO'RINISH UCHUN MAJBURIY) ⭐⭐⭐
-export async function generateMetadata({ params }) {
-  const { slug } = params;
-
-  const res = await fetch(`${base}/api/movies/${slug}`, { cache: "no-store" });
-  const movie = await res.json();
-
-  return {
-    title: `${movie.title} — Film | Fastora`,
-    description: movie.description?.slice(0, 160),
-    openGraph: {
-      title: `${movie.title} — Film | Fastora`,
-      description: movie.description?.slice(0, 200),
-      url: `https://fastora.uz/movie/${slug}`,
-      type: "video.movie",
-      siteName: "Fastora",
-      images: [
-        {
-          url: movie.poster,
-          width: 800,
-          height: 1200,
-          alt: movie.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      images: [movie.poster],
-    },
-  };
-}
-
-// ============================
-//      MOVIE FETCH
-// ============================
 async function getMovie(slug) {
-  const res = await fetch(`${base}/api/movies/${slug}`, {
+  const res = await fetch(`https://fastora.vercel.app/api/movies/${slug}`, {
     cache: "no-store",
   });
 
@@ -50,21 +13,17 @@ async function getMovie(slug) {
   return res.json();
 }
 
-// ============================
-//      ASOSIY PAGE
-// ============================
-export default async function MoviePage({ params }) {
-  const { slug } = params;
+export default async function MoviePage(props) {
+  const { slug } = await props.params;
   const movie = await getMovie(slug);
 
   if (!movie) return redirect("/");
 
-  // ⭐⭐⭐ SCHEMA — GOOGLE RICH RESULTS UCHUN ⭐⭐⭐
+  // ⭐⭐⭐ SCHEMA YOZILDI — GOOGLE UCHUN FILM STRUKTURASI ⭐⭐⭐
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "Movie",
     "name": movie.title,
-    "@id": `https://fastora.uz/movie/${slug}`,
     "image": movie.poster,
     "description": movie.description,
     "genre": movie.genres,
@@ -73,44 +32,44 @@ export default async function MoviePage({ params }) {
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": movie.imdb,
-      "ratingCount": movie.comments_count ?? 1,
-      "bestRating": "10"
+      "bestRating": "10",
+      "ratingCount": movie.comments_count ?? 1
+    },
+    "trailer": {
+      "@type": "VideoObject",
+      "name": movie.title + " — treyler",
+      "thumbnailUrl": movie.thumbs?.[0],
+      "contentUrl": movie.video,
+      "embedUrl": `https://fastora.uz/movie/${slug}`
     }
   };
 
   return (
     <>
-      {/* GOOGLE SCHEMA */}
+      {/* GOOGLE RICH RESULTS UCHUN SCHEMA */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ============================
-            UI BOSHLANADI (195 QATOR)
-      ============================ */}
-
+      {/* ASOSIY SAHIFA */}
       <div className="text-white min-h-screen bg-black pb-28">
 
         {/* BACKDROP */}
         <div className="relative w-full h-[250px] overflow-hidden">
           <Image
             src={movie.backdrop}
-            alt={movie.title}
             fill
             priority
+            alt={movie.title}
             className="absolute inset-0 w-full h-full object-cover scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00000070] to-black/70" />
         </div>
 
-        {/* ============================ */}
-        {/* POSTER + TITLE + INFO */}
-        {/* ============================ */}
         <div className="px-4 mt-[-30px]">
+          {/* POSTER + DETAILS */}
           <div className="flex gap-4 items-start">
-            
-            {/* POSTER */}
             <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
               <Image
                 src={movie.poster}
@@ -121,31 +80,36 @@ export default async function MoviePage({ params }) {
               />
             </div>
 
-            {/* TITLE & META */}
             <div className="flex-1 mt-9">
               <h1 className="text-2xl font-bold leading-tight">{movie.title}</h1>
 
               <p className="text-gray-400 mt-1 text-sm">📅 {movie.year}</p>
-              <p className="text-gray-400 text-sm">🌍 {movie.country}</p>
-              <p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
+              <p className="text-gray-400 text-sm">🌍 Davlati: {movie.country}</p>
+              <p className="text-gray-400 text-sm">🔊 Til: O‘zbek tilida</p>
 
               <span className="inline-flex items-center gap-2 bg-yellow-600/30 text-yellow-300 px-2 py-1 text-sm rounded-lg w-max mt-2">
                 ⭐ IMDb: {movie.imdb}
               </span>
             </div>
-
           </div>
 
-          {/* ============================ */}
-          {/* INFO PANEL (IMDb, Comments, Age) */}
-          {/* ============================ */}
+          {/* INFO PANEL */}
           <div className="mt-5 grid grid-cols-3 gap-2">
 
             {/* IMDb */}
             <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 64 64"
+                fill="none"
+              >
                 <rect width="64" height="64" rx="6" fill="#F5C518" />
-                <path d="M14 18h6v28h-6V18Zm12 0h9l3 20 3-20h9v28h-6V26l-3 20h-6l-3-20v20h-6V18Zm27 0h9c2 0 4 2 4 4v20c0 2-2 4-4 4h-9V18Zm6 20c1 0 2-1 2-2V24c0-1-1-2-2-2h-3v16h3Z" fill="#000"/>
+                <path
+                  d="M14 18h6v28h-6V18Zm12 0h9l3 20 3-20h9v28h-6V26l-3 20h-6l-3-20v20h-6V18Zm27 0h9c2 0 4 2 4 4v20c0 2-2 4-4 4h-9V18Zm6 20c1 0 2-1 2-2V24c0-1-1-2-2-2h-3v16h3Z"
+                  fill="#000"
+                />
               </svg>
               <p className="text-xs mt-1">{movie.imdb}</p>
             </div>
@@ -155,27 +119,30 @@ export default async function MoviePage({ params }) {
               href={`/movie/${slug}/comments`}
               className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
             >
-              <svg width="26" height="26" fill="currentColor">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-white"
+              >
                 <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
               </svg>
               <p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
             </Link>
 
-            {/* AGE */}
+            {/* AGE LIMIT */}
             <AgeModal age={movie.age ?? "18+"} />
 
           </div>
 
-          {/* ============================ */}
-          {/* PLAYER */}
-          {/* ============================ */}
+          {/* VIDEO PLAYER */}
           <div className="mt-6">
             <Player src={movie.video} />
           </div>
 
-          {/* ============================ */}
           {/* GENRES */}
-          {/* ============================ */}
           <div className="mt-6">
             <h2 className="text-gray-300 mb-2 text-lg">Janri:</h2>
 
@@ -191,9 +158,7 @@ export default async function MoviePage({ params }) {
             </div>
           </div>
 
-          {/* ============================ */}
           {/* DESCRIPTION */}
-          {/* ============================ */}
           <div className="mt-6">
             <h2 className="text-gray-300 mb-2 mt-5">Film haqida qisqacha:</h2>
             <p className="text-gray-400 leading-relaxed whitespace-pre-line">
@@ -201,9 +166,7 @@ export default async function MoviePage({ params }) {
             </p>
           </div>
 
-          {/* ============================ */}
-          {/* THUMBNAILS */}
-          {/* ============================ */}
+          {/* THUMBS */}
           <div className="mt-6">
             <h2 className="text-gray-300 mb-2">Lavhalar:</h2>
 
