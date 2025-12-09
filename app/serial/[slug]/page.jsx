@@ -1,41 +1,8 @@
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL;
-
-// ⭐⭐⭐ META — POSTER KO‘RINISHI UCHUN MAJBURIY ⭐⭐⭐
-export async function generateMetadata({ params }) {
-  const { slug } = params;
-
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
-  const series = await res.json();
-
-  if (!series) return { title: "Serial topilmadi | Fastora" };
-
-  return {
-    title: `${series.title} — Serial | Fastora`,
-    description: series.description?.slice(0, 160),
-    openGraph: {
-      title: `${series.title} — Serial | Fastora`,
-      description: series.description?.slice(0, 200),
-      url: `https://fastora.uz/serial/${slug}`,
-      type: "video.tv_show",
-      siteName: "Fastora",
-      images: [
-        {
-          url: series.poster,
-          width: 800,
-          height: 1200,
-          alt: series.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      images: [series.poster],
-    },
-  };
-}
+const base =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.vercel.app";
 
 async function getSeries(slug) {
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
@@ -49,14 +16,13 @@ async function getSeasons(slug) {
 }
 
 export default async function SeriesPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
 
   if (!series) return <div className="text-white p-4">Serial topilmadi</div>;
 
-  // ⭐⭐⭐ TV SERIES SCHEMA ⭐⭐⭐
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "TVSeries",
@@ -71,19 +37,17 @@ export default async function SeriesPage({ params }) {
       "@type": "AggregateRating",
       "ratingValue": series.imdb,
       "bestRating": "10",
-      "ratingCount": series.comments_count ?? 1
-    }
+      "ratingCount": series.comments_count ?? 1,
+    },
   };
 
   return (
     <>
-      {/* Schema Google Rich Results uchun */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
@@ -93,3 +57,4 @@ export default async function SeriesPage({ params }) {
     </>
   );
 }
+
