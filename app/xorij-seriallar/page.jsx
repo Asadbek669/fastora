@@ -1,5 +1,20 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Xorij seriallar — Eng mashhur seriallar | Fastora",
+  description:
+    "Dunyoning eng mashhur xorijiy seriallari o‘zbek tilida endi Fastorada. Yangi mavsumlar va epizodlarni birinchi bo‘lib tomosha qiling.",
+  openGraph: {
+    title: "Xorij seriallar — Fastora",
+    description:
+      "Eng mashhur xorij seriallarini HD sifatda bepul tomosha qiling.",
+    url: "https://fastora.uz/xorij-seriallar",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getSeries() {
   const res = await fetch("https://fastora.vercel.app/api/series", {
     cache: "no-store",
@@ -37,3 +52,4 @@ export default async function Page() {
     </div>
   );
 }
+
