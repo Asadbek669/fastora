@@ -2,63 +2,80 @@ import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 import EpisodeList from "@/components/EpisodeList";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL;
+const base =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
 
 // API FUNCTIONS
 async function getSeries(slug) {
-  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" }).then(r =>
+    r.json()
+  );
 }
 
 async function getSeasons(slug) {
-  return fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/season?slug=${slug}`, {
+    cache: "no-store",
+  }).then(r => r.json());
 }
 
 async function getEpisodesBySeason(id) {
-  return fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/episode/season/${id}`, {
+    cache: "no-store",
+  }).then(r => r.json());
 }
 
 /* -----------------------------------------------------
-   SEO: generateMetadata → title, description, canonical
+   SEO METADATA (FETCH YO‘Q — XATOSIZ ISHLAYDI)
 ------------------------------------------------------*/
-export async function generateMetadata({ params }) {
+export function generateMetadata({ params }) {
   const { slug, season } = params;
-  const series = await getSeries(slug);
+
+  const readableName = slug.replace(/-/g, " ");
+  const title = `${readableName} — ${season}-sezon O'zbek tilida HD`;
 
   return {
-    title: `${series.title} — ${season}-sezon O'zbek tilida HD`,
-    description: `${series.title} ${season}-sezon barcha qismlari HD sifatda. ${series.description?.slice(0, 150)}...`,
+    title,
+    description: `${title} barcha qismlari HD sifatda tomosha qiling.`,
     alternates: {
       canonical: `${base}/serial/${slug}/season/${season}`,
     },
     openGraph: {
-      title: `${series.title} — ${season}-sezon`,
-      description: series.description,
-      images: [series.poster],
+      title,
+      description: `${title} bepul va HD sifatda.`,
       url: `${base}/serial/${slug}/season/${season}`,
+      type: "video.tv_show",
+      locale: "uz_UZ",
+      images: [`${base}/icon.png`],
     },
   };
 }
 
 /* -----------------------------------------------------
-   MAIN PAGE RENDER
+   ASOSIY PAGE
 ------------------------------------------------------*/
 export default async function SeasonPage({ params }) {
   const { slug, season } = params;
 
+  // SERIYA, SEZON VA EPIZODLARNI OLAMIZ
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
 
+  if (!series || !seasons) {
+    return <div className="text-white p-4">Serial topilmadi</div>;
+  }
+
   const selectedSeason = seasons.find(
-    (s) => Number(s.season_number) === Number(season)
+    s => Number(s.season_number) === Number(season)
   );
 
-  if (!selectedSeason)
+  if (!selectedSeason) {
     return <div className="text-white p-4">Sezon topilmadi</div>;
+  }
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
   /* -----------------------------------------------------
-     SCHEMA — Google TVSeason + TVEpisode
+     GOOGLE TVSeason + TVEpisode SCHEMA (STRONG SEO) 
   ------------------------------------------------------*/
   const schemaData = {
     "@context": "https://schema.org",
@@ -69,13 +86,15 @@ export default async function SeasonPage({ params }) {
     "image": series.poster,
     "description": series.description,
 
-    "episode": episodes.map((e) => ({
+    // HAR EPIZOD UCHUN MINI SCHEMA
+    "episode": episodes.map(e => ({
       "@type": "TVEpisode",
       "episodeNumber": e.episode_number,
       "name": `${series.title} ${e.episode_number}-qism`,
       "url": `${base}/serial/${slug}/season/${season}/episode/${e.episode_number}`,
     })),
 
+    // ULANISH TVSeries GA
     "partOfSeries": {
       "@type": "TVSeries",
       "name": series.title,
@@ -92,28 +111,23 @@ export default async function SeasonPage({ params }) {
 
   return (
     <>
-      {/* SEO STRUCTURED DATA */}
+      {/* GOOGLE STRUCTURED DATA */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* MAIN UI */}
+      {/* UI */}
       <div className="bg-black text-white pb-24">
+        {/* Serial haqida umumiy malumot */}
         <SeriesDetail series={series} />
 
         <div className="px-4 mt-6">
-          <SeasonList
-            slug={slug}
-            seasons={seasons}
-            activeSeason={season}
-          />
+          {/* Sezonlar ro'yxati */}
+          <SeasonList slug={slug} seasons={seasons} activeSeason={season} />
 
-          <EpisodeList
-            slug={slug}
-            season={season}
-            episodes={episodes}
-          />
+          {/* Epizodlar ro'yxati */}
+          <EpisodeList slug={slug} season={season} episodes={episodes} />
         </div>
       </div>
     </>
