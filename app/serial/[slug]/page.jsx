@@ -3,41 +3,6 @@ import SeasonList from "@/components/SeasonList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-// ⭐⭐⭐ METADATA — 100% ISHLAYDIGAN VARIANT ⭐⭐⭐
-export async function generateMetadata({ params }) {
-  const { slug } = params;
-
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
-  if (!res.ok) return { title: "Serial topilmadi | Fastora" };
-
-  const series = await res.json();
-
-  return {
-    title: `${series.title} — Serial | Fastora`,
-    description: series.description?.slice(0, 160),
-
-    openGraph: {
-      title: `${series.title} — Serial | Fastora`,
-      description: series.description?.slice(0, 200),
-      url: `${base}/serial/${slug}`,
-      type: "video.tv_show",
-      images: [
-        {
-          url: series.poster,
-          width: 800,
-          height: 1200,
-          alt: series.title
-        }
-      ]
-    },
-
-    twitter: {
-      card: "summary_large_image",
-      images: [series.poster]
-    }
-  };
-}
-
 async function getSeries(slug) {
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
   if (!res.ok) return null;
@@ -50,13 +15,14 @@ async function getSeasons(slug) {
 }
 
 export default async function SeriesPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
 
   if (!series) return <div className="text-white p-4">Serial topilmadi</div>;
 
+  // ⭐⭐⭐ TV SERIES SCHEMA ⭐⭐⭐
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "TVSeries",
@@ -77,13 +43,13 @@ export default async function SeriesPage({ params }) {
 
   return (
     <>
-      {/* GOOGLE SCHEMA */}
+      {/* GOOGLE RICH RESULTS uchun */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY PAGE */}
+      {/* ASOSIY SERIAL PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
