@@ -1,5 +1,19 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Koreya seriallari — K-drama | Fastora",
+  description:
+    "Eng mashhur koreys dramalari, romantik, komediya va action janridagi K-dramalar o‘zbek tilida.",
+  openGraph: {
+    title: "Koreya seriallari — Fastora",
+    description: "Eng mashhur K-dramalarni bepul tomosha qiling.",
+    url: "https://fastora.uz/korea-seriallari",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getSeries() {
   const res = await fetch("https://fastora.vercel.app/api/series", {
     cache: "no-store",
@@ -37,3 +51,4 @@ export default async function Page() {
     </div>
   );
 }
+
