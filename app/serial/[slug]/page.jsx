@@ -3,33 +3,24 @@ import SeasonList from "@/components/SeasonList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-async function getSeries(slug) {
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
-}
-
-async function getSeasons(slug) {
-  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
-  return res.json();
-}
-
-// ⭐⭐⭐ DYNAMIC METADATA ⭐⭐⭐
+// ⭐⭐⭐ META — POSTER KO‘RINISHI UCHUN MAJBURIY ⭐⭐⭐
 export async function generateMetadata({ params }) {
   const { slug } = params;
 
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
   const series = await res.json();
 
+  if (!series) return { title: "Serial topilmadi | Fastora" };
+
   return {
     title: `${series.title} — Serial | Fastora`,
-    description: series.description?.slice(0, 150),
+    description: series.description?.slice(0, 160),
     openGraph: {
       title: `${series.title} — Serial | Fastora`,
       description: series.description?.slice(0, 200),
       url: `https://fastora.uz/serial/${slug}`,
-      siteName: "Fastora",
       type: "video.tv_show",
+      siteName: "Fastora",
       images: [
         {
           url: series.poster,
@@ -44,6 +35,17 @@ export async function generateMetadata({ params }) {
       images: [series.poster],
     },
   };
+}
+
+async function getSeries(slug) {
+  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function getSeasons(slug) {
+  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
+  return res.json();
 }
 
 export default async function SeriesPage({ params }) {
@@ -75,11 +77,13 @@ export default async function SeriesPage({ params }) {
 
   return (
     <>
+      {/* Schema Google Rich Results uchun */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
+      {/* ASOSIY PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
