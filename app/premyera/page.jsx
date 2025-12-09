@@ -1,5 +1,20 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Premyera kinolar — Eng yangi filmlar | Fastora",
+  description:
+    "Eng yangi premyera kinolarni HD sifatda fastora.uz saytida bepul tomosha qiling. O‘zbek tilida tarjima qilingan eng so‘nggi filmlar.",
+  openGraph: {
+    title: "Premyera kinolar — Fastora",
+    description:
+      "Eng yangi premyera kinolarni yuqori sifatda tomosha qiling.",
+    url: "https://fastora.uz/premyera",
+    siteName: "Fastora",
+    type: "website",
+  },
+};
+
+
 async function getAllMovies() {
   const res = await fetch("https://fastora.vercel.app/api/movies", {
     cache: "no-store",
