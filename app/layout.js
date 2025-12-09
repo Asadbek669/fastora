@@ -3,7 +3,7 @@ import ClientWrapper from "./components/ClientWrapper";
 
 // Domen avtomatik aniqlanadi
 const DOMAIN =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.vercel.app";
 
 // Google Rich Logo uchun asosiy rasm
 const LOGO_URL = `${DOMAIN}/icon.png`;
