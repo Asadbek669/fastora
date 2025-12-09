@@ -1,21 +1,14 @@
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 
-const base =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.vercel.app";
+const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-// ⭐⭐⭐ 1) METADATA — GOOGLE POSTER UCHUN MAJBURIY ⭐⭐⭐
+// ⭐⭐⭐ METADATA — 100% ISHLAYDIGAN VARIANT ⭐⭐⭐
 export async function generateMetadata({ params }) {
   const { slug } = params;
 
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
-
-  if (!res.ok) {
-    return {
-      title: "Serial topilmadi | Fastora",
-      description: "Serial mavjud emas.",
-    };
-  }
+  if (!res.ok) return { title: "Serial topilmadi | Fastora" };
 
   const series = await res.json();
 
@@ -26,29 +19,25 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${series.title} — Serial | Fastora`,
       description: series.description?.slice(0, 200),
-      url: `https://fastora.uz/serial/${slug}`,
+      url: `${base}/serial/${slug}`,
       type: "video.tv_show",
-      siteName: "Fastora",
       images: [
         {
-          url: series.poster, // ⭐ GOOGLE POSTER UCHUN MUHIM
+          url: series.poster,
           width: 800,
           height: 1200,
-          alt: series.title,
-        },
-      ],
+          alt: series.title
+        }
+      ]
     },
 
     twitter: {
       card: "summary_large_image",
-      title: series.title,
-      description: series.description?.slice(0, 200),
-      images: [series.poster], // ⭐ TELEGRAM/INSTAGRAM UCHUN
-    },
+      images: [series.poster]
+    }
   };
 }
 
-// Fetch functions
 async function getSeries(slug) {
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
   if (!res.ok) return null;
@@ -60,7 +49,6 @@ async function getSeasons(slug) {
   return res.json();
 }
 
-// ⭐⭐⭐ 2) ASOSIY PAGE ⭐⭐⭐
 export default async function SeriesPage({ params }) {
   const { slug } = params;
 
@@ -69,7 +57,6 @@ export default async function SeriesPage({ params }) {
 
   if (!series) return <div className="text-white p-4">Serial topilmadi</div>;
 
-  // ⭐⭐⭐ 3) SCHEMA (Google Rich Results uchun) ⭐⭐⭐
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "TVSeries",
@@ -84,19 +71,19 @@ export default async function SeriesPage({ params }) {
       "@type": "AggregateRating",
       "ratingValue": series.imdb,
       "bestRating": "10",
-      "ratingCount": series.comments_count ?? 1,
-    },
+      "ratingCount": series.comments_count ?? 1
+    }
   };
 
   return (
     <>
-      {/* SCHEMA */}
+      {/* GOOGLE SCHEMA */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY SERIAL PAGE */}
+      {/* ASOSIY PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
@@ -106,4 +93,3 @@ export default async function SeriesPage({ params }) {
     </>
   );
 }
-
