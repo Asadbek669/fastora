@@ -1,3 +1,41 @@
+export const metadata = {
+  title: "Fastora — Eng yangi multfilmlar, animelar, kinolar va seriallar",
+  description:
+    "Fastora — o‘zbekcha tarjima kinolar, xorij seriallari, koreys dramalari, hind filmlari, anime va multfilmlarni bepul tomosha qilish platformasi.",
+  keywords: [
+    "kino",
+    "serial",
+    "uzbekcha tarjima",
+    "anime",
+    "multfilm",
+    "hind kino",
+    "koreya seriallari",
+    "turk seriallari",
+    "Fastora",
+  ],
+  openGraph: {
+    title: "Fastora — Eng yangi filmlar va seriallar",
+    description:
+      "Fastora — o‘zbek tilidagi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
+    url: "https://fastora.uz",
+    siteName: "Fastora",
+    images: [
+      {
+        url: "https://fastora.uz/icons/icon-192.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fastora — Bepul kino va seriallar",
+    description:
+      "Fastora — yangi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
+    images: ["https://fastora.uz/icons/icon-192.png"],
+  },
+};
+
 import StorySlider from "./components/StorySlider";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
