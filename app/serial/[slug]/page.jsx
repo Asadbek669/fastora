@@ -1,7 +1,7 @@
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL;
+const base = "https://fastora.uz";
 
 // ================================
 //  API FUNCTIONS
