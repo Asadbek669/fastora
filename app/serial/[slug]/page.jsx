@@ -3,6 +3,9 @@ import SeasonList from "@/components/SeasonList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
+// ================================
+//  API FUNCTIONS
+// ================================
 async function getSeries(slug) {
   const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
   if (!res.ok) return null;
@@ -14,6 +17,49 @@ async function getSeasons(slug) {
   return res.json();
 }
 
+// ================================
+//  ⭐⭐⭐ SEO METADATA (Google + OG)
+// ================================
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+
+  const series = await getSeries(slug);
+  const seasons = await getSeasons(slug);
+
+  if (!series) {
+    return { title: "Serial topilmadi | Fastora" };
+  }
+
+  return {
+    title: `${series.title} — barcha mavsumlar | Fastora`,
+    description: series.description.slice(0, 160),
+
+    openGraph: {
+      title: `${series.title} — barcha mavsumlar`,
+      description: series.description.slice(0, 180),
+      url: `https://fastora.uz/serial/${slug}`,
+      type: "video.tv_show",
+      images: [
+        {
+          url: series.poster,   // ⭐⭐ POSTER GOOGLE & TELEGRAM PREVIEW UCHUN
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: series.title,
+      description: series.description.slice(0, 150),
+      images: [series.poster],
+    },
+  };
+}
+
+// ================================
+//  MAIN PAGE COMPONENT
+// ================================
 export default async function SeriesPage({ params }) {
   const { slug } = await params;
 
@@ -22,7 +68,9 @@ export default async function SeriesPage({ params }) {
 
   if (!series) return <div className="text-white p-4">Serial topilmadi</div>;
 
-  // ⭐⭐⭐ TV SERIES SCHEMA ⭐⭐⭐
+  // ================================
+  //  ⭐⭐⭐ TV SERIES STRUCTURED DATA
+  // ================================
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "TVSeries",
@@ -41,6 +89,9 @@ export default async function SeriesPage({ params }) {
     }
   };
 
+  // ================================
+  //  PAGE UI
+  // ================================
   return (
     <>
       {/* GOOGLE RICH RESULTS uchun */}
@@ -52,6 +103,7 @@ export default async function SeriesPage({ params }) {
       {/* ASOSIY SERIAL PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
+
         <div className="px-4 mt-6">
           <SeasonList slug={slug} seasons={seasons} />
         </div>
