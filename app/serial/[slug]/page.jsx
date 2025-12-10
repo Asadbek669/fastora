@@ -42,7 +42,7 @@ async function getSeasons(slug) {
 //  ⭐⭐⭐ SEO METADATA (Google + OG)
 // ================================
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
@@ -82,7 +82,7 @@ export async function generateMetadata({ params }) {
 //  MAIN PAGE COMPONENT
 // ================================
 export default async function SeriesPage({ params }) {
-  const { slug } = params; // ✔️ to‘g‘ri
+  const { slug } = await params; // ✔️ to‘g‘ri
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
