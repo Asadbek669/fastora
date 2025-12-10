@@ -82,7 +82,7 @@ export async function generateMetadata({ params }) {
 //  MAIN PAGE COMPONENT
 // ================================
 export default async function SeriesPage({ params }) {
-  const { slug } = await params;
+  const { slug } = params; // ✔️ to‘g‘ri
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
