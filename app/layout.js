@@ -20,19 +20,12 @@ export const metadata = {
     siteName: "Fastora",
     type: "website",
     locale: "uz_UZ",
-    images: [
-      {
-        url: OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Fastora",
-      },
-    ],
+    // ❗❗❗ BU YERDAN images NI OCHIRAMIZ
   },
 
   twitter: {
     card: "summary_large_image",
-    images: [OG_IMAGE],
+    // ❗❗❗ GLOBAL twitter image ham kerak emas, ochiramiz
   },
 };
 
