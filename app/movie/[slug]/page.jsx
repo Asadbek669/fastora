@@ -4,8 +4,13 @@ import Link from "next/link";
 import Player from "@/components/Player";
 import AgeModal from "@/components/AgeModal";
 
+const base = "https://fastora.uz";
+
+// ================================
+//  API FUNCTION
+// ================================
 async function getMovie(slug) {
-  const res = await fetch(`https://fastora.vercel.app/api/movies/${slug}`, {
+  const res = await fetch(`${base}/api/movies/${slug}`, {
     cache: "no-store",
   });
 
@@ -13,13 +18,18 @@ async function getMovie(slug) {
   return res.json();
 }
 
-export default async function MoviePage(props) {
-  const { slug } = await props.params;
-  const movie = await getMovie(slug);
+// ================================
+//  MAIN PAGE COMPONENT
+// ================================
+export default async function MoviePage({ params }) {
+  const { slug } = params; // ✔️ to‘g‘ri
 
+  const movie = await getMovie(slug);
   if (!movie) return redirect("/");
 
-  // ⭐⭐⭐ SCHEMA YOZILDI — GOOGLE UCHUN FILM STRUKTURASI ⭐⭐⭐
+  // ================================
+  // ⭐⭐⭐ MOVIE SCHEMA (GOOGLE RICH RESULT)
+  // ================================
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "Movie",
@@ -37,22 +47,24 @@ export default async function MoviePage(props) {
     },
     "trailer": {
       "@type": "VideoObject",
-      "name": movie.title + " — treyler",
+      "name": `${movie.title} — treyler`,
       "thumbnailUrl": movie.thumbs?.[0],
       "contentUrl": movie.video,
       "embedUrl": `https://fastora.uz/movie/${slug}`
     }
   };
 
+  // ================================
+  //  PAGE UI
+  // ================================
   return (
     <>
-      {/* GOOGLE RICH RESULTS UCHUN SCHEMA */}
+      {/* GOOGLE SEO RICH RESULT */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY SAHIFA */}
       <div className="text-white min-h-screen bg-black pb-28">
 
         {/* BACKDROP */}
@@ -68,6 +80,7 @@ export default async function MoviePage(props) {
         </div>
 
         <div className="px-4 mt-[-30px]">
+
           {/* POSTER + DETAILS */}
           <div className="flex gap-4 items-start">
             <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
@@ -98,19 +111,7 @@ export default async function MoviePage(props) {
 
             {/* IMDb */}
             <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 64 64"
-                fill="none"
-              >
-                <rect width="64" height="64" rx="6" fill="#F5C518" />
-                <path
-                  d="M14 18h6v28h-6V18Zm12 0h9l3 20 3-20h9v28h-6V26l-3 20h-6l-3-20v20h-6V18Zm27 0h9c2 0 4 2 4 4v20c0 2-2 4-4 4h-9V18Zm6 20c1 0 2-1 2-2V24c0-1-1-2-2-2h-3v16h3Z"
-                  fill="#000"
-                />
-              </svg>
+              ⭐
               <p className="text-xs mt-1">{movie.imdb}</p>
             </div>
 
@@ -119,22 +120,12 @@ export default async function MoviePage(props) {
               href={`/movie/${slug}/comments`}
               className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="26"
-                height="26"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-white"
-              >
-                <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
-              </svg>
+              💬
               <p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
             </Link>
 
             {/* AGE LIMIT */}
             <AgeModal age={movie.age ?? "18+"} />
-
           </div>
 
           {/* VIDEO PLAYER */}
@@ -145,7 +136,6 @@ export default async function MoviePage(props) {
           {/* GENRES */}
           <div className="mt-6">
             <h2 className="text-gray-300 mb-2 text-lg">Janri:</h2>
-
             <div className="flex gap-2 flex-wrap">
               {movie.genres?.map((g, i) => (
                 <span
