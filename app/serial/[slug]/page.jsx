@@ -4,18 +4,39 @@ import SeasonList from "@/components/SeasonList";
 const base = "https://fastora.uz";
 
 // ================================
-//  API FUNCTIONS
+//  API FUNCTIONS + LOG
 // ================================
 async function getSeries(slug) {
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
+  const url = `${base}/api/series/${slug}`;
+  console.log("📌 API SERIES URL:", url);
+
+  const res = await fetch(url, { cache: "no-store" });
+
+  console.log("📌 SERIES STATUS:", res.status);
+
+  if (!res.ok) {
+    console.log("❌ SERIES ERROR RESPONSE:", await res.text());
+    return null;
+  }
+
+  const data = await res.json();
+  console.log("✅ SERIES DATA:", data);
+  return data;
 }
 
 async function getSeasons(slug) {
-  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
-  return res.json();
+  const url = `${base}/api/season?slug=${slug}`;
+  console.log("📌 API SEASONS URL:", url);
+
+  const res = await fetch(url, { cache: "no-store" });
+
+  console.log("📌 SEASONS STATUS:", res.status);
+
+  const data = await res.json();
+  console.log("✅ SEASONS DATA:", data);
+  return data;
 }
+
 
 // ================================
 //  ⭐⭐⭐ SEO METADATA (Google + OG)
