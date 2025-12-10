@@ -22,7 +22,7 @@ async function getMovie(slug) {
 // ⭐⭐⭐ SEO METADATA (Google + Telegram + OG)
 // ================================
 export async function generateMetadata({ params }) {
-  const { slug } = await props.params;
+  const { slug } = await params;
   const movie = await getMovie(slug);
 
   if (!movie) {
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }) {
 //  PAGE UI
 // ================================
 export default async function MoviePage({ params }) {
-  const { slug } = await props.params;
+  const { slug } = await params;
   const movie = await getMovie(slug);
 
   if (!movie) return redirect("/");
