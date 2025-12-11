@@ -85,7 +85,9 @@ export default async function SeasonPage({ params }) {
       "@type": "AggregateRating",
       "ratingValue": series.imdb,
       "bestRating": "10",
-      "ratingCount": Math.max(series.comments_count || 1, 1)
+      "ratingCount": Number(series.comments_count) > 0 
+        ? Number(series.comments_count) 
+        : 1
     }
   };
 
