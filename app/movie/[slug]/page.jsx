@@ -146,6 +146,51 @@ export default async function MoviePage({ params }) {
             </div>
           </div>
 
+		  {/* INFO PANEL */}
+		  <div className="mt-5 grid grid-cols-3 gap-2">
+
+		    {/* IMDb */}
+		    <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
+			  <svg
+			    xmlns="http://www.w3.org/2000/svg"
+			    width="20"
+			    height="20"
+			    viewBox="0 0 64 64"
+			    fill="none"
+			  >
+			    <rect width="64" height="64" rx="6" fill="#F5C518" />
+			    <path
+				  d="M14 18h6v28h-6V18Zm12 0h9l3 20 3-20h9v28h-6V26l-3 20h-6l-3-20v20h-6V18Zm27 0h9c2 0 4 2 4 4v20c0 2-2 4-4 4h-9V18Zm6 20c1 0 2-1 2-2V24c0-1-1-2-2-2h-3v16h3Z"
+				  fill="#000"
+			    />
+			  </svg>
+			  <p className="text-xs mt-1">{movie.imdb}</p>
+		    </div>
+
+		    {/* COMMENTS */}
+		    <Link
+			  href={`/movie/${slug}/comments`}
+			  className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
+		    >
+			  <svg
+			    xmlns="http://www.w3.org/2000/svg"
+			    width="26"
+			    height="26"
+			    viewBox="0 0 24 24"
+			    fill="currentColor"
+			    className="text-white"
+			  >
+			    <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
+			  </svg>
+			  <p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
+		    </Link>
+
+		    {/* AGE LIMIT */}
+		    <AgeModal age={movie.age ?? "18+"} />
+
+		  </div>
+
+
           {/* PLAYER */}
           <div className="mt-6">
             <Player src={movie.video} />
@@ -203,4 +248,3 @@ export default async function MoviePage({ params }) {
     </>
   );
 }
-
