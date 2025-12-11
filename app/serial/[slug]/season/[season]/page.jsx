@@ -56,7 +56,7 @@ export default async function SeasonPage({ params }) {
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  /* ⭐ TVSeason schema ⭐ */
+  /* ⭐ TVSeason schema (GOOGLE uchun to‘g‘rilangan) ⭐ */
   const seasonSchema = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
@@ -69,37 +69,21 @@ export default async function SeasonPage({ params }) {
       "@type": "TVSeries",
       "name": series.title,
       "image": series.poster,
-      "genre": series.genres
-    }
-  };
-
-  /* ⭐ Yangi qo‘shilgan — TVSeries schema ⭐ */
-  const seriesSchema = {
-    "@context": "https://schema.org",
-    "@type": "TVSeries",
-    "name": series.title,
-    "image": series.poster,
-    "description": series.description,
-    "genre": series.genres,
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": series.imdb,
-      "bestRating": "10",
-      "ratingCount": Number(series.comments_count) > 0 
-        ? Number(series.comments_count) 
-        : 1
+      "genre": series.genres,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": series.imdb,
+        "bestRating": "10",
+        "ratingCount": Number(series.comments_count) > 0 
+          ? Number(series.comments_count)
+          : 1
+      }
     }
   };
 
   return (
     <>
-      {/* TVSeries STRUCTURE */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(seriesSchema) }}
-      />
-
-      {/* TVSeason STRUCTURE */}
+      {/* TVSeason STRUCTURE (Google Rich Results uchun) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(seasonSchema) }}
