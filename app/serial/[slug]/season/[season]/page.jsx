@@ -57,7 +57,7 @@ export default async function SeasonPage({ params }) {
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  /* ⭐⭐⭐ TVSeason STRUCTURED DATA (Google uchun eng to'g'ri variant) ⭐⭐⭐ */
+  /* ⭐⭐⭐ TVSeason STRUCTURED DATA — IMDb YO‘Q ⭐⭐⭐ */
   const seasonSchema = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
@@ -71,20 +71,8 @@ export default async function SeasonPage({ params }) {
       "@type": "TVSeries",
       "name": series.title,
       "image": series.poster,
-      "genre": series.genres,
-
-      /* ⭐ Google xatosini hal qiluvchi qism ⭐ */
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": series.imdb,
-        "bestRating": "10",
-
-        // Agar comments_count = 0 bo'lsa → 1 bo'ladi
-        "ratingCount":
-          Number(series.comments_count) > 0
-            ? Number(series.comments_count)
-            : 1
-      }
+      "genre": series.genres
+      // ❗ IMDb va AggregateRating butunlay olib tashlandi
     }
   };
 
