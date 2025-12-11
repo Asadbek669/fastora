@@ -4,6 +4,8 @@ import EpisodeList from "@/components/EpisodeList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
+/* ----------------- API HELPERS ------------------ */
+
 async function getSeries(slug) {
   return fetch(`${base}/api/series/${slug}`, { cache: "no-store" })
     .then(r => r.json());
@@ -19,19 +21,12 @@ async function getEpisodesBySeason(id) {
     .then(r => r.json());
 }
 
-/*  
-------------------------------------------------------
-   🔥 GOOGLE SEO OPTIMIZATION — GENERATE METADATA
-------------------------------------------------------
-*/
+/* ----------------- SEO METADATA ------------------ */
 
 export async function generateMetadata({ params }) {
   const { slug, season } = params;
 
-  const series = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/series/${slug}`, 
-    { cache: "no-store" }
-  ).then(res => res.json());
+  const series = await getSeries(slug);
 
   return {
     title: `${series.title} — ${season}-sezon | Fastora`,
@@ -44,11 +39,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-/*  
-------------------------------------------------------
-   ASOSIY SEASON PAGE UI
-------------------------------------------------------
-*/
+/* ----------------- MAIN PAGE ------------------ */
 
 export default async function SeasonPage({ params }) {
   const { slug, season } = params;
@@ -65,7 +56,7 @@ export default async function SeasonPage({ params }) {
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  // ⭐⭐⭐ TVSEASON SCHEMA ⭐⭐⭐
+  // ⭐ SCHEMA ⭐
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
@@ -79,12 +70,6 @@ export default async function SeasonPage({ params }) {
       "name": series.title,
       "image": series.poster,
       "genre": series.genres,
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": series.imdb,
-        "bestRating": "10",
-        "ratingCount": series.comments_count ?? 1
-      }
     }
   };
 
@@ -96,7 +81,6 @@ export default async function SeasonPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* UI */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
