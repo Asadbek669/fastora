@@ -7,18 +7,18 @@ const base = process.env.NEXT_PUBLIC_SITE_URL;
 /* ----------------- API HELPERS ------------------ */
 
 async function getSeries(slug) {
-  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" })
-    .then(r => r.json());
+  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+  return res.json();
 }
 
 async function getSeasons(slug) {
-  return fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" })
-    .then(r => r.json());
+  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
+  return res.json();
 }
 
 async function getEpisodesBySeason(id) {
-  return fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" })
-    .then(r => r.json());
+  const res = await fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" });
+  return res.json();
 }
 
 /* ----------------- SEO METADATA ------------------ */
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
     title: `${series.title} — ${season}-sezon | Fastora`,
     description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online tomosha qiling.`,
     openGraph: {
-      title: `${series.title} — ${season}-sezon | Fastora`,
+      title: `${series.title} — ${season}-sezon`,
       description: `${series.title} ${season}-sezon barcha qismlar.`,
       images: [series.poster],
     },
@@ -51,12 +51,13 @@ export default async function SeasonPage({ params }) {
     (s) => Number(s.season_number) === Number(season)
   );
 
-  if (!selectedSeason)
+  if (!selectedSeason) {
     return <div className="text-white p-4">Sezon topilmadi</div>;
+  }
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  /* ⭐ TVSeason schema (GOOGLE uchun to‘g‘rilangan) ⭐ */
+  /* ⭐⭐⭐ TVSeason STRUCTURED DATA (Google uchun eng to'g'ri variant) ⭐⭐⭐ */
   const seasonSchema = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
@@ -65,30 +66,37 @@ export default async function SeasonPage({ params }) {
     "numberOfEpisodes": episodes.length,
     "image": series.poster,
     "description": series.description,
+
     "partOfSeries": {
       "@type": "TVSeries",
       "name": series.title,
       "image": series.poster,
       "genre": series.genres,
+
+      /* ⭐ Google xatosini hal qiluvchi qism ⭐ */
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": series.imdb,
         "bestRating": "10",
-        "ratingCount": Number(series.comments_count) > 0 
-          ? Number(series.comments_count)
-          : 1
+
+        // Agar comments_count = 0 bo'lsa → 1 bo'ladi
+        "ratingCount":
+          Number(series.comments_count) > 0
+            ? Number(series.comments_count)
+            : 1
       }
     }
   };
 
   return (
     <>
-      {/* TVSeason STRUCTURE (Google Rich Results uchun) */}
+      {/* ⭐ Google Rich Results uchun Schema ⭐ */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(seasonSchema) }}
       />
 
+      {/* ⭐ Sahifa UI ⭐ */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
 
