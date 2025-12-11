@@ -56,8 +56,8 @@ export default async function SeasonPage({ params }) {
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  // ⭐ SCHEMA ⭐
-  const schemaData = {
+  /* ⭐ TVSeason schema ⭐ */
+  const seasonSchema = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
     "name": `${series.title} — ${season}-sezon`,
@@ -69,20 +69,43 @@ export default async function SeasonPage({ params }) {
       "@type": "TVSeries",
       "name": series.title,
       "image": series.poster,
-      "genre": series.genres,
+      "genre": series.genres
+    }
+  };
+
+  /* ⭐ Yangi qo‘shilgan — TVSeries schema ⭐ */
+  const seriesSchema = {
+    "@context": "https://schema.org",
+    "@type": "TVSeries",
+    "name": series.title,
+    "image": series.poster,
+    "description": series.description,
+    "genre": series.genres,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": series.imdb,
+      "bestRating": "10",
+      "ratingCount": Math.max(series.comments_count || 1, 1)
     }
   };
 
   return (
     <>
-      {/* GOOGLE RICH RESULTS */}
+      {/* TVSeries STRUCTURE */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(seriesSchema) }}
+      />
+
+      {/* TVSeason STRUCTURE */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(seasonSchema) }}
       />
 
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
+
         <div className="px-4 mt-6">
           <SeasonList slug={slug} seasons={seasons} activeSeason={season} />
           <EpisodeList slug={slug} season={season} episodes={episodes} />
