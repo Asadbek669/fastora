@@ -62,7 +62,7 @@ export async function generateMetadata({ params }) {
 */
 
 export default async function SeasonPage({ params }) {
-  const { slug, season } = params;
+  const { slug, season } = await params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
