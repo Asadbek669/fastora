@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
+import convertToEmbed from "@/utils/convertEmbed";
 
 // Icons (SVG)
 const CloseIcon = () => (
@@ -29,32 +30,8 @@ const InfoIcon = () => (
 );
 
 const PlayIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
     <path d="M8 5v14l11-7z" />
-  </svg>
-);
-
-const PauseIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-  </svg>
-);
-
-const VolumeOnIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-  </svg>
-);
-
-const VolumeOffIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-  </svg>
-);
-
-const FullscreenIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
   </svg>
 );
 
@@ -69,17 +46,12 @@ export default function StoryPage() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showControls, setShowControls] = useState(false);
-  const [videoError, setVideoError] = useState(false);
 
   const videoRef = useRef(null);
-  const controlsTimerRef = useRef(null);
+  const progressInterval = useRef(null);
   const touchStartY = useRef(0);
   const touchStartX = useRef(0);
-  const containerRef = useRef(null);
+  const videoStartTime = useRef(0);
 
   // Disable scroll
   useEffect(() => {
@@ -89,35 +61,16 @@ export default function StoryPage() {
     return () => {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
-      exitFullscreen();
     };
   }, []);
-
-  // Auto-hide controls
-  useEffect(() => {
-    if (showControls) {
-      clearTimeout(controlsTimerRef.current);
-      controlsTimerRef.current = setTimeout(() => {
-        setShowControls(false);
-      }, 3000);
-    }
-
-    return () => clearTimeout(controlsTimerRef.current);
-  }, [showControls]);
 
   // Load all stories
   useEffect(() => {
     async function loadAll() {
-      try {
-        const base = "https://fastora.uz";
-        const res = await fetch(`${base}/api/stories`, { 
-          cache: "no-store" 
-        });
-        const data = await res.json();
-        setAllStories(data);
-      } catch (error) {
-        console.error("Failed to load stories:", error);
-      }
+      const base = "https://fastora.uz";
+      const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
+      const data = await res.json();
+      setAllStories(data);
     }
     loadAll();
   }, []);
@@ -127,160 +80,64 @@ export default function StoryPage() {
     if (!id) return;
 
     async function loadStory() {
-      try {
-        const base = "https://fastora.uz";
-        const res = await fetch(`${base}/api/stories/${id}`, {
-          cache: "no-store",
-        });
+      const base = "https://fastora.uz";
+      const res = await fetch(`${base}/api/stories/${id}`, {
+        cache: "no-store",
+      });
 
-        if (!res.ok) {
-          setStory({ error: true });
-          return;
-        }
-
-        const data = await res.json();
-        setStory(data);
-        setVideoError(false);
-
-        const index = allStories.findIndex((s) => String(s.id) === String(id));
-        setCurrentIndex(index >= 0 ? index : 0);
-        setVideoLoaded(false);
-        setProgress(0);
-        setIsPlaying(true);
-        setShowControls(true);
-
-      } catch (error) {
-        console.error("Failed to load story:", error);
+      if (!res.ok) {
         setStory({ error: true });
+        return;
       }
+
+      const data = await res.json();
+      setStory(data);
+
+      const index = allStories.findIndex((s) => String(s.id) === String(id));
+      setCurrentIndex(index >= 0 ? index : 0);
+      setVideoLoaded(false);
+      setProgress(0);
+      videoStartTime.current = Date.now();
+      setIsPlaying(true);
     }
 
     loadStory();
   }, [id, allStories]);
 
-  // Video event listeners
+  // Progress bar animation
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    if (!story || !isPlaying) {
+      clearInterval(progressInterval.current);
+      return;
+    }
 
-    const handleTimeUpdate = () => {
-      if (video.duration > 0) {
-        const currentProgress = (video.currentTime / video.duration) * 100;
-        setProgress(currentProgress);
+    const STORY_DURATION = 15000; // 15 seconds per story
+
+    progressInterval.current = setInterval(() => {
+      const elapsed = Date.now() - videoStartTime.current;
+      const newProgress = (elapsed / STORY_DURATION) * 100;
+      
+      if (newProgress >= 100) {
+        gotoNextStory();
+      } else {
+        setProgress(newProgress);
       }
-    };
+    }, 100);
 
-    const handleLoadedData = () => {
-      setVideoLoaded(true);
-      if (isPlaying) {
-        video.play().catch(e => {
-          console.log("Autoplay prevented:", e);
-          setIsPlaying(false);
-        });
-      }
-    };
-
-    const handleEnded = () => {
-      gotoNextStory();
-    };
-
-    const handleError = () => {
-      setVideoError(true);
-      console.error("Video loading error");
-    };
-
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('ended', handleEnded);
-    video.addEventListener('error', handleError);
-    video.addEventListener('play', handlePlay);
-    video.addEventListener('pause', handlePause);
-
-    return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('ended', handleEnded);
-      video.removeEventListener('error', handleError);
-      video.removeEventListener('play', handlePlay);
-      video.removeEventListener('pause', handlePause);
-    };
-  }, [isPlaying]);
+    return () => clearInterval(progressInterval.current);
+  }, [story, isPlaying, currentIndex]);
 
   // Video controls
   const togglePlay = useCallback(() => {
-    if (!videoRef.current) return;
-    
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
+    setIsPlaying(!isPlaying);
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+      } else {
+        videoRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      }
     }
-    setShowControls(true);
-  }, []);
-
-  const toggleMute = useCallback(() => {
-    if (!videoRef.current) return;
-    
-    if (videoRef.current.muted) {
-      videoRef.current.muted = false;
-      setIsMuted(false);
-    } else {
-      videoRef.current.muted = true;
-      setIsMuted(true);
-    }
-    setShowControls(true);
-  }, []);
-
-  const handleVolumeChange = useCallback((e) => {
-    if (!videoRef.current) return;
-    
-    const newVolume = parseFloat(e.target.value);
-    videoRef.current.volume = newVolume;
-    setVolume(newVolume);
-    setIsMuted(newVolume === 0);
-    setShowControls(true);
-  }, []);
-
-  const handleSeek = useCallback((e) => {
-    if (!videoRef.current || !videoRef.current.duration) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const width = rect.width;
-    const seekTime = (x / width) * videoRef.current.duration;
-    
-    videoRef.current.currentTime = seekTime;
-    setShowControls(true);
-  }, []);
-
-  const toggleFullscreen = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().then(() => {
-        setIsFullscreen(true);
-      }).catch(err => {
-        console.log(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-    setShowControls(true);
-  }, []);
-
-  const exitFullscreen = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  };
+  }, [isPlaying]);
 
   // Navigation
   const gotoNextStory = useCallback(() => {
@@ -299,7 +156,7 @@ export default function StoryPage() {
     }
   }, [currentIndex, allStories, router]);
 
-  // Touch controls
+  // Touch controls for swipe
   const handleTouchStart = useCallback((e) => {
     touchStartY.current = e.touches[0].clientY;
     touchStartX.current = e.touches[0].clientX;
@@ -325,9 +182,32 @@ export default function StoryPage() {
         gotoNextStory();
       }
     }
-    
-    setShowControls(true);
   }, [gotoNextStory, gotoPrevStory, router]);
+
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          gotoPrevStory();
+          break;
+        case "ArrowRight":
+        case " ":
+          gotoNextStory();
+          break;
+        case "Escape":
+          router.push("/");
+          break;
+        case "p":
+        case "P":
+          togglePlay();
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [gotoNextStory, gotoPrevStory, router, togglePlay]);
 
   // Click controls
   const handleVideoClick = useCallback((e) => {
@@ -341,69 +221,15 @@ export default function StoryPage() {
     } else {
       togglePlay();
     }
-    
-    setShowControls(true);
   }, [gotoNextStory, gotoPrevStory, togglePlay]);
-
-  // Keyboard controls
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.key) {
-        case "ArrowLeft":
-          gotoPrevStory();
-          break;
-        case "ArrowRight":
-        case " ":
-          if (e.key === " ") {
-            e.preventDefault();
-            togglePlay();
-          } else {
-            gotoNextStory();
-          }
-          break;
-        case "Escape":
-          if (isFullscreen) {
-            exitFullscreen();
-          } else {
-            router.push("/");
-          }
-          break;
-        case "f":
-        case "F":
-          toggleFullscreen();
-          break;
-        case "m":
-        case "M":
-          toggleMute();
-          break;
-      }
-      setShowControls(true);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [gotoNextStory, gotoPrevStory, router, togglePlay, toggleFullscreen, toggleMute, isFullscreen]);
-
-  // Handle fullscreen change
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
 
   if (!id || !story) {
     return (
       <div className="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
-        <div className="relative w-full max-w-[430px] h-screen bg-gray-900">
+        <div className="relative w-full max-w-[430px] h-screen bg-gray-900 animate-pulse">
           {/* Loading skeleton */}
           <div className="absolute top-4 left-0 right-0 flex gap-2 px-4">
             <div className="w-full h-1 bg-gray-700 rounded-full"></div>
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       </div>
@@ -431,11 +257,9 @@ export default function StoryPage() {
 
   return (
     <div 
-      ref={containerRef}
       className="fixed inset-0 bg-black z-[9999]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onClick={() => setShowControls(true)}
     >
       {/* Top progress bars */}
       <div className="absolute top-0 left-0 right-0 flex gap-1 px-2 pt-2 z-50">
@@ -444,7 +268,7 @@ export default function StoryPage() {
             <div
               className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-100 ease-linear"
               style={{
-                width: i === currentIndex ? `${Math.min(progress, 100)}%` : 
+                width: i === currentIndex ? `${progress}%` : 
                        i < currentIndex ? "100%" : "0%",
               }}
             ></div>
@@ -453,12 +277,12 @@ export default function StoryPage() {
       </div>
 
       {/* Top controls */}
-      <div className={`absolute top-3 left-3 right-3 z-50 flex justify-between items-center transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="absolute top-3 left-3 right-3 z-50 flex justify-between items-center">
         <button
           onClick={() => router.push("/")}
           className="w-10 h-10 flex items-center justify-center
           bg-black/40 backdrop-blur-md text-white rounded-full
-          hover:bg-black/60 transition-all active:scale-95"
+          hover:bg-black/60 transition-all"
         >
           <CloseIcon />
         </button>
@@ -472,7 +296,7 @@ export default function StoryPage() {
             onClick={() => setShowDetails(!showDetails)}
             className="w-10 h-10 flex items-center justify-center
             bg-black/40 backdrop-blur-md text-white rounded-full
-            hover:bg-black/60 transition-all active:scale-95"
+            hover:bg-black/60 transition-all"
           >
             <InfoIcon />
           </button>
@@ -484,190 +308,143 @@ export default function StoryPage() {
         className="relative w-full h-full flex items-center justify-center"
         onClick={handleVideoClick}
       >
-        {/* Video player */}
+        {/* Video player - YouTube Shorts style */}
         <div className="relative w-full max-w-[430px] h-full bg-black">
-          <video
+          <iframe
             ref={videoRef}
-            className="w-full h-full object-contain"
-            src={story.video_url || story.youtube_url}
-            playsInline
-            webkit-playsinline="true"
-            preload="auto"
-            muted={isMuted}
-            autoPlay
-          />
+            className="absolute inset-0 w-full h-full"
+            src={`${convertToEmbed(story.youtube_url)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3`}
+            allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
+            allowFullScreen
+            onLoad={() => setVideoLoaded(true)}
+            style={{
+              pointerEvents: "none"
+            }}
+          ></iframe>
 
           {/* Loading overlay */}
-          {!videoLoaded && !videoError && (
+          {!videoLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
               <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
 
-          {/* Error overlay */}
-          {videoError && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 p-4">
-              <div className="text-red-500 text-xl mb-4">⚠️ Video yuklanmadi</div>
-              <p className="text-white/70 text-center mb-6">
-                Video yuklashda xatolik yuz berdi. Iltimos, internet aloqasini tekshiring.
-              </p>
-              <button
-                onClick={() => {
-                  setVideoError(false);
-                  if (videoRef.current) {
-                    videoRef.current.load();
-                  }
-                }}
-                className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-full"
-              >
-                Qayta urinish
-              </button>
-            </div>
-          )}
-
           {/* Play/Pause overlay */}
-          {!isPlaying && videoLoaded && (
+          {!isPlaying && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <button
-                onClick={togglePlay}
-                className="w-20 h-20 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center
-                hover:bg-black/70 transition-all active:scale-95"
-              >
+              <div className="w-20 h-20 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center">
                 <PlayIcon />
-              </button>
+              </div>
             </div>
           )}
 
-          {/* Video controls overlay */}
-          <div 
-            className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Progress bar */}
-            <div 
-              className="relative w-full h-1 bg-white/30 rounded-full mb-4 cursor-pointer"
-              onClick={handleSeek}
-            >
-              <div 
-                className="absolute left-0 top-0 h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full"
-                style={{ width: `${progress}%` }}
-              />
-              <div 
-                className="absolute w-4 h-4 bg-white rounded-full -top-1.5 shadow-lg"
-                style={{ left: `calc(${progress}% - 8px)` }}
-              />
-            </div>
-
-            {/* Control buttons */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={togglePlay}
-                  className="w-10 h-10 flex items-center justify-center
-                  bg-white/10 backdrop-blur-md text-white rounded-full
-                  hover:bg-white/20 transition-all active:scale-95"
-                >
-                  {isPlaying ? <PauseIcon /> : <PlayIcon />}
-                </button>
-
-                {/* Volume control */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={toggleMute}
-                    className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white"
-                  >
-                    {isMuted || volume === 0 ? <VolumeOffIcon /> : <VolumeOnIcon />}
-                  </button>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={volume}
-                    onChange={handleVolumeChange}
-                    className="w-20 accent-red-500"
-                  />
-                </div>
-
-                {/* Time display */}
-                <div className="text-white text-sm font-medium">
-                  {videoRef.current && (
-                    <>
-                      {formatTime(videoRef.current.currentTime)} / {formatTime(videoRef.current.duration)}
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={toggleFullscreen}
-                  className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white"
-                >
-                  <FullscreenIcon />
-                </button>
-                
-                <button
-                  onClick={() => window.open(story.page_url, '_blank')}
-                  className="bg-gradient-to-r from-red-600 to-red-700
-                  text-white px-6 py-2 rounded-full text-sm font-semibold
-                  hover:from-red-700 hover:to-red-800 transition-all
-                  backdrop-blur-md shadow-lg active:scale-95"
-                >
-                  Batafsil →
-                </button>
-              </div>
-            </div>
+          {/* Video controls hint */}
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 
+          bg-black/60 backdrop-blur-md text-white text-xs px-3 py-2 rounded-full 
+          opacity-0 animate-fadeInOut pointer-events-none">
+            Chap: Oldingi • Oʻrta: Play/Pause • Oʻng: Keyingisi
           </div>
         </div>
       </div>
 
-      {/* Navigation buttons */}
-      <div className={`absolute top-1/2 left-4 right-4 -translate-y-1/2 flex justify-between transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-        <button
-          onClick={gotoPrevStory}
-          disabled={!hasPrev}
-          className={`w-12 h-12 flex items-center justify-center rounded-full
-          backdrop-blur-md transition-all active:scale-95 ${
-            hasPrev
-              ? "bg-black/40 hover:bg-black/60 text-white"
-              : "bg-black/20 text-white/30 pointer-events-none"
-          }`}
-        >
-          <PrevIcon />
-        </button>
-        
-        <button
-          onClick={gotoNextStory}
-          disabled={!hasNext}
-          className={`w-12 h-12 flex items-center justify-center rounded-full
-          backdrop-blur-md transition-all active:scale-95 ${
-            hasNext
-              ? "bg-black/40 hover:bg-black/60 text-white"
-              : "bg-black/20 text-white/30 pointer-events-none"
-          }`}
-        >
-          <NextIcon />
-        </button>
-      </div>
+      {/* Bottom content */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 z-50 
+      bg-gradient-to-t from-black via-black/80 to-transparent">
+        {/* Title and metadata */}
+        <div className="mb-6">
+          <h1 className="text-white text-xl font-bold mb-2 line-clamp-2">
+            {story.title}
+          </h1>
+          {story.subtitle && (
+            <p className="text-white/80 text-sm mb-3 line-clamp-2">
+              {story.subtitle}
+            </p>
+          )}
+          
+          <div className="flex items-center gap-3 text-white/60 text-sm">
+            {story.duration && (
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 bg-white/40 rounded-full"></span>
+                ⏱️ {story.duration}
+              </span>
+            )}
+            {story.views && (
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 bg-white/40 rounded-full"></span>
+                👁️ {story.views}
+              </span>
+            )}
+          </div>
+        </div>
 
-      {/* Bottom title */}
-      <div className={`absolute bottom-20 left-0 right-0 p-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-        <h1 className="text-white text-xl font-bold mb-2 line-clamp-2 text-center">
-          {story.title}
-        </h1>
-        {story.subtitle && (
-          <p className="text-white/80 text-sm text-center">
-            {story.subtitle}
-          </p>
-        )}
+        {/* Action buttons */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={togglePlay}
+              className="w-12 h-12 flex items-center justify-center
+              bg-white/10 backdrop-blur-md text-white rounded-full
+              hover:bg-white/20 transition-all"
+            >
+              {isPlaying ? (
+                <div className="flex items-center gap-1">
+                  <div className="w-1 h-3 bg-white"></div>
+                  <div className="w-1 h-3 bg-white"></div>
+                </div>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              onClick={() => window.location.href = story.page_url}
+              className="bg-gradient-to-r from-red-600 to-red-700
+              text-white px-6 py-3 rounded-full text-sm font-semibold
+              hover:from-red-700 hover:to-red-800 transition-all
+              backdrop-blur-md shadow-lg"
+            >
+              Batafsil ma'lumot →
+            </button>
+          </div>
+
+          {/* Navigation buttons (visible on hover) */}
+          <div className="flex items-center gap-2 opacity-0 hover:opacity-100 transition-opacity">
+            <button
+              onClick={gotoPrevStory}
+              disabled={!hasPrev}
+              className={`w-10 h-10 flex items-center justify-center rounded-full
+              backdrop-blur-md transition-all ${
+                hasPrev
+                  ? "bg-white/10 hover:bg-white/20 text-white"
+                  : "bg-white/5 text-white/30 pointer-events-none"
+              }`}
+            >
+              <PrevIcon />
+            </button>
+            
+            <button
+              onClick={gotoNextStory}
+              disabled={!hasNext}
+              className={`w-10 h-10 flex items-center justify-center rounded-full
+              backdrop-blur-md transition-all ${
+                hasNext
+                  ? "bg-white/10 hover:bg-white/20 text-white"
+                  : "bg-white/5 text-white/30 pointer-events-none"
+              }`}
+            >
+              <NextIcon />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Details modal */}
       {showDetails && (
         <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-[100] 
         flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-gray-900/90 backdrop-blur-md rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-gray-900/90 backdrop-blur-md rounded-2xl p-6 max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-white text-xl font-bold">Ma'lumot</h2>
               <button
@@ -687,7 +464,7 @@ export default function StoryPage() {
               {story.description && (
                 <div>
                   <h3 className="text-white/80 text-sm mb-1">Tavsif</h3>
-                  <p className="text-white/90 whitespace-pre-line">{story.description}</p>
+                  <p className="text-white/90">{story.description}</p>
                 </div>
               )}
               
@@ -708,10 +485,9 @@ export default function StoryPage() {
             </div>
             
             <button
-              onClick={() => window.open(story.page_url, '_blank')}
+              onClick={() => window.location.href = story.page_url}
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-700
-              text-white py-3 rounded-full font-semibold hover:from-red-700 hover:to-red-800
-              active:scale-95 transition-all"
+              text-white py-3 rounded-full font-semibold hover:from-red-700 hover:to-red-800"
             >
               Toʻliq ma'lumot
             </button>
@@ -719,23 +495,19 @@ export default function StoryPage() {
         </div>
       )}
 
-      {/* Tap hints */}
-      {!showControls && (
-        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 
-        bg-black/60 backdrop-blur-md text-white text-xs px-4 py-2 rounded-full 
-        animate-fadeInOut pointer-events-none">
-          ◀︎ Chap • ▷ Play/Pause • ▶︎ Oʻng
+      {/* Navigation hints */}
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 
+      opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="text-white/50 text-xs text-center rotate-90">
+          SWIPE ←
         </div>
-      )}
+      </div>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 
+      opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="text-white/50 text-xs text-center -rotate-90">
+          SWIPE →
+        </div>
+      </div>
     </div>
   );
 }
-
-// Helper function to format time
-function formatTime(seconds) {
-  if (!seconds || isNaN(seconds)) return "0:00";
-  
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-      }
