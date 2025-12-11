@@ -86,7 +86,7 @@ export default async function SeriesPage({ params }) {
       "@type": "AggregateRating",
       "ratingValue": series.imdb,
       "bestRating": "10",
-      "ratingCount": series.comments_count ?? 1
+      "ratingCount": Math.max(series.comments_count || 1, 1)
     }
   };
 
