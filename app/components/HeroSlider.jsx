@@ -2,22 +2,25 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Play, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function HeroSlider() {
   const [items, setItems] = useState([]);
-  const [idx, setIdx] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [touchAction, setTouchAction] = useState(null); // 'swipe' | 'click' | null
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const [touchType, setTouchType] = useState(null); // 'swipe' | 'tap'
+  const [direction, setDirection] = useState('right'); // Animation direction
 
-  const AUTOPLAY = 7000;
-  const TRANSITION = 1000; // Biraz qisqartirildi
+  const AUTOPLAY_DURATION = 5000;
+  const TRANSITION_DURATION = 600;
 
   const timerRef = useRef(null);
-  const transitionRef = useRef(null);
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const touchStartY = useRef(0);
   const touchStartTime = useRef(0);
   const containerRef = useRef(null);
+  const playButtonTimerRef = useRef(null);
 
   const router = useRouter();
 
@@ -35,217 +38,353 @@ export default function HeroSlider() {
     load();
   }, []);
 
-  // Smooth transition function
-  const changeSlide = useCallback((direction) => {
-    if (isTransitioning || items.length === 0) return;
+  // Smooth slide change with direction
+  const changeSlide = useCallback((newIndex, dir = 'right') => {
+    if (isAnimating || items.length === 0) return;
     
-    setIsTransitioning(true);
+    setDirection(dir);
+    setIsAnimating(true);
+    setCurrentIndex(newIndex);
+    setShowPlayButton(false);
     
-    if (direction === 'next') {
-      setIdx((i) => (i + 1) % items.length);
-    } else {
-      setIdx((i) => (i - 1 + items.length) % items.length);
-    }
-    
-    // Transition tugagach holatni tiklash
-    clearTimeout(transitionRef.current);
-    transitionRef.current = setTimeout(() => {
-      setIsTransitioning(false);
-    }, TRANSITION);
-  }, [isTransitioning, items.length]);
+    // Reset animation state
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, TRANSITION_DURATION);
+  }, [isAnimating, items.length]);
 
-  // Navigate functions
-  const next = useCallback(() => changeSlide('next'), [changeSlide]);
-  const prev = useCallback(() => changeSlide('prev'), [changeSlide]);
+  const nextSlide = useCallback(() => {
+    const nextIndex = (currentIndex + 1) % items.length;
+    changeSlide(nextIndex, 'right');
+  }, [currentIndex, items.length, changeSlide]);
 
-  // Autoplay with pause during interaction
+  const prevSlide = useCallback(() => {
+    const prevIndex = (currentIndex - 1 + items.length) % items.length;
+    changeSlide(prevIndex, 'left');
+  }, [currentIndex, items.length, changeSlide]);
+
+  // Autoplay
   useEffect(() => {
-    if (!items.length || isTransitioning) return;
+    if (!items.length || isAnimating || showPlayButton) return;
 
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      next();
-    }, AUTOPLAY);
+      nextSlide();
+    }, AUTOPLAY_DURATION);
 
     return () => clearTimeout(timerRef.current);
-  }, [idx, items.length, isTransitioning, next]);
+  }, [currentIndex, items.length, isAnimating, nextSlide, showPlayButton]);
 
-  // Touch handlers with improved detection
-  const onTouchStart = useCallback((e) => {
+  // Touch handlers
+  const handleTouchStart = useCallback((e) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
     touchStartTime.current = Date.now();
-    setTouchAction(null);
-    clearTimeout(timerRef.current); // Autoplay'ni to'xtatish
+    setTouchType(null);
+    clearTimeout(timerRef.current);
+    clearTimeout(playButtonTimerRef.current);
+    setShowPlayButton(false);
   }, []);
 
-  const onTouchMove = useCallback((e) => {
-    touchEndX.current = e.touches[0].clientX;
+  const handleTouchMove = useCallback((e) => {
+    const currentX = e.touches[0].clientX;
+    const dx = currentX - touchStartX.current;
     
-    // Swipe aniqlash
-    const dx = touchEndX.current - touchStartX.current;
-    if (Math.abs(dx) > 20) {
-      setTouchAction('swipe');
+    if (Math.abs(dx) > 10) {
+      setTouchType('swipe');
     }
   }, []);
 
-  const onTouchEnd = useCallback(() => {
-    const dx = touchEndX.current - touchStartX.current;
-    const dt = Date.now() - touchStartTime.current;
+  const handleTouchEnd = useCallback((e) => {
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const dx = endX - touchStartX.current;
+    const dy = endY - touchStartY.current;
+    const time = Date.now() - touchStartTime.current;
+    
     const swipeThreshold = 50;
-    const timeThreshold = 300;
-
-    // Swipe aniqlash
-    if (Math.abs(dx) > swipeThreshold && dt < timeThreshold && touchAction === 'swipe') {
-      e?.preventDefault();
-      if (dx < 0) next();
-      else prev();
-      setTouchAction(null);
+    const maxVerticalSwipe = 30;
+    const tapTimeThreshold = 250;
+    
+    // Vertical swipe check (ignore if vertical movement is too much)
+    if (Math.abs(dy) > maxVerticalSwipe) {
+      setTouchType(null);
       return;
     }
+    
+    // Horizontal swipe detection
+    if (Math.abs(dx) > swipeThreshold && time < 300 && touchType === 'swipe') {
+      e.preventDefault();
+      if (dx < 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      setTouchType(null);
+      return;
+    }
+    
+    // Tap detection
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && time < tapTimeThreshold) {
+      setTouchType('tap');
+      
+      // Show play button on first tap
+      if (!showPlayButton) {
+        setShowPlayButton(true);
+        
+        // Hide play button after 3 seconds
+        playButtonTimerRef.current = setTimeout(() => {
+          setShowPlayButton(false);
+        }, 3000);
+      } else {
+        // Second tap - navigate to page
+        const url = items[currentIndex]?.page_url;
+        if (url) {
+          router.push(url);
+        }
+      }
+    }
+    
+    setTouchType(null);
+    
+    // Restart autoplay
+    if (!showPlayButton) {
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        nextSlide();
+      }, AUTOPLAY_DURATION);
+    }
+  }, [currentIndex, items, nextSlide, prevSlide, router, showPlayButton, touchType]);
 
-    // Tap aniqlash (klik)
-    if (Math.abs(dx) < 10 && dt < 200 && touchAction !== 'swipe') {
-      const url = items[idx]?.page_url;
+  // Handle click
+  const handleClick = useCallback((e) => {
+    if (touchType === 'swipe') return;
+    
+    if (!showPlayButton) {
+      setShowPlayButton(true);
+      
+      // Hide play button after 3 seconds
+      playButtonTimerRef.current = setTimeout(() => {
+        setShowPlayButton(false);
+      }, 3000);
+    } else {
+      const url = items[currentIndex]?.page_url;
       if (url) {
         router.push(url);
       }
     }
+  }, [currentIndex, items, router, showPlayButton, touchType]);
 
-    // Touch action'ni reset
-    setTouchAction(null);
-    
-    // Autoplay'ni qayta boshlash
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      next();
-    }, AUTOPLAY / 2);
-  }, [idx, items, next, prev, router, touchAction]);
-
-  // Click handler with debounce
-  const handleClick = useCallback(() => {
-    if (touchAction === 'swipe') return; // Swipe bo'lsa click'ni ignore qilish
-    
-    const url = items[idx]?.page_url;
-    if (url) {
-      router.push(url);
-    }
-  }, [idx, items, router, touchAction]);
+  // Go to specific slide
+  const goToSlide = useCallback((index) => {
+    if (isAnimating || index === currentIndex) return;
+    const dir = index > currentIndex ? 'right' : 'left';
+    changeSlide(index, dir);
+  }, [currentIndex, isAnimating, changeSlide]);
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'Escape') setShowPlayButton(false);
     };
-
+    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [next, prev]);
+  }, [nextSlide, prevSlide]);
 
-  // Pagination dots
-  const goToSlide = useCallback((index) => {
-    if (isTransitioning || index === idx) return;
-    setIdx(index);
-  }, [isTransitioning, idx]);
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      clearTimeout(timerRef.current);
+      clearTimeout(playButtonTimerRef.current);
+    };
+  }, []);
 
-  if (!items.length) return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200 animate-pulse" />
-  );
+  if (!items.length) {
+    return (
+      <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-r from-gray-800 to-gray-900 animate-pulse" />
+    );
+  }
 
-  const current = items[idx];
+  const currentItem = items[currentIndex];
+  const nextItem = items[(currentIndex + 1) % items.length];
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full aspect-video rounded-xl overflow-hidden select-none cursor-pointer group"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onClick={handleClick}
-    >
-      {/* Fade Slides with improved transition */}
-      {items.map((it, i) => (
+    <div className="relative w-full h-[500px] rounded-2xl overflow-hidden select-none">
+      {/* Main container for touch */}
+      <div
+        ref={containerRef}
+        className="relative w-full h-full"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onClick={handleClick}
+      >
+        {/* Current slide */}
         <div
-          key={it.id}
-          className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-            i === idx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-          }`}
+          className="absolute inset-0 w-full h-full"
           style={{
-            backgroundImage: `url(${it.backdrop_url})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            transitionDelay: i === idx ? '0ms' : '100ms'
+            backgroundImage: `url(${currentItem.backdrop_url})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: `translateX(${isAnimating && direction === 'right' ? '-100%' : 
+                         isAnimating && direction === 'left' ? '100%' : '0%'})`,
+            transition: isAnimating ? `transform ${TRANSITION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)` : 'none',
+            zIndex: 20,
           }}
-        />
-      ))}
+        >
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+        </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-
-      {/* Navigation buttons - hoverda ko'rinadi */}
-      <button
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40"
-        onClick={(e) => {
-          e.stopPropagation();
-          prev();
-        }}
-        aria-label="Previous slide"
-      >
-        ←
-      </button>
-      <button
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40"
-        onClick={(e) => {
-          e.stopPropagation();
-          next();
-        }}
-        aria-label="Next slide"
-      >
-        →
-      </button>
-
-      {/* Title and subtitle */}
-      <div className="absolute bottom-8 left-6 right-6 z-30 text-white">
-        <h2 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg animate-fadeInUp">
-          {current.title}
-        </h2>
-        {current.subtitle && (
-          <p className="text-lg opacity-90 drop-shadow-md animate-fadeInUp animation-delay-200">
-            {current.subtitle}
-          </p>
+        {/* Next slide preview (on the side) */}
+        {nextItem && (
+          <div
+            className="absolute right-0 top-0 w-1/3 h-full overflow-hidden"
+            style={{ zIndex: 10 }}
+          >
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: `url(${nextItem.backdrop_url})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-transparent" />
+            <div className="absolute bottom-8 right-4 left-4">
+              <p className="text-white/70 text-xs font-medium mb-1 truncate">Keyingisi</p>
+              <h4 className="text-white text-sm font-semibold truncate">{nextItem.title}</h4>
+            </div>
+          </div>
         )}
-      </div>
 
-      {/* Pagination dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-        {items.map((_, i) => (
-          <button
-            key={i}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === idx 
-                ? 'bg-white w-6' 
-                : 'bg-white/50 hover:bg-white/70'
-            }`}
+        {/* Title and info - Minimal and elegant */}
+        <div className="absolute left-8 bottom-8 right-[35%] z-30">
+          <div className="mb-4">
+            <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-white text-xs font-medium mb-3">
+              Featured
+            </span>
+            <h2 className="text-4xl font-bold text-white mb-3 leading-tight drop-shadow-2xl">
+              {currentItem.title}
+            </h2>
+            {currentItem.subtitle && (
+              <p className="text-white/80 text-lg max-w-2xl drop-shadow-lg">
+                {currentItem.subtitle}
+              </p>
+            )}
+          </div>
+          
+          {/* Metadata */}
+          <div className="flex items-center gap-4 text-white/70 text-sm">
+            {currentItem.year && (
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 bg-white/50 rounded-full" />
+                {currentItem.year}
+              </span>
+            )}
+            {currentItem.rating && (
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 bg-white/50 rounded-full" />
+                ⭐ {currentItem.rating}/10
+              </span>
+            )}
+            {currentItem.duration && (
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 bg-white/50 rounded-full" />
+                ⏱️ {currentItem.duration}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Play button - Shows on first tap */}
+        {showPlayButton && (
+          <div
+            className="absolute inset-0 flex items-center justify-center z-40 animate-fadeIn"
             onClick={(e) => {
               e.stopPropagation();
-              goToSlide(i);
+              const url = currentItem.page_url;
+              if (url) router.push(url);
             }}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
+          >
+            <div className="relative group cursor-pointer">
+              <div className="absolute inset-0 bg-red-600 rounded-full animate-ping opacity-50" />
+              <div className="relative w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-300">
+                <Play className="w-8 h-8 text-white ml-1" fill="white" />
+              </div>
+              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm px-3 py-1 rounded-md text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Bosish uchun
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation arrows */}
+        <button
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-all duration-300 z-30 group"
+          onClick={(e) => {
+            e.stopPropagation();
+            prevSlide();
+          }}
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
+        </button>
+        
+        <button
+          className="absolute right-[calc(33%+1rem)] top-1/2 -translate-y-1/2 w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-all duration-300 z-30 group"
+          onClick={(e) => {
+            e.stopPropagation();
+            nextSlide();
+          }}
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
+        </button>
+
+        {/* Pagination dots - Minimal */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 z-30">
+          {items.map((_, index) => (
+            <button
+              key={index}
+              className={`transition-all duration-300 ${
+                index === currentIndex
+                  ? 'w-8 h-2 bg-white rounded-full'
+                  : 'w-2 h-2 bg-white/40 hover:bg-white/60 rounded-full'
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                goToSlide(index);
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Swipe hint */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 text-white/50 text-xs z-30">
+          <div className="flex items-center gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            <span>Swipe</span>
+            <ChevronRight className="w-4 h-4" />
+          </div>
+          <div className="text-center">yoki bosing</div>
+        </div>
       </div>
 
-      {/* Progress bar for autoplay */}
+      {/* Progress indicator */}
       <div className="absolute top-0 left-0 right-0 h-1 z-40">
-        <div 
-          className="h-full bg-white/80 transition-all duration-1000 ease-linear"
+        <div
+          className="h-full bg-gradient-to-r from-red-500 to-orange-500"
           style={{
-            width: isTransitioning ? '100%' : '0%',
-            transition: isTransitioning 
-              ? `width ${AUTOPLAY}ms linear` 
-              : 'none'
+            width: isAnimating ? '0%' : '100%',
+            transition: !isAnimating ? `width ${AUTOPLAY_DURATION}ms linear` : 'none',
           }}
-          key={idx} // Har bir slide uchun yangilash
+          key={currentIndex}
         />
       </div>
     </div>
