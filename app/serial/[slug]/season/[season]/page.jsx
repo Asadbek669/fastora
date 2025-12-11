@@ -5,19 +5,64 @@ import EpisodeList from "@/components/EpisodeList";
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
 async function getSeries(slug) {
-  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" })
+    .then(r => r.json());
 }
 
 async function getSeasons(slug) {
-  return fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" })
+    .then(r => r.json());
 }
 
 async function getEpisodesBySeason(id) {
-  return fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" }).then(r => r.json());
+  return fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" })
+    .then(r => r.json());
 }
 
+/*  
+------------------------------------------------------
+   🔥 GOOGLE SEO OPTIMIZATION — GENERATE METADATA
+------------------------------------------------------
+*/
+
+export async function generateMetadata({ params }) {
+  const { slug, season } = params;
+
+  const series = await getSeries(slug);
+  const seasons = await getSeasons(slug);
+
+  const selectedSeason = seasons.find(
+    (s) => Number(s.season_number) === Number(season)
+  );
+
+  if (!selectedSeason) {
+    return {
+      title: "Sezon topilmadi",
+    };
+  }
+
+  const episodes = await getEpisodesBySeason(selectedSeason.id);
+
+  return {
+    title: `${series.title} — ${season}-sezon (${episodes.length} qism)`,
+    description: `${series.title} ${season}-sezon barcha qismlar. Jami ${episodes.length} ta qism mavjud. Fastora orqali online tomosha qiling!`,
+    openGraph: {
+      title: `${series.title} — ${season}-sezon (${episodes.length} qism)`,
+      description: `${series.title} ${season}-sezon barcha qismlar. Jami ${episodes.length} qism. HD sifatda tomosha qiling.`,
+      images: [series.poster],
+      type: "video.tv_season",
+    }
+  };
+}
+
+/*  
+------------------------------------------------------
+   ASOSIY SEASON PAGE UI
+------------------------------------------------------
+*/
+
 export default async function SeasonPage({ params }) {
-  const { slug, season } = await params;
+  const { slug, season } = params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
@@ -56,13 +101,13 @@ export default async function SeasonPage({ params }) {
 
   return (
     <>
-      {/* GOOGLE SEO RICH RESULTS UCHUN */}
+      {/* GOOGLE RICH RESULTS */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* ASOSIY UI */}
+      {/* UI */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
         <div className="px-4 mt-6">
