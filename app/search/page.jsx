@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SearchClient from "./SearchClient";
 
 export async function generateMetadata({ searchParams }) {
@@ -34,5 +35,12 @@ export async function generateMetadata({ searchParams }) {
 
 export default function SearchPage({ searchParams }) {
   const q = searchParams.query || "";
-  return <SearchClient initialQuery={q} />;
+
+  return (
+    <Suspense fallback={<div className="text-white p-4">Yuklanmoqda...</div>}>
+      <SearchClient initialQuery={q} />
+    </Suspense>
+  );
 }
+
+
