@@ -26,7 +26,7 @@ export default function StoryPage() {
   // Load all stories
   useEffect(() => {
     async function loadAll() {
-      const base = "https://www.fastora.uz";
+      const base = "https://fastora.uz";
       const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
       const data = await res.json();
       setAllStories(data);
@@ -39,7 +39,7 @@ export default function StoryPage() {
     if (!id) return;
 
     async function loadStory() {
-      const base = "https://www.fastora.uz";
+      const base = "https://fastora.uz";
       const res = await fetch(`${base}/api/stories/${id}`, {
         cache: "no-store",
       });
@@ -181,4 +181,5 @@ export default function StoryPage() {
     </div>
   );
 }
+
 
