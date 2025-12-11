@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
     description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online tomosha qiling.`,
     openGraph: {
       title: `${series.title} — ${season}-sezon`,
-      description: `${series.title} ${season}-sezon barcha qismlar.`,
+      description: `${series.title} ${season}-sezon 1, 2, 3, 4, 5, 6, 7, 8 - qismlar.`,
       images: [series.poster],
     },
   };
