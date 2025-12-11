@@ -28,30 +28,19 @@ async function getEpisodesBySeason(id) {
 export async function generateMetadata({ params }) {
   const { slug, season } = params;
 
-  const series = await getSeries(slug);
-  const seasons = await getSeasons(slug);
-
-  const selectedSeason = seasons.find(
-    (s) => Number(s.season_number) === Number(season)
-  );
-
-  if (!selectedSeason) {
-    return {
-      title: "Sezon topilmadi",
-    };
-  }
-
-  const episodes = await getEpisodesBySeason(selectedSeason.id);
+  const series = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/series/${slug}`, 
+    { cache: "no-store" }
+  ).then(res => res.json());
 
   return {
-    title: `${series.title} — ${season}-sezon (${episodes.length} qism)`,
-    description: `${series.title} ${season}-sezon barcha qismlar. Jami ${episodes.length} ta qism mavjud. Fastora orqali online tomosha qiling!`,
+    title: `${series.title} — ${season}-sezon | Fastora`,
+    description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online tomosha qiling.`,
     openGraph: {
-      title: `${series.title} — ${season}-sezon (${episodes.length} qism)`,
-      description: `${series.title} ${season}-sezon barcha qismlar. Jami ${episodes.length} qism. HD sifatda tomosha qiling.`,
+      title: `${series.title} — ${season}-sezon | Fastora`,
+      description: `${series.title} ${season}-sezon barcha qismlar.`,
       images: [series.poster],
-      type: "video.tv_season",
-    }
+    },
   };
 }
 
