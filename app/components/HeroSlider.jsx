@@ -2,7 +2,43 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Play, ChevronLeft, ChevronRight } from "lucide-react";
+
+// SVG icons for Play, ChevronLeft, ChevronRight
+const PlayIcon = () => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    className="w-8 h-8"
+  >
+    <path d="M8 5v14l11-7z" />
+  </svg>
+);
+
+const ChevronLeft = () => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    className="w-6 h-6"
+  >
+    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+  </svg>
+);
+
+const ChevronRight = () => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    className="w-6 h-6"
+  >
+    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+  </svg>
+);
 
 export default function HeroSlider() {
   const [items, setItems] = useState([]);
@@ -314,7 +350,7 @@ export default function HeroSlider() {
             <div className="relative group cursor-pointer">
               <div className="absolute inset-0 bg-red-600 rounded-full animate-ping opacity-50" />
               <div className="relative w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-300">
-                <Play className="w-8 h-8 text-white ml-1" fill="white" />
+                <PlayIcon />
               </div>
               <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm px-3 py-1 rounded-md text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 Bosish uchun
@@ -332,7 +368,7 @@ export default function HeroSlider() {
           }}
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
+          <ChevronLeft />
         </button>
         
         <button
@@ -343,7 +379,7 @@ export default function HeroSlider() {
           }}
           aria-label="Next slide"
         >
-          <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
+          <ChevronRight />
         </button>
 
         {/* Pagination dots - Minimal */}
@@ -368,9 +404,9 @@ export default function HeroSlider() {
         {/* Swipe hint */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 text-white/50 text-xs z-30">
           <div className="flex items-center gap-1">
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft />
             <span>Swipe</span>
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight />
           </div>
           <div className="text-center">yoki bosing</div>
         </div>
