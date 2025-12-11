@@ -37,7 +37,7 @@ export default function SearchClient({ initialQuery }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-black text-white p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-black p-4 pt-6 pb-24 text-white">
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
