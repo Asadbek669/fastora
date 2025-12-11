@@ -30,8 +30,14 @@ const InfoIcon = () => (
 );
 
 const PlayIcon = () => (
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
     <path d="M8 5v14l11-7z" />
+  </svg>
+);
+
+const PauseIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
   </svg>
 );
 
@@ -46,12 +52,33 @@ export default function StoryPage() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const videoRef = useRef(null);
   const progressInterval = useRef(null);
   const touchStartY = useRef(0);
   const touchStartX = useRef(0);
   const videoStartTime = useRef(0);
+  const playerRef = useRef(null);
+
+  // YouTube Player API
+  useEffect(() => {
+    // Load YouTube IFrame API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      console.log('YouTube API ready');
+    };
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+      }
+    };
+  }, []);
 
   // Disable scroll
   useEffect(() => {
@@ -99,43 +126,125 @@ export default function StoryPage() {
       setProgress(0);
       videoStartTime.current = Date.now();
       setIsPlaying(true);
+      setIsVideoReady(false);
     }
 
     loadStory();
   }, [id, allStories]);
 
+  // Initialize YouTube Player
+  useEffect(() => {
+    if (!story || !story.youtube_url || videoRef.current || !window.YT) return;
+
+    const videoId = extractYouTubeId(story.youtube_url);
+    if (!videoId) return;
+
+    // Destroy previous player
+    if (playerRef.current) {
+      playerRef.current.destroy();
+    }
+
+    // Create new player
+    playerRef.current = new window.YT.Player('youtube-player', {
+      videoId: videoId,
+      playerVars: {
+        'autoplay': 1,
+        'controls': 0,
+        'modestbranding': 1,
+        'rel': 0,
+        'showinfo': 0,
+        'iv_load_policy': 3,
+        'playsinline': 1,
+        'enablejsapi': 1,
+        'origin': window.location.origin,
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange,
+        'onError': onPlayerError,
+      }
+    });
+
+    function onPlayerReady(event) {
+      console.log('Player ready');
+      setIsVideoReady(true);
+      setVideoLoaded(true);
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+      // -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
+      switch (event.data) {
+        case window.YT.PlayerState.PLAYING:
+          setIsPlaying(true);
+          videoStartTime.current = Date.now();
+          break;
+        case window.YT.PlayerState.PAUSED:
+          setIsPlaying(false);
+          break;
+        case window.YT.PlayerState.ENDED:
+          gotoNextStory();
+          break;
+      }
+    }
+
+    function onPlayerError(event) {
+      console.error('YouTube player error:', event.data);
+    }
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+      }
+    };
+  }, [story]);
+
   // Progress bar animation
   useEffect(() => {
-    if (!story || !isPlaying) {
+    if (!isPlaying || !isVideoReady || !playerRef.current) {
       clearInterval(progressInterval.current);
       return;
     }
 
-    const STORY_DURATION = 15000; // 15 seconds per story
-
     progressInterval.current = setInterval(() => {
-      const elapsed = Date.now() - videoStartTime.current;
-      const newProgress = (elapsed / STORY_DURATION) * 100;
-      
-      if (newProgress >= 100) {
-        gotoNextStory();
-      } else {
-        setProgress(newProgress);
+      if (playerRef.current && playerRef.current.getCurrentTime && playerRef.current.getDuration) {
+        try {
+          const currentTime = playerRef.current.getCurrentTime();
+          const duration = playerRef.current.getDuration();
+          
+          if (duration > 0) {
+            const newProgress = (currentTime / duration) * 100;
+            setProgress(newProgress);
+            
+            // Auto-next when video ends
+            if (newProgress >= 99.9) {
+              gotoNextStory();
+            }
+          }
+        } catch (error) {
+          console.error('Progress error:', error);
+        }
       }
     }, 100);
 
     return () => clearInterval(progressInterval.current);
-  }, [story, isPlaying, currentIndex]);
+  }, [isPlaying, isVideoReady, currentIndex]);
+
+  // Extract YouTube ID
+  const extractYouTubeId = (url) => {
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
 
   // Video controls
   const togglePlay = useCallback(() => {
-    setIsPlaying(!isPlaying);
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-      } else {
-        videoRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-      }
+    if (!playerRef.current) return;
+    
+    if (isPlaying) {
+      playerRef.current.pauseVideo();
+    } else {
+      playerRef.current.playVideo();
     }
   }, [isPlaying]);
 
@@ -193,7 +302,12 @@ export default function StoryPage() {
           break;
         case "ArrowRight":
         case " ":
-          gotoNextStory();
+          if (e.key === " ") {
+            e.preventDefault();
+            togglePlay();
+          } else {
+            gotoNextStory();
+          }
           break;
         case "Escape":
           router.push("/");
@@ -222,6 +336,24 @@ export default function StoryPage() {
       togglePlay();
     }
   }, [gotoNextStory, gotoPrevStory, togglePlay]);
+
+  // Handle video ready
+  useEffect(() => {
+    if (videoRef.current && story) {
+      const handleLoad = () => {
+        setVideoLoaded(true);
+        setIsVideoReady(true);
+      };
+      
+      videoRef.current.addEventListener('load', handleLoad);
+      
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener('load', handleLoad);
+        }
+      };
+    }
+  }, [story]);
 
   if (!id || !story) {
     return (
@@ -254,6 +386,7 @@ export default function StoryPage() {
 
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < allStories.length - 1;
+  const videoId = extractYouTubeId(story.youtube_url);
 
   return (
     <div 
@@ -268,7 +401,7 @@ export default function StoryPage() {
             <div
               className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-100 ease-linear"
               style={{
-                width: i === currentIndex ? `${progress}%` : 
+                width: i === currentIndex ? `${Math.min(progress, 100)}%` : 
                        i < currentIndex ? "100%" : "0%",
               }}
             ></div>
@@ -282,7 +415,7 @@ export default function StoryPage() {
           onClick={() => router.push("/")}
           className="w-10 h-10 flex items-center justify-center
           bg-black/40 backdrop-blur-md text-white rounded-full
-          hover:bg-black/60 transition-all"
+          hover:bg-black/60 transition-all active:scale-95"
         >
           <CloseIcon />
         </button>
@@ -296,7 +429,7 @@ export default function StoryPage() {
             onClick={() => setShowDetails(!showDetails)}
             className="w-10 h-10 flex items-center justify-center
             bg-black/40 backdrop-blur-md text-white rounded-full
-            hover:bg-black/60 transition-all"
+            hover:bg-black/60 transition-all active:scale-95"
           >
             <InfoIcon />
           </button>
@@ -308,19 +441,13 @@ export default function StoryPage() {
         className="relative w-full h-full flex items-center justify-center"
         onClick={handleVideoClick}
       >
-        {/* Video player - YouTube Shorts style */}
-        <div className="relative w-full max-w-[430px] h-full bg-black">
-          <iframe
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full"
-            src={`${convertToEmbed(story.youtube_url)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3`}
-            allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
-            allowFullScreen
-            onLoad={() => setVideoLoaded(true)}
-            style={{
-              pointerEvents: "none"
-            }}
-          ></iframe>
+        {/* YouTube Player Container */}
+        <div 
+          id="youtube-player-container"
+          className="relative w-full max-w-[430px] h-full bg-black"
+        >
+          {/* YouTube Player will be injected here by API */}
+          <div id="youtube-player" className="w-full h-full"></div>
 
           {/* Loading overlay */}
           {!videoLoaded && (
@@ -330,20 +457,17 @@ export default function StoryPage() {
           )}
 
           {/* Play/Pause overlay */}
-          {!isPlaying && (
+          {!isPlaying && videoLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <div className="w-20 h-20 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center">
+              <button
+                onClick={togglePlay}
+                className="w-20 h-20 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center
+                hover:bg-black/70 transition-all active:scale-95"
+              >
                 <PlayIcon />
-              </div>
+              </button>
             </div>
           )}
-
-          {/* Video controls hint */}
-          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 
-          bg-black/60 backdrop-blur-md text-white text-xs px-3 py-2 rounded-full 
-          opacity-0 animate-fadeInOut pointer-events-none">
-            Chap: Oldingi • Oʻrta: Play/Pause • Oʻng: Keyingisi
-          </div>
         </div>
       </div>
 
@@ -384,38 +508,29 @@ export default function StoryPage() {
               onClick={togglePlay}
               className="w-12 h-12 flex items-center justify-center
               bg-white/10 backdrop-blur-md text-white rounded-full
-              hover:bg-white/20 transition-all"
+              hover:bg-white/20 transition-all active:scale-95"
             >
-              {isPlaying ? (
-                <div className="flex items-center gap-1">
-                  <div className="w-1 h-3 bg-white"></div>
-                  <div className="w-1 h-3 bg-white"></div>
-                </div>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              )}
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
 
             <button
-              onClick={() => window.location.href = story.page_url}
+              onClick={() => window.open(story.page_url, '_blank')}
               className="bg-gradient-to-r from-red-600 to-red-700
               text-white px-6 py-3 rounded-full text-sm font-semibold
               hover:from-red-700 hover:to-red-800 transition-all
-              backdrop-blur-md shadow-lg"
+              backdrop-blur-md shadow-lg active:scale-95"
             >
               Batafsil ma'lumot →
             </button>
           </div>
 
-          {/* Navigation buttons (visible on hover) */}
-          <div className="flex items-center gap-2 opacity-0 hover:opacity-100 transition-opacity">
+          {/* Navigation buttons */}
+          <div className="flex items-center gap-2">
             <button
               onClick={gotoPrevStory}
               disabled={!hasPrev}
               className={`w-10 h-10 flex items-center justify-center rounded-full
-              backdrop-blur-md transition-all ${
+              backdrop-blur-md transition-all active:scale-95 ${
                 hasPrev
                   ? "bg-white/10 hover:bg-white/20 text-white"
                   : "bg-white/5 text-white/30 pointer-events-none"
@@ -428,7 +543,7 @@ export default function StoryPage() {
               onClick={gotoNextStory}
               disabled={!hasNext}
               className={`w-10 h-10 flex items-center justify-center rounded-full
-              backdrop-blur-md transition-all ${
+              backdrop-blur-md transition-all active:scale-95 ${
                 hasNext
                   ? "bg-white/10 hover:bg-white/20 text-white"
                   : "bg-white/5 text-white/30 pointer-events-none"
@@ -444,7 +559,7 @@ export default function StoryPage() {
       {showDetails && (
         <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-[100] 
         flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-gray-900/90 backdrop-blur-md rounded-2xl p-6 max-w-md w-full">
+          <div className="bg-gray-900/90 backdrop-blur-md rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-white text-xl font-bold">Ma'lumot</h2>
               <button
@@ -464,7 +579,7 @@ export default function StoryPage() {
               {story.description && (
                 <div>
                   <h3 className="text-white/80 text-sm mb-1">Tavsif</h3>
-                  <p className="text-white/90">{story.description}</p>
+                  <p className="text-white/90 whitespace-pre-line">{story.description}</p>
                 </div>
               )}
               
@@ -485,9 +600,10 @@ export default function StoryPage() {
             </div>
             
             <button
-              onClick={() => window.location.href = story.page_url}
+              onClick={() => window.open(story.page_url, '_blank')}
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-700
-              text-white py-3 rounded-full font-semibold hover:from-red-700 hover:to-red-800"
+              text-white py-3 rounded-full font-semibold hover:from-red-700 hover:to-red-800
+              active:scale-95 transition-all"
             >
               Toʻliq ma'lumot
             </button>
@@ -495,18 +611,11 @@ export default function StoryPage() {
         </div>
       )}
 
-      {/* Navigation hints */}
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 
-      opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-        <div className="text-white/50 text-xs text-center rotate-90">
-          SWIPE ←
-        </div>
-      </div>
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 
-      opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-        <div className="text-white/50 text-xs text-center -rotate-90">
-          SWIPE →
-        </div>
+      {/* Navigation hints (temporary) */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 
+      bg-black/60 backdrop-blur-md text-white text-xs px-4 py-2 rounded-full 
+      animate-fadeInOut pointer-events-none">
+        ◀︎ Chap • ▷ Play/Pause • ▶︎ Oʻng
       </div>
     </div>
   );
