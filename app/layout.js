@@ -1,5 +1,7 @@
+
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
+import Script from "next/script"; // 🔥 FAQAT SHU QO‘SHILDI
 
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
 const LOGO_URL = `${DOMAIN}/icon.png`;
@@ -20,12 +22,10 @@ export const metadata = {
     siteName: "Fastora",
     type: "website",
     locale: "uz_UZ",
-    // ❗❗❗ BU YERDAN images NI OCHIRAMIZ
   },
 
   twitter: {
     card: "summary_large_image",
-    // ❗❗❗ GLOBAL twitter image ham kerak emas, ochiramiz
   },
 };
 
@@ -38,8 +38,26 @@ export function generateViewport() {
 export default function RootLayout({ children }) {
   return (
     <html lang="uz">
-      <body>
+      <head>
+        {/* 🔥 GOOGLE ANALYTICS — FAQAT SHU QO‘SHILDI */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-9K7SCJDFJD"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-9K7SCJDFJD', {
+              anonymize_ip: true,
+              send_page_view: true
+            });
+          `}
+        </Script>
+      </head>
 
+      <body>
         {/* ORGANIZATION SCHEMA */}
         <script
           type="application/ld+json"
@@ -47,13 +65,13 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Fastora",
-              "url": DOMAIN,
-              "logo": LOGO_URL,
-              "sameAs": [
+              name: "Fastora",
+              url: DOMAIN,
+              logo: LOGO_URL,
+              sameAs: [
                 "https://t.me/fastora",
-                "https://instagram.com/fastora"
-              ]
+                "https://instagram.com/fastora",
+              ],
             }),
           }}
         />
@@ -65,16 +83,16 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "Fastora",
-              "url": DOMAIN,
-              "publisher": {
+              name: "Fastora",
+              url: DOMAIN,
+              publisher: {
                 "@type": "Organization",
-                "name": "Fastora",
-                "logo": {
+                name: "Fastora",
+                logo: {
                   "@type": "ImageObject",
-                  "url": LOGO_URL,
-                  "width": 512,
-                  "height": 512,
+                  url: LOGO_URL,
+                  width: 512,
+                  height: 512,
                 },
               },
             }),
