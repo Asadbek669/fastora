@@ -35,7 +35,7 @@ export default function TvPage() {
           >
             {/* RASM */}
             <img
-              src="/tez-orada.jpg"
+              src="/tv.jpg"
               alt={tv.name}
               className="w-full h-28 object-cover"
             />
