@@ -82,6 +82,30 @@ export default async function Page() {
         <HeroSlider testData={movies} />
       </div>
 
+{/* TELEKANALLAR */}
+<h2 className="text-xl font-semibold mt-6 mb-3 px-4">
+  Telekanallar
+</h2>
+
+<div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
+  {[
+    "O‘zbekiston 24",
+    "Milliy TV",
+    "Zo‘r TV",
+    "MY5",
+    "Sport",
+    "Sevimli",
+  ].map((tv, i) => (
+    <div
+      key={i}
+      className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111]"
+    >
+      <img src="/tez-orada.jpg" className="w-full h-24 object-cover" />
+      <p className="text-center py-2 text-sm truncate">{tv}</p>
+    </div>
+  ))}
+</div>
+  
       {/* JANRLAR */}
       <h2 className="text-xl font-semibold mt-6 mb-3 px-4">Janrlar</h2>
 
