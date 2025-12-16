@@ -1,15 +1,18 @@
-export default function LiveChannelPage({ params }) {
-  const { slug } = params;
 
-  // slug'dan chiroyli nom chiqarish
+export default function LiveChannelPage(props) {
+  const slug = props?.params?.slug;
+
+  // Agar slug bo‘lmasa — xatoni oldini olamiz
   const channelName = slug
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
+    ? slug
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase())
+    : "Telekanal";
 
   return (
     <div className="pb-24 px-4 pt-4">
 
-      {/* ORTGA QAYTISH */}
+      {/* ORTGA */}
       <a
         href="/tv"
         className="inline-block mb-4 text-sm text-gray-400"
@@ -17,7 +20,7 @@ export default function LiveChannelPage({ params }) {
         ← Telekanallarga qaytish
       </a>
 
-      {/* KANAL NOMI */}
+      {/* NOMI */}
       <h1 className="text-xl font-semibold mb-2">
         📺 {channelName}
       </h1>
