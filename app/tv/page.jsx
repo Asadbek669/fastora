@@ -1,3 +1,4 @@
+
 import tvChannels from "./tvConfig";
 
 export const metadata = {
@@ -9,26 +10,37 @@ export default function TvPage() {
   return (
     <div className="pb-24">
 
+      {/* SAHIFA SARLAVHASI */}
       <h1 className="text-xl font-semibold px-4 pt-4 mb-4">
         📺 Telekanallar
       </h1>
 
-      <div className="grid grid-cols-2 gap-4 px-4">
+      {/* TELEKANALLAR GRID */}
+      <div
+        className="
+          grid gap-4 px-4
+          [grid-template-columns:repeat(auto-fit,minmax(110px,1fr))]
+        "
+      >
         {tvChannels.map((tv, index) => (
           <div
             key={index}
             className="
               rounded-xl overflow-hidden
               bg-[#111] shadow-lg
-              active:scale-95 transition
+              transition
+              active:scale-95
+              hover:scale-[1.02]
             "
           >
+            {/* RASM */}
             <img
               src="/tez-orada.jpg"
               alt={tv.name}
               className="w-full h-28 object-cover"
             />
 
+            {/* NOMI */}
             <div className="p-2 text-center text-sm truncate">
               {tv.name}
             </div>
