@@ -85,15 +85,6 @@ export default async function MoviePage({ params }) {
       "bestRating": "10",
       "ratingCount": movie.comments_count ?? 1
     },
-    "video": {
-      "@type": "VideoObject",
-      "name": `${movie.title} — to‘liq film`,
-      "thumbnailUrl": movie.thumbs?.[0] || movie.poster,
-      "description": movie.description.slice(0, 150),
-      "uploadDate": movie.year + "-01-01",
-      "contentUrl": movie.video,
-      "embedUrl": `${BASE_URL}/movie/${slug}`,
-    }
   };
 
   return (
