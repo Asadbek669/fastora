@@ -10,7 +10,7 @@ export default function TvRow() {
       {/* HEADER */}
       <div className="flex items-center justify-between px-4 mb-3">
         <h2 className="text-xl font-semibold">
-          📺 Telekanallar
+          Telekanallar
         </h2>
 
         <Link
@@ -109,3 +109,4 @@ export default function TvRow() {
     </section>
   );
 }
+
