@@ -1,57 +1,27 @@
 "use client";
-import { useState } from "react";
 
-export default function Player({ movieId }) {
-  const [src, setSrc] = useState(null);
-  const [loading, setLoading] = useState(false);
+export default function Player({ src, title }) {
+  function openDirect() {
+    if (!src) return;
 
-  async function handlePlay() {
-    if (loading || src) return;
+    const sep = src.includes("?") ? "&" : "?";
+    const url = `${src}${sep}t=${Date.now()}`;
 
-    setLoading(true);
-
-    try {
-      const res = await fetch(`/api/movies/${movieId}`, {
-        cache: "no-store",
-      });
-
-      if (!res.ok) throw new Error("Film topilmadi");
-
-      const movie = await res.json();
-
-      if (!movie?.video) {
-        throw new Error("Video yo‘q");
-      }
-
-      // 🔥 faqat hozir paydo bo‘ladi
-      setSrc(movie.video + "?t=" + Date.now());
-    } catch (e) {
-      alert("Video vaqtincha mavjud emas");
-    } finally {
-      setLoading(false);
-    }
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   return (
-    <div className="mt-6 px-4">
-      <div className="w-full aspect-video bg-black rounded-xl border border-white/10 overflow-hidden flex items-center justify-center">
-        {!src ? (
-          <button
-            onClick={handlePlay}
-            className="flex items-center justify-center text-white text-4xl w-20 h-20 rounded-full bg-blue-600 shadow-lg hover:scale-105 transition"
-          >
-            {loading ? "⏳" : "▶"}
-          </button>
-        ) : (
-          <video
-            src={src}
-            controls
-            autoPlay
-            playsInline
-            className="w-full h-full"
-          />
-        )}
+    <div className="mt-4 px-4">
+      <div className="w-full aspect-video bg-black flex items-center justify-center rounded-xl border border-white/10">
+        <button
+          onClick={openDirect}
+          className="flex items-center justify-center text-white text-4xl w-20 h-20 rounded-full bg-blue-600 shadow-lg hover:scale-105 transition"
+        >
+          ▶
+        </button>
       </div>
+
+      {title && <h3 className="mt-2 text-white text-lg">{title}</h3>}
     </div>
   );
 }
