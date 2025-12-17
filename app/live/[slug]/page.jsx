@@ -1,4 +1,4 @@
-import tvChannels from "@/app/tv/tvConfig";
+import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
