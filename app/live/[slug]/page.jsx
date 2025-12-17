@@ -2,7 +2,6 @@
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
 import LiveExternalPlayer from "@/components/LiveExternalPlayer";
-import { ArrowLeft, LiveIcon, AlertCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +24,10 @@ export default async function LiveChannelPage({ params }) {
             className="inline-flex items-center gap-2 text-gray-300 hover:text-white transition-all duration-300 group"
           >
             <div className="p-2 bg-gray-800/50 rounded-lg group-hover:bg-gray-700/50 transition-all">
-              <ArrowLeft className="w-4 h-4" />
+              {/* Arrow Left SVG */}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
             </div>
             <span className="text-sm font-medium">Telekanallar ro'yxatiga qaytish</span>
           </a>
@@ -47,7 +49,10 @@ export default async function LiveChannelPage({ params }) {
                         className="w-48 h-48 rounded-xl object-cover shadow-2xl border-4 border-gray-800"
                       />
                       <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
-                        <LiveIcon className="w-3 h-3" />
+                        {/* Live Icon SVG */}
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
                         LIVE
                       </div>
                     </div>
@@ -69,7 +74,10 @@ export default async function LiveChannelPage({ params }) {
                   {/* Ogohlantirish */}
                   <div className="mt-6 p-4 bg-gray-800/50 rounded-xl border border-gray-700">
                     <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                      {/* AlertCircle SVG */}
+                      <svg className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.686 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
                       <div>
                         <p className="text-sm text-gray-300">
                           Bu test rejimida ishlayotgan xizmat. Sifat yoki uzilishlar bo'lishi mumkin.
@@ -144,6 +152,7 @@ export default async function LiveChannelPage({ params }) {
               {/* Yo'riqnoma */}
               <div className="mt-8 p-6 bg-gray-900/30 rounded-2xl border border-gray-800">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  {/* Info Icon SVG */}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
