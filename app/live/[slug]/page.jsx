@@ -1,7 +1,7 @@
 
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
-import LiveExternalPlayer from "@/app/components/LiveExternalPlayer";
+import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 import Link from "next/link";
 
 export default function LiveChannelPage({ params }) {
@@ -33,85 +33,55 @@ export default function LiveChannelPage({ params }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* ================= LEFT COLUMN ================= */}
+          {/* LEFT */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6">
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
-
-                <div className="flex justify-center mb-6">
-                  <div className="relative">
-                    <img
-                      src={tv.image}
-                      alt={tv.name}
-                      className="w-48 h-48 rounded-xl object-cover shadow-2xl border-4 border-gray-800"
-                    />
-                    <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
-                      LIVE
-                    </div>
+            <div className="sticky top-6 bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-800">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <img
+                    src={tv.image}
+                    alt={tv.name}
+                    className="w-48 h-48 rounded-xl object-cover shadow-2xl border-4 border-gray-800"
+                  />
+                  <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+                    LIVE
                   </div>
                 </div>
+              </div>
 
-                <h1 className="text-2xl font-bold text-center mb-2">
-                  {tv.name}
-                </h1>
+              <h1 className="text-2xl font-bold text-center mb-2">
+                {tv.name}
+              </h1>
 
-                <div className="flex items-center justify-center gap-2 text-sm mb-6">
-                  <span className="text-green-400">Jonli efir</span>
-                  <span className="text-gray-500">•</span>
-                  <span className="text-amber-400">Test rejimi</span>
-                </div>
+              <div className="flex items-center justify-center gap-2 text-sm mb-6">
+                <span className="text-green-400">Jonli efir</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-amber-400">Test rejimi</span>
+              </div>
 
-                <div className="grid grid-cols-3 gap-2 text-xs text-center">
-                  <span className="bg-gray-800 rounded px-2 py-1">1080p</span>
-                  <span className="bg-gray-800 rounded px-2 py-1">Stereo</span>
-                  <span className="bg-gray-800 rounded px-2 py-1">HLS</span>
-                </div>
-
+              <div className="grid grid-cols-3 gap-2 text-xs text-center">
+                <span className="bg-gray-800 rounded px-2 py-1">1080p</span>
+                <span className="bg-gray-800 rounded px-2 py-1">Stereo</span>
+                <span className="bg-gray-800 rounded px-2 py-1">HLS</span>
               </div>
             </div>
           </div>
 
-          {/* ================= RIGHT COLUMN ================= */}
+          {/* RIGHT */}
           <div className="lg:col-span-2">
+            <h2 className="text-xl font-bold mb-2">Jonli ko‘rish</h2>
+            <p className="text-sm text-gray-400 mb-4">
+              Real vaqt • {tv.name}
+            </p>
 
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-bold">Jonli ko‘rish</h2>
-                <p className="text-sm text-gray-400">
-                  Real vaqt • {tv.name}
-                </p>
-              </div>
-            </div>
-
-            {/* 🎬 LIVE PLAYER */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black mb-6">
               <LiveExternalPlayer
                 src={`/api/live/${tv.slug}.m3u8`}
               />
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-75" />
             </div>
-
-            {/* QUICK INFO */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-800">
-                <div className="text-xs text-gray-400">Buffer</div>
-                <div className="text-lg font-semibold text-green-400">98%</div>
-              </div>
-              <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-800">
-                <div className="text-xs text-gray-400">CPU</div>
-                <div className="text-lg font-semibold text-blue-400">24%</div>
-              </div>
-              <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-800">
-                <div className="text-xs text-gray-400">Kechikish</div>
-                <div className="text-lg font-semibold text-amber-400">2.8s</div>
-              </div>
-              <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-800">
-                <div className="text-xs text-gray-400">Bitrate</div>
-                <div className="text-lg font-semibold text-purple-400">4.5 Mbps</div>
-              </div>
-            </div>
-
           </div>
+
         </div>
       </div>
     </div>
