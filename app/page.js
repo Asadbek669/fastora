@@ -96,7 +96,7 @@ export default async function Page() {
 
     <Link
       href="/tv"
-      className="text-sm text-blue-400 hover:text-white transition"
+      className="text-sm text-white/80 hover:text-white transition"
     >
       Barchasini ko‘rish ➤
     </Link>
