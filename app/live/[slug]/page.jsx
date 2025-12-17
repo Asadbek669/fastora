@@ -1,18 +1,23 @@
+import tvChannels from "@/app/tv/tvConfig";
+import { notFound } from "next/navigation";
 
-export default function LiveChannelPage(props) {
-  const slug = props?.params?.slug;
+export const dynamic = "force-dynamic";
 
-  // Agar slug bo‘lmasa — xatoni oldini olamiz
-  const channelName = slug
-    ? slug
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase())
-    : "Telekanal";
+export default function LiveChannelPage({ params }) {
+  const { slug } = params || {};
+
+  // TV ni slug bo‘yicha topamiz
+  const tv = tvChannels.find((c) => c.slug === slug);
+
+  // Agar slug noto‘g‘ri bo‘lsa → 404
+  if (!tv) {
+    notFound();
+  }
 
   return (
     <div className="pb-24 px-4 pt-4">
 
-      {/* ORTGA */}
+      {/* ORTGA QAYTISH */}
       <a
         href="/tv"
         className="inline-block mb-4 text-sm text-gray-400"
@@ -20,9 +25,9 @@ export default function LiveChannelPage(props) {
         ← Telekanallarga qaytish
       </a>
 
-      {/* NOMI */}
+      {/* KANAL NOMI */}
       <h1 className="text-xl font-semibold mb-2">
-        📺 {channelName}
+        📺 {tv.name}
       </h1>
 
       {/* STATUS */}
