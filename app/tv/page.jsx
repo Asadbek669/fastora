@@ -30,11 +30,12 @@ export default function TvPage() {
               active:scale-95
             "
           >
-            <img
-              src="/tvz.jpg"
-              alt={tv.name}
-              className="w-full h-24 object-cover"
-            />
+      			<img
+      			  src={tv.image}
+      			  alt={tv.name}
+      			  className="w-full h-24 object-cover"
+      			  loading="lazy"
+      			/>
 
             <div className="py-1 text-center text-xs truncate">
               {tv.name}
