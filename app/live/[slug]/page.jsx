@@ -220,9 +220,7 @@ export default async function LiveChannelPage({ params }) {
             
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
-              <LiveExternalPlayer src={tv.stream} />
-             
-              </div>
+              <LiveExternalPlayer src={tv.stream} />             
             </div>
           </div>
 
