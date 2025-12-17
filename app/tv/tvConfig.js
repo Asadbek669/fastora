@@ -1,7 +1,12 @@
 const CDN_BASE = "https://cdn.fastora.uz/tv";
+const TEST_HLS = "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/tracks-v1a1/mono.m3u8";
 
 const tvChannels = [
-  { name: "BIZ TV", slug: "biz-tv" },
+  {
+    name: "BIZ TV",
+    slug: "biz-tv",
+    stream: TEST_HLS, // ✅ TEST LIVE
+  },
   { name: "Setanta 1", slug: "setanta-1" },
   { name: "Россия 1", slug: "rossiya-1" },
   { name: "Россия 24", slug: "rossiya-24" },
@@ -34,8 +39,9 @@ const tvChannels = [
   { name: "Yoshlar", slug: "yoshlar" },
 ].map((tv) => ({
   ...tv,
-  image: `${CDN_BASE}/${tv.slug}.webp?v=2`,
+  image: `${CDN_BASE}/${tv.slug}.webp`,
   live: true,
 }));
 
 export default tvChannels;
+
