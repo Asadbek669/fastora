@@ -3,46 +3,60 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function LiveChannelPage({ params }) {
-  const { slug } = params || {};
+export default async function LiveChannelPage({ params }) {
+  const { slug } = await params;
 
-  // TV ni slug bo‘yicha topamiz
   const tv = tvChannels.find((c) => c.slug === slug);
 
-  // Agar slug noto‘g‘ri bo‘lsa → 404
   if (!tv) {
     notFound();
   }
 
   return (
-    <div className="pb-24 px-4 pt-4">
+    <div className="pb-24 px-4 pt-6 text-white">
 
-      {/* ORTGA QAYTISH */}
+      {/* 🔙 Orqaga */}
       <a
         href="/tv"
-        className="inline-block mb-4 text-sm text-gray-400"
+        className="inline-block mb-6 text-sm text-gray-400 hover:text-white transition"
       >
         ← Telekanallarga qaytish
       </a>
 
-      {/* KANAL NOMI */}
-      <h1 className="text-xl font-semibold mb-2">
-        📺 {tv.name}
+      {/* 🖼️ KATTA TV LOGO */}
+      <div className="flex justify-center mb-4">
+        <img
+          src={tv.image}
+          alt={tv.name}
+          className="
+            w-full max-w-xs
+            rounded-2xl
+            bg-[#111]
+            shadow-lg
+            object-cover
+          "
+        />
+      </div>
+
+      {/* 📺 TV NOMI */}
+      <h1 className="text-xl font-semibold text-center mb-1">
+        {tv.name}
       </h1>
 
-      {/* STATUS */}
-      <p className="text-sm text-gray-400 mb-4">
-        Jonli efir — test rejimida
+      {/* 🔴 LIVE */}
+      <p className="text-center text-sm text-green-500 mb-5">
+        ● Jonli efir — test rejimida
       </p>
 
-      {/* PLAYER PLACEHOLDER */}
+      {/* 🎬 PLAYER PLACEHOLDER */}
       <div
         className="
           w-full aspect-video
-          rounded-xl
+          rounded-2xl
           bg-[#111]
           flex items-center justify-center
           text-gray-500 text-sm
+          shadow-inner
         "
       >
         Player tez orada qo‘shiladi
