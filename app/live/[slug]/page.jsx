@@ -1,7 +1,6 @@
 
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
-import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 
 export const dynamic = "force-dynamic";
 
@@ -86,7 +85,7 @@ export default async function LiveChannelPage({ params }) {
                     </div>
                   </div>
 
-                  {/* Qo'shimcha ma'lumotlar (agar mavjud bo'lsa) */}
+                  {/* Qo'shimcha ma'lumotlar */}
                   {tv.category && (
                     <div className="mt-4 flex items-center justify-center">
                       <span className="px-3 py-1 bg-gray-800 text-gray-300 text-sm rounded-full">
@@ -121,9 +120,18 @@ export default async function LiveChannelPage({ params }) {
                 </div>
               </div>
 
-              {/* Pleer konteyneri */}
+              {/* Pleer - TO'G'RIDAN IFRAME */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
-                <LiveExternalPlayer src={tv.stream} />
+                <div className="w-full aspect-video">
+                  <iframe
+                    src={tv.stream}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    frameBorder="0"
+                    title={`${tv.name} jonli efiri`}
+                  />
+                </div>
                 
                 {/* Pleer pastidagi dekorativ chiziq */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
