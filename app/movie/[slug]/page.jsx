@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
       title: movie.title,
       description: movie.description.slice(0, 180),
       url: `${BASE_URL}/movie/${slug}`,
-      type: "video.movie",
+      type: "website",
       images: [
         {
           url: movie.poster,          // ⭐ PREVIEW UCHUN ASOSIY RASM
