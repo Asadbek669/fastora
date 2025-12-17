@@ -5,7 +5,7 @@ import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 import Link from "next/link";
 
 export default function LiveChannelPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const tv = tvChannels.find((c) => c.slug === slug);
   if (!tv) notFound();
