@@ -11,17 +11,20 @@ export default function Player({ movieId }) {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/watch/${movieId}`, {
-        method: "POST",
+      const res = await fetch(`/api/movies/${movieId}`, {
+        cache: "no-store",
       });
 
-      if (!res.ok) throw new Error("Video olinmadi");
+      if (!res.ok) throw new Error("Film topilmadi");
 
-      const data = await res.json();
+      const movie = await res.json();
 
-      if (data?.url) {
-        setSrc(data.url); // 🔥 faqat clickdan keyin
+      if (!movie?.video) {
+        throw new Error("Video yo‘q");
       }
+
+      // 🔥 faqat hozir paydo bo‘ladi
+      setSrc(movie.video + "?t=" + Date.now());
     } catch (e) {
       alert("Video vaqtincha mavjud emas");
     } finally {
