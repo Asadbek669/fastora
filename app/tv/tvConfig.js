@@ -34,7 +34,7 @@ const tvChannels = [
   { name: "Yoshlar", slug: "yoshlar" },
 ].map((tv) => ({
   ...tv,
-  image: `${CDN_BASE}/${tv.slug}.webp`,
+  image: `${CDN_BASE}/${tv.slug}.webp?v=2`,
   live: true,
 }));
 
