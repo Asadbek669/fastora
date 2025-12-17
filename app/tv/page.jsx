@@ -31,7 +31,7 @@ export default function TvPage() {
             "
           >
             <img
-              src="/tv.jpg"
+              src="/tvz.jpg"
               alt={tv.name}
               className="w-full h-24 object-cover"
             />
