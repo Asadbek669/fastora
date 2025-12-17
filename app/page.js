@@ -39,6 +39,7 @@ export const metadata = {
 import StorySlider from "./components/StorySlider";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
+import Link from "next/link";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
