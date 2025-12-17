@@ -184,7 +184,7 @@ export default async function MoviePage({ params }) {
 
           {/* PLAYER */}
           <div className="mt-6">
-            <Player movieId={movie.id} />
+            <Player src={movie.video} />
           </div>
 
           {/* GENRES */}
