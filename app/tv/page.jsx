@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 import tvChannels from "./tvConfig";
 
 export const metadata = {
@@ -21,26 +21,28 @@ export default function TvPage() {
         "
       >
         {tvChannels.map((tv, index) => (
-          <div
+          <Link
             key={index}
+            href={`/live/${tv.slug}`}
             className="
+              block
               rounded-xl overflow-hidden
               bg-[#111] shadow-md
               transition
               active:scale-95
             "
           >
-      			<img
-      			  src={tv.image}
-      			  alt={tv.name}
-      			  className="w-full h-24 object-cover"
-      			  loading="lazy"
-      			/>
+            <img
+              src={tv.image}
+              alt={tv.name}
+              className="w-full h-24 object-cover"
+              loading="lazy"
+            />
 
             <div className="py-1 text-center text-xs truncate">
               {tv.name}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
