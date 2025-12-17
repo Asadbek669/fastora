@@ -39,7 +39,8 @@ export const metadata = {
 import StorySlider from "./components/StorySlider";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
-import Link from "next/link";
+import TvRow from "./components/TvRow";
+
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -83,61 +84,9 @@ export default async function Page() {
         <HeroSlider testData={movies} />
       </div>
 
-{/* ============================
-    📺 TELEKANALLAR
-    ============================ */}
-<div className="mt-6">
+	  {/* 📺 TELEKANALLAR */}
+	  <TvRow />
 
-  {/* HEADER */}
-  <div className="flex items-center justify-between px-4 mb-3">
-    <h2 className="text-xl font-semibold">
-      Telekanallar
-    </h2>
-
-    <Link
-      href="/tv"
-      className="text-sm text-white/80 hover:text-white transition"
-    >
-      Barchasini ko‘rish ➤
-    </Link>
-  </div>
-
-  {/* SLIDER */}
-  <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
-
-    {[
-      "O‘zbekiston 24",
-      "Milliy TV",
-      "Zo‘r TV",
-      "MY5",
-      "Sport",
-      "Sevimli",
-    ].map((name, i) => (
-      <div
-        key={i}
-        className="
-          flex-shrink-0 w-[110px]
-          rounded-xl overflow-hidden
-          bg-[#111] shadow-lg
-          active:scale-95 transition
-        "
-      >
-        {/* TEMP IMAGE */}
-        <img
-          src="/tvz.jpg"
-          alt={name}
-          className="w-full h-24 object-cover"
-        />
-
-        {/* TV NAME */}
-        <p className="text-center py-2 text-sm truncate">
-          {name}
-        </p>
-      </div>
-    ))}
-
-  </div>
-</div>
 
   
       {/* JANRLAR */}
