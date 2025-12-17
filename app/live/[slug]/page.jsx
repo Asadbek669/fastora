@@ -1,5 +1,6 @@
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
+import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 
 export const dynamic = "force-dynamic";
 
@@ -48,20 +49,8 @@ export default async function LiveChannelPage({ params }) {
         ● Jonli efir — test rejimida
       </p>
 
-      {/* 🎬 PLAYER PLACEHOLDER */}
-      <div
-        className="
-          w-full aspect-video
-          rounded-2xl
-          bg-[#111]
-          flex items-center justify-center
-          text-gray-500 text-sm
-          shadow-inner
-        "
-      >
-        Player tez orada qo‘shiladi
-      </div>
-
+	  {/* 🎬 LIVE PLAYER */}
+	    <LiveExternalPlayer src={tv.stream} />
     </div>
   );
 }
