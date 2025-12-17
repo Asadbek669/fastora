@@ -106,31 +106,13 @@ export default async function Page() {
   <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
 
     {[
-      {
-        name: "O‘zbekiston 24",
-        logo: "/tv/uzbekiston24.jpg",
-      },
-      {
-        name: "Milliy TV",
-        logo: "/tv/milliy.jpg",
-      },
-      {
-        name: "Zo‘r TV",
-        logo: "/tv/zor.jpg",
-      },
-      {
-        name: "MY5",
-        logo: "/tv/my5.jpg",
-      },
-      {
-        name: "Sport",
-        logo: "/tv/sport.jpg",
-      },
-      {
-        name: "Sevimli",
-        logo: "/tv/sevimli.jpg",
-      },
-    ].map((tv, i) => (
+      "O‘zbekiston 24",
+      "Milliy TV",
+      "Zo‘r TV",
+      "MY5",
+      "Sport",
+      "Sevimli",
+    ].map((name, i) => (
       <div
         key={i}
         className="
@@ -140,22 +122,23 @@ export default async function Page() {
           active:scale-95 transition
         "
       >
-        {/* TV LOGO */}
+        {/* TEMP IMAGE */}
         <img
-          src={tv.logo || "/tvz.jpg"}
-          alt={tv.name}
+          src="/tvz.jpg"
+          alt={name}
           className="w-full h-24 object-cover"
         />
 
         {/* TV NAME */}
         <p className="text-center py-2 text-sm truncate">
-          {tv.name}
+          {name}
         </p>
       </div>
     ))}
 
   </div>
 </div>
+
   
       {/* JANRLAR */}
       <h2 className="text-xl font-semibold mt-6 mb-3 px-4">Janrlar</h2>
