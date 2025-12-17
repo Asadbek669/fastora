@@ -1,11 +1,9 @@
-
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
-import Script from "next/script"; // 🔥 FAQAT SHU QO‘SHILDI
+import Script from "next/script";
 
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
 const LOGO_URL = `${DOMAIN}/icon.png`;
-const OG_IMAGE = `${DOMAIN}/icons/icon-192.png`;
 
 export const metadata = {
   manifest: "/manifest.json",
@@ -17,29 +15,25 @@ export const metadata = {
     shortcut: "/favicon.ico",
     apple: "/icons/icon-192.png",
   },
-
   openGraph: {
     siteName: "Fastora",
     type: "website",
     locale: "uz_UZ",
   },
-
   twitter: {
     card: "summary_large_image",
   },
 };
 
 export function generateViewport() {
-  return {
-    themeColor: "#000000",
-  };
+  return { themeColor: "#000000" };
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="uz">
       <head>
-        {/* 🔥 GOOGLE ANALYTICS — FAQAT SHU QO‘SHILDI */}
+        {/* 🔹 GOOGLE ANALYTICS */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9K7SCJDFJD"
           strategy="afterInteractive"
@@ -58,6 +52,12 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
+        {/* ✅ PLAYERJS — SHU YERDA */}
+        <Script
+          src="/player/playerjs.min.js"
+          strategy="afterInteractive"
+        />
+
         {/* ORGANIZATION SCHEMA */}
         <script
           type="application/ld+json"
@@ -68,10 +68,6 @@ export default function RootLayout({ children }) {
               name: "Fastora",
               url: DOMAIN,
               logo: LOGO_URL,
-              sameAs: [
-                "https://t.me/fastora",
-                "https://instagram.com/fastora",
-              ],
             }),
           }}
         />
@@ -104,3 +100,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
