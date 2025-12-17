@@ -235,7 +235,7 @@ export default async function LiveChannelPage({ params }) {
                   rounded-lg
                   border border-white/10
                 ">
-                  <span className="text-xs text-gray-300">O'zbekiston TV</span>
+                  <span className="text-xs text-gray-300">Fastora TV</span>
                 </div>
                 <div className="
                   inline-flex items-center gap-2
@@ -247,7 +247,7 @@ export default async function LiveChannelPage({ params }) {
                   <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-xs text-green-400">Aktiv</span>
+                
                 </div>
               </div>
             </div>
@@ -270,7 +270,7 @@ export default async function LiveChannelPage({ params }) {
         {/* Bottom gradient */}
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
-            © 2024 O'zbekiston TV Platformasi - Barcha huquqlar himoyalangan
+            © 2025 Fastora TV Platformasi - Barcha huquqlar himoyalangan
           </p>
         </div>
       </div>
