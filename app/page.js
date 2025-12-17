@@ -82,28 +82,78 @@ export default async function Page() {
         <HeroSlider testData={movies} />
       </div>
 
-{/* TELEKANALLAR */}
-<h2 className="text-xl font-semibold mt-6 mb-3 px-4">
-  Telekanallar
-</h2>
+{/* ============================
+    📺 TELEKANALLAR
+    ============================ */}
+<div className="mt-6">
 
-<div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
-  {[
-    "O‘zbekiston 24",
-    "Milliy TV",
-    "Zo‘r TV",
-    "MY5",
-    "Sport",
-    "Sevimli",
-  ].map((tv, i) => (
-    <div
-      key={i}
-      className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111]"
+  {/* HEADER */}
+  <div className="flex items-center justify-between px-4 mb-3">
+    <h2 className="text-xl font-semibold">
+      Telekanallar
+    </h2>
+
+    <Link
+      href="/tv"
+      className="text-sm text-blue-400 hover:text-blue-300 transition"
     >
-      <img src="/tvz.jpg" className="w-full h-24 object-cover" />
-      <p className="text-center py-2 text-sm truncate">{tv}</p>
-    </div>
-  ))}
+      Barchasini ko‘rish →
+    </Link>
+  </div>
+
+  {/* SLIDER */}
+  <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
+
+    {[
+      {
+        name: "O‘zbekiston 24",
+        logo: "/tv/uzbekiston24.jpg",
+      },
+      {
+        name: "Milliy TV",
+        logo: "/tv/milliy.jpg",
+      },
+      {
+        name: "Zo‘r TV",
+        logo: "/tv/zor.jpg",
+      },
+      {
+        name: "MY5",
+        logo: "/tv/my5.jpg",
+      },
+      {
+        name: "Sport",
+        logo: "/tv/sport.jpg",
+      },
+      {
+        name: "Sevimli",
+        logo: "/tv/sevimli.jpg",
+      },
+    ].map((tv, i) => (
+      <div
+        key={i}
+        className="
+          flex-shrink-0 w-[110px]
+          rounded-xl overflow-hidden
+          bg-[#111] shadow-lg
+          active:scale-95 transition
+        "
+      >
+        {/* TV LOGO */}
+        <img
+          src={tv.logo || "/tvz.jpg"}
+          alt={tv.name}
+          className="w-full h-24 object-cover"
+        />
+
+        {/* TV NAME */}
+        <p className="text-center py-2 text-sm truncate">
+          {tv.name}
+        </p>
+      </div>
+    ))}
+
+  </div>
 </div>
   
       {/* JANRLAR */}
