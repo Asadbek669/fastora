@@ -4,7 +4,61 @@ import { notFound } from "next/navigation";
 import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 import Link from "next/link";
 
+const BASE_URL = "https://fastora.uz";
+
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+
+  const tv = tvChannels.find((c) => c.slug === slug);
+
+  if (!tv) {
+    return {
+      title: "Telekanal topilmadi | Fastora",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  return {
+    title: `${tv.name} — Jonli efir | Fastora`,
+    description: `${tv.name} telekanalini Fastora platformasida jonli efirda bepul tomosha qiling.`,
+
+    alternates: {
+      canonical: `${BASE_URL}/live/${tv.slug}`,
+    },
+
+    openGraph: {
+      title: `${tv.name} — Jonli efir`,
+      description: `${tv.name} telekanalini Fastora orqali jonli tomosha qiling.`,
+      url: `${BASE_URL}/live/${tv.slug}`,
+      siteName: "Fastora",
+      locale: "uz_UZ",
+      type: "video.other",
+      images: [
+        {
+          url: tv.image,
+          width: 1200,
+          height: 630,
+          alt: `${tv.name} jonli efir`,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: `${tv.name} — Jonli efir`,
+      description: `${tv.name} telekanalini jonli tomosha qiling`,
+      images: [tv.image],
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
 
 export default async function LiveChannelPage({ params }) {
   const { slug } = await params;
@@ -246,3 +300,5 @@ export default async function LiveChannelPage({ params }) {
     </div>
   );
 }
+
+
