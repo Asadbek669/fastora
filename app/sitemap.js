@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import tvChannels from "@/app/tv/tvConfig";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -30,6 +31,7 @@ export default async function sitemap() {
     "anime",
     "multfilmlar",
     "uzbek-film",
+    "tv", 
   ];
 
   const urls = [
@@ -44,6 +46,14 @@ export default async function sitemap() {
     // 📂 Kategoriya sahifalari
     ...categories.map((cat) => ({
       url: `${baseUrl}/${cat}`,
+      lastModified: new Date(),
+      changefreq: "daily",
+      priority: 0.9,
+    })),
+
+    // 📡 Jonli telekanallar
+    ...tvChannels.map((tv) => ({
+      url: `${baseUrl}/live/${tv.slug}`,
       lastModified: new Date(),
       changefreq: "daily",
       priority: 0.9,
@@ -81,3 +91,4 @@ export default async function sitemap() {
 
   return urls;
 }
+
