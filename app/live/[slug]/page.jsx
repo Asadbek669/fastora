@@ -16,7 +16,7 @@ export default async function LiveChannelPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black pb-24 px-4 pt-6 text-white relative overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-900 via-gray-900 to-black px-4 pt-6 text-white relative overflow-hidden">
       
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/5 via-transparent to-transparent pointer-events-none"></div>
@@ -234,22 +234,9 @@ export default async function LiveChannelPage({ params }) {
             border border-white/5
           ">
             <p className="text-sm text-gray-400">
-              Jonli efir sifatini yaxshilash uchun <span className="text-blue-400">yuqori tezlikdagi internet</span> ulanishini tavsiya etamiz
+              Jonli efir sifatini yaxshilash uchun yuqori tezlikdagi internet ulanishini tavsiya etamiz
             </p>
           </div>
-        </div>
-
-        {/* Bottom gradient */}
-        <div className="mt-8 text-center">
-		  <p className="text-xs text-gray-500">
-		    © 2025 Fastora TV Platformasi —{" "}
-		    <Link
-			  href="/copyright"
-			  className="text-blue-400 hover:text-blue-300 transition"
-		    >
-			  Mualliflik huquqi
-		    </Link>
-		  </p>
         </div>
       </div>
 
