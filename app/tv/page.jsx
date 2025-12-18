@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function TvPage() {
   return (
-    <div className="pb-24">
+    <div>
 
       <h1 className="text-xl font-semibold px-4 pt-4 mb-4">
         📺 Telekanallar
