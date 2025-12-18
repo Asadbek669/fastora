@@ -18,13 +18,22 @@ export const metadata = {
     siteName: "Fastora",
     locale: "uz_UZ",
     type: "website",
+
+    images: [
+      {
+        url: "https://cdn.fastora.uz/og-tv.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fastora — Jonli telekanallar",
+      },
+    ],
   },
 
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Jonli telekanallar — Fastora",
-    description:
-      "Bepul jonli efirdagi TV kanallar Fastora’da",
+    description: "Bepul jonli efirdagi TV kanallar Fastora’da",
+    images: ["https://cdn.fastora.uz/og-tv.jpg"],
   },
 
   robots: {
@@ -32,7 +41,6 @@ export const metadata = {
     follow: true,
   },
 };
-
 
 export default function TvPage() {
   return (
