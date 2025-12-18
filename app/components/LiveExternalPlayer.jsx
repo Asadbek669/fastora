@@ -10,7 +10,7 @@ export default function LiveExternalPlayer({ src }) {
     new window.Playerjs({
       id: "player",
       file: src,
-      autoplay: 1,
+      autoplay: 0,
       controls: 1,
       mute: 0,
     });
@@ -30,3 +30,4 @@ export default function LiveExternalPlayer({ src }) {
     </div>
   );
 }
+
