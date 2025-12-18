@@ -72,7 +72,7 @@ export default async function Page() {
   const premyeraMovies = [...movies].reverse().slice(0, 10);
 
   return (
-    <div className="pb-24">
+    <div>
 
       {/* STORY SLIDER */}
       <div className="px-4 pt-4">
