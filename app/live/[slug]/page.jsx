@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 import Link from "next/link";
 
-const BASE_URL = "https://fastora.uz";
+const BASE_URL = "https://www.fastora.uz";
 
 export const dynamic = "force-dynamic";
 
