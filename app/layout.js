@@ -1,5 +1,6 @@
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper";
+import Footer from "@/components/Footer";
 import Script from "next/script";
 
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://fastora.uz";
@@ -51,8 +52,8 @@ export default function RootLayout({ children }) {
         </Script>
       </head>
 
-      <body>
-        {/* ✅ PLAYERJS — SHU YERDA */}
+      <body className="bg-black text-white">
+        {/* ✅ PLAYERJS */}
         <Script
           src="/player/playerjs.min.js"
           strategy="afterInteractive"
@@ -95,9 +96,17 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        <ClientWrapper>{children}</ClientWrapper>
-      </body>
+
+		<div className="min-h-screen flex flex-col pb-24">
+		  {/* CONTENT */}
+		  <main className="flex-1">
+		    <ClientWrapper>{children}</ClientWrapper>
+		  </main>
+
+		  {/* GLOBAL FOOTER */}
+		  <Footer />
+	    </div>
+	  </body>
     </html>
   );
 }
-
