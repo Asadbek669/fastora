@@ -1,8 +1,10 @@
 
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
-import LiveExternalPlayer from "@/components/LiveExternalPlayer";
+import ClientPlayer from "./ClientPlayer";
 import Link from "next/link";
+
+
 
 const BASE_URL = "https://www.fastora.uz";
 
@@ -275,7 +277,7 @@ export default async function LiveChannelPage({ params }) {
             
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
-              <LiveExternalPlayer src={tv.stream} />             
+              <ClientPlayer src={tv.stream} />         
             </div>
           </div>
 
