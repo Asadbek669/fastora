@@ -2,6 +2,7 @@
 import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
 import LiveExternalPlayer from "@/components/LiveExternalPlayer";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -240,9 +241,15 @@ export default async function LiveChannelPage({ params }) {
 
         {/* Bottom gradient */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
-            © 2025 Fastora TV Platformasi - Barcha huquqlar himoyalangan
-          </p>
+		  <p className="text-xs text-gray-500">
+		    © 2025 Fastora TV Platformasi —{" "}
+		    <Link
+			  href="/copyright"
+			  className="text-blue-400 hover:text-blue-300 transition"
+		    >
+			  Mualliflik huquqi
+		    </Link>
+		  </p>
         </div>
       </div>
 
