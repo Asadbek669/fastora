@@ -11,7 +11,7 @@ export default function TvPage() {
     <div>
 
       <h1 className="text-xl font-semibold px-4 pt-4 mb-4">
-        📺 Telekanallar
+        Telekanallar
       </h1>
 
       <div
