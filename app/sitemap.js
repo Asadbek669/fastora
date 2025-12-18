@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import tvChannels from "@/app/tv/tvConfig";
+import tvChannels from "./tv/tvConfig";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -91,4 +91,5 @@ export default async function sitemap() {
 
   return urls;
 }
+
 
