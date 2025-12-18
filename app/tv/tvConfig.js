@@ -164,5 +164,5 @@ const tvChannels = [
 }));
 
 export default tvChannels;
-export default tvChannels;
+
 
