@@ -1,3 +1,8 @@
+// 🔴 MUHIM: sitemap static bo‘lib qolmasligi uchun
+export const dynamic = "force-dynamic";
+
+// 🔴 ISR: 1 soatda bir marta qayta generatsiya bo‘ladi (request bo‘lsa)
+export const revalidate = 3600;
 
 import { Pool } from "pg";
 import tvChannels from "./tv/tvConfig";
@@ -42,13 +47,13 @@ export default async function sitemap() {
   ];
 
   // 🔒 Static sahifalar uchun bitta sana
-  const STATIC_DATE = "2025-01-01";
+  const STATIC_DATE = "2025-12-18";
 
   const urls = [
-    // 🏠 Asosiy sahifa
+    // 🏠 Asosiy sahifa (dynamic UI → new Date())
     {
       url: baseUrl,
-      lastModified: new Date(), // home uchun ruxsat
+      lastModified: new Date(),
       changefreq: "daily",
       priority: 1.0,
     },
@@ -69,39 +74,39 @@ export default async function sitemap() {
       priority: 0.9,
     })),
 
-    // 🎬 Filmlar
+    // 🎬 Filmlar (REAL lastmod)
     ...movies.rows.map((m) => ({
       url: `${baseUrl}/movie/${m.slug}`,
-      lastModified: m.created_at, // ✅ REAL DATA
+      lastModified: m.created_at,
       changefreq: "monthly",
       priority: 0.8,
     })),
 
-    // 📺 Seriallar
+    // 📺 Seriallar (REAL lastmod)
     ...series.rows.map((s) => ({
       url: `${baseUrl}/serial/${s.slug}`,
-      lastModified: s.created_at, // ✅ REAL DATA
+      lastModified: s.created_at,
       changefreq: "monthly",
       priority: 0.8,
     })),
 
     // 📦 Sezonlar
-    ...seasons.rows.map((season) => {
-      const parentSeries = series.rows.find(
-        (sr) => sr.id === season.series_id
-      );
+    ...seasons.rows
+      .map((season) => {
+        const parentSeries = series.rows.find(
+          (sr) => sr.id === season.series_id
+        );
 
-      if (!parentSeries) return null;
+        if (!parentSeries) return null;
 
-      return {
-        url: `${baseUrl}/serial/${parentSeries.slug}/season/${season.season_number}`,
-        // sezon o‘zgarsa → o‘zi
-        // aks holda → serial yaratilgan sana
-        lastModified: season.created_at || parentSeries.created_at,
-        changefreq: "monthly",
-        priority: 0.7,
-      };
-    }).filter(Boolean),
+        return {
+          url: `${baseUrl}/serial/${parentSeries.slug}/season/${season.season_number}`,
+          lastModified: season.created_at || parentSeries.created_at,
+          changefreq: "monthly",
+          priority: 0.7,
+        };
+      })
+      .filter(Boolean),
   ];
 
   return urls;
