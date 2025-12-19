@@ -277,7 +277,7 @@ export default async function LiveChannelPage({ params }) {
             
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
-              <ClientPlayer src={tv.stream} />         
+              <ClientPlayer slug={tv.slug} />         
             </div>
           </div>
 
