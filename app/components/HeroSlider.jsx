@@ -69,6 +69,7 @@ export default function HeroSlider() {
         alt={item.title}
         fill
         priority          // 🔥 ENG MUHIM
+        fetchPriority="high" 
         sizes="100vw"
         quality={75}
         className={`object-cover transition-transform duration-[600ms] ${
