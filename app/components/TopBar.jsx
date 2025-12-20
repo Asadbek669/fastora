@@ -11,7 +11,7 @@ export default function TopBar() {
       "
     >
       <img
-        src="https://pub-7b8b8366b149459fa661ebc5cb2caef0.r2.dev/fastora-logo.webp"
+        src="https://cdn.fastora.uz/tv/fastora-logo1.webp" 
         alt="Fastora logotipi"
         className="h-[40px] w-auto object-contain"
         decoding="async"
