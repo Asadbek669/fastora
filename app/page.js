@@ -107,7 +107,12 @@ export default async function Page() {
             key={index}
             className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
-            <img src="/tez-orada.jpg" className="w-full h-24 object-cover" />
+            <img
+              src="/tez-orada.jpg"
+              alt=""
+              aria-hidden="true"
+              className="w-full h-24 object-cover"
+            />
             <p className="text-center py-2 text-sm truncate">{g}</p>
           </div>
         ))}
