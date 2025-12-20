@@ -11,9 +11,7 @@ export default function StorySlider() {
 
   useEffect(() => {
     async function loadStories() {
-      const res = await fetch("/api/stories", {
-        next: { revalidate: 3000 }, // 🔥 50 daqiqa cache
-      });
+      const res = await fetch("/api/stories");
       if (res.ok) setStories(await res.json());
     }
     loadStories();
