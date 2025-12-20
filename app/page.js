@@ -75,12 +75,12 @@ export default async function Page() {
     <div>
 
       {/* STORY SLIDER */}
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 min-h-[120px]">
         <StorySlider testData={movies} />
       </div>
 
       {/* HERO SLIDER */}
-      <div className="mt-3 px-4">
+      <div className="mt-3 px-4 min-h-[220px] md:min-h-[520px]">
         <HeroSlider testData={movies} />
       </div>
 
