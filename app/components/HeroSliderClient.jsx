@@ -3,6 +3,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function HeroSliderClient({ items }) {
   const [index, setIndex] = useState(0);
@@ -29,16 +30,15 @@ export default function HeroSliderClient({ items }) {
     const SWIPE_Y = 30;
     const TAP_TIME = 250;
 
-    // Vertical scroll — ignore
     if (Math.abs(dy) > SWIPE_Y) return;
 
     // Swipe
     if (Math.abs(dx) > SWIPE_X && dt < 300) {
-      if (dx < 0) {
-        setIndex((i) => (i + 1) % items.length);
-      } else {
-        setIndex((i) => (i - 1 + items.length) % items.length);
-      }
+      setIndex((i) =>
+        dx < 0
+          ? (i + 1) % items.length
+          : (i - 1 + items.length) % items.length
+      );
       return;
     }
 
@@ -51,6 +51,20 @@ export default function HeroSliderClient({ items }) {
 
   return (
     <>
+      {/* 🔥 CLIENT IMAGE (2+ slaydlar) */}
+      {index !== 0 && (
+        <div className="absolute inset-0 z-10">
+          <Image
+            src={items[index].backdrop_url}
+            alt={items[index].title}
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority={false}   // ❗ LCP EMAS
+          />
+        </div>
+      )}
+
       {/* Touch layer */}
       <div
         className="absolute inset-0 z-20"
