@@ -45,13 +45,15 @@ export default function StorySlider() {
             {/* Avatar */}
             <div className="w-20 h-20 rounded-full p-[3px] bg-gradient-to-tr from-yellow-400 to-red-500">
               <div className="relative w-full h-full rounded-full overflow-hidden bg-black">
-                <Image
+                <Image                  
                   src={s.poster_url}
                   alt={s.title}
                   fill
                   sizes="80px"
+                  quality={60}
+                  loading="eager"          // 🔥 lazy EMAS
+                  fetchPriority="low"      // 🔥 hero’dan keyin
                   className="object-cover"
-                  loading="lazy"
                 />
               </div>
             </div>
