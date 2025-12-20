@@ -13,7 +13,7 @@ export default function HeroSliderClient({ items }) {
   const startY = useRef(0);
   const startTime = useRef(0);
 
-  if (items.length < 2) return null;
+  if (!items || items.length < 2) return null;
 
   const onTouchStart = (e) => {
     startX.current = e.touches[0].clientX;
@@ -30,6 +30,7 @@ export default function HeroSliderClient({ items }) {
     const SWIPE_Y = 30;
     const TAP_TIME = 250;
 
+    // Vertical scroll — ignore
     if (Math.abs(dy) > SWIPE_Y) return;
 
     // Swipe
@@ -51,7 +52,7 @@ export default function HeroSliderClient({ items }) {
 
   return (
     <>
-      {/* 🔥 CLIENT IMAGE (2+ slaydlar) */}
+      {/* 🖼 CLIENT IMAGE (2+ slaydlar uchun) */}
       {index !== 0 && (
         <div className="absolute inset-0 z-10">
           <Image
@@ -60,20 +61,35 @@ export default function HeroSliderClient({ items }) {
             fill
             sizes="100vw"
             className="object-cover"
-            priority={false}   // ❗ LCP EMAS
+            priority={false} // ❗ LCP EMAS
           />
         </div>
       )}
 
-      {/* Touch layer */}
+      {/* 🔤 CLIENT TITLE (2+ slaydlar uchun) */}
+      {index !== 0 && (
+        <div className="absolute left-4 bottom-4 md:left-8 md:bottom-8 z-20 max-w-xl">
+          <h2 className="text-xl md:text-3xl font-semibold text-white leading-tight line-clamp-2">
+            {items[index].title}
+          </h2>
+
+          {items[index].subtitle && (
+            <p className="text-sm md:text-base text-white/75 mt-1 line-clamp-2">
+              {items[index].subtitle}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* 🖐 TOUCH LAYER */}
       <div
-        className="absolute inset-0 z-20"
+        className="absolute inset-0 z-30"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       />
 
-      {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+      {/* 🔘 DOTS */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-40">
         {items.slice(0, 5).map((_, i) => (
           <button
             key={i}
@@ -81,6 +97,7 @@ export default function HeroSliderClient({ items }) {
               e.stopPropagation();
               setIndex(i);
             }}
+            aria-label={`Slide ${i + 1}`}
             className={`h-1.5 rounded-full transition-all ${
               i === index ? "w-6 bg-white" : "w-2 bg-white/40"
             }`}
