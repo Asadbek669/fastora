@@ -1,21 +1,22 @@
+
 "use client";
 
 import { useEffect } from "react";
 
-export default function LiveExternalPlayer({ slug }) {
+export default function LiveExternalPlayer({ src }) {
   useEffect(() => {
-    if (!slug || !window.Playerjs) return;
+    if (!src || !window.Playerjs) return;
 
     new window.Playerjs({
       id: "player",
-      file: `/api/live/${slug}`, // 🔥 ASOSIY O‘ZGARISH
+      file: src,
       autoplay: 0,
       controls: 1,
       mute: 0,
     });
-  }, [slug]);
+  }, [src]);
 
-  if (!slug) {
+  if (!src) {
     return (
       <div className="w-full aspect-video rounded-xl bg-[#111] flex items-center justify-center text-gray-500 text-sm">
         Bu kanal uchun live stream mavjud emas
