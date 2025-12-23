@@ -27,7 +27,7 @@ export default function WatchPage({ params }) {
 		  onClick={() => history.back()}
 		  className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition transform hover:scale-105"
 	    >
-		  ← Orqaga
+		  ‹ Orqaga
 	    </button>
 
 		{/* Movie title */}
@@ -45,4 +45,5 @@ export default function WatchPage({ params }) {
     </div>
   );
 }
+
 
