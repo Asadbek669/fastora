@@ -139,57 +139,58 @@ export default function StoryPage() {
       </div>
 
       {/* CONTROL BUTTONS */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-5 z-50">
-
-        {/* PREVIOUS */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
-    		<button
-    		  disabled={!hasPrev}
-    		  onClick={gotoPrevStory}
-    		  className={`
-    			w-12 h-12 rounded-full text-white text-2xl
-    			transition-all active:scale-95
-    			${
-    			  hasPrev
-    				? "bg-red-600 hover:bg-red-700"
-    				: "bg-red-900/40 opacity-40 cursor-not-allowed"
-    			}
-    		  `}
-    		>
-    		  ‹
-    		</button>
-    
-    		<button
-    		  onClick={() => (window.location.href = story.page_url)}
-    		  className="
-    			bg-red-600 hover:bg-red-700
-    			text-white px-6 py-3 rounded-full
-    			transition-all active:scale-95
-    		  "
-    		>
-    		  Batafsil
-    		</button>
-    
-    		<button
-    		  disabled={!hasNext}
-    		  onClick={gotoNextStory}
-    		  className={`
-    			w-12 h-12 rounded-full text-white text-2xl
-    			transition-all active:scale-95
-    			${
-    			  hasNext
-    				? "bg-red-600 hover:bg-red-700"
-    				: "bg-red-900/40 opacity-40 cursor-not-allowed"
-    			}
-    		  `}
-    		>
-    		  ›
-    		</button>
+	  {/* CONTROL BUTTONS */}
+	  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-50">
+	
+	  {/* PREVIOUS */}
+	    <button
+	      disabled={!hasPrev}
+	      onClick={gotoPrevStory}
+	      className={`
+	        w-12 h-12 rounded-full text-white text-2xl
+	        transition-all active:scale-95
+	        ${
+	          hasPrev
+	            ? "bg-red-600 hover:bg-red-700"
+	            : "bg-red-900/40 opacity-40 cursor-not-allowed"
+	        }
+	      `}
+	    >
+	      ‹
+	    </button>
+	
+	    {/* DETAILS */}
+	    <button
+	      onClick={() => (window.location.href = story.page_url)}
+	      className="
+	        bg-red-600 hover:bg-red-700
+	        text-white px-6 py-3 rounded-full
+	        transition-all active:scale-95
+	      "
+	    >
+	      Batafsil
+	    </button>
+	
+	    {/* NEXT */}
+	    <button
+	      disabled={!hasNext}
+	      onClick={gotoNextStory}
+	      className={`
+	        w-12 h-12 rounded-full text-white text-2xl
+	        transition-all active:scale-95
+	        ${
+	          hasNext
+	      	    ? "bg-red-600 hover:bg-red-700"
+	            : "bg-red-900/40 opacity-40 cursor-not-allowed"
+	        }
+	      `}
+	    >
+	      ›
+	    </button>
       </div>
-
-    </div>
   );
 }
+
 
 
 
