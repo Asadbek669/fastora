@@ -182,10 +182,13 @@ export default async function MoviePage({ params }) {
 		  </div>
 
 
-          {/* PLAYER */}
-          <div className="mt-6">
-            <Player src={movie.video} />
-          </div>
+		  {/* TOMOSHA QILISH TUGMASI */}
+		  <Link
+		    href={`/movie/${slug}/watch`}
+		    className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
+		  >
+	  	    ▶ Tomosha qilish
+		  </Link>
 
           {/* GENRES */}
           <div className="mt-6">
