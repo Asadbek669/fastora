@@ -7,6 +7,6 @@ const LiveExternalPlayer = dynamic(
   { ssr: false }
 );
 
-export default function ClientPlayer({ slug }) {
-  return <LiveExternalPlayer slug={slug} />;
+export default function ClientPlayer({ src }) {
+  return <LiveExternalPlayer src={src} />;
 }
