@@ -104,15 +104,19 @@ export default function StoryPage() {
       </div>
 
       {/* BACK BUTTON */}
-      <button
-        onClick={() => router.push("/")}
-        className="absolute top-4 left-4 z-50
-        bg-black/60 hover:bg-black/80 
-        text-white rounded-full px-4 py-3
-        text-xl backdrop-blur-md shadow-xl transition-all"
-      >
-        ←
-      </button>
+	    <button
+	      onClick={() => router.push("/")}
+	      className="
+  		  absolute top-4 left-4 z-50
+  		  flex items-center gap-2
+  		  bg-red-600 hover:bg-red-700
+  		  text-white px-4 py-2 rounded-full
+  		  transition-all active:scale-95
+  	    "
+  	  >
+  	    <span className="text-xl">‹</span>
+  	    Orqaga
+  	  </button>
 
       {/* VIDEO PLAYER */}
       <div
@@ -138,50 +142,54 @@ export default function StoryPage() {
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-5 z-50">
 
         {/* PREVIOUS */}
-        <button
-          onClick={gotoPrevStory}
-          disabled={!hasPrev}
-          className={`w-14 h-14 flex justify-center items-center
-          rounded-full text-white text-3xl font-bold
-          backdrop-blur-md shadow-xl transition-all
-          ${
-            hasPrev
-              ? "bg-black/60 hover:bg-black/80"
-              : "bg-black/30 opacity-40 pointer-events-none"
-          }`}
-        >
-          ‹
-        </button>
-
-        {/* DETAILS */}
-        <button
-          onClick={() => (window.location.href = story.page_url)}
-          className="bg-gradient-to-r from-red-600 to-red-700
-          text-white px-8 py-4 rounded-full text-lg font-semibold
-          shadow-xl active:scale-95 backdrop-blur-md transition-all"
-        >
-          Batafsil
-        </button>
-
-        {/* NEXT */}
-        <button
-          onClick={gotoNextStory}
-          disabled={!hasNext}
-          className={`w-14 h-14 flex justify-center items-center
-          rounded-full text-white text-3xl font-bold
-          backdrop-blur-md shadow-xl transition-all
-          ${
-            hasNext
-              ? "bg-black/60 hover:bg-black/80"
-              : "bg-black/30 opacity-40 pointer-events-none"
-          }`}
-        >
-          ›
-        </button>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+    		<button
+    		  disabled={!hasPrev}
+    		  onClick={gotoPrevStory}
+    		  className={`
+    			w-12 h-12 rounded-full text-white text-2xl
+    			transition-all active:scale-95
+    			${
+    			  hasPrev
+    				? "bg-red-600 hover:bg-red-700"
+    				: "bg-red-900/40 opacity-40 cursor-not-allowed"
+    			}
+    		  `}
+    		>
+    		  ‹
+    		</button>
+    
+    		<button
+    		  onClick={() => (window.location.href = story.page_url)}
+    		  className="
+    			bg-red-600 hover:bg-red-700
+    			text-white px-6 py-3 rounded-full
+    			transition-all active:scale-95
+    		  "
+    		>
+    		  Batafsil
+    		</button>
+    
+    		<button
+    		  disabled={!hasNext}
+    		  onClick={gotoNextStory}
+    		  className={`
+    			w-12 h-12 rounded-full text-white text-2xl
+    			transition-all active:scale-95
+    			${
+    			  hasNext
+    				? "bg-red-600 hover:bg-red-700"
+    				: "bg-red-900/40 opacity-40 cursor-not-allowed"
+    			}
+    		  `}
+    		>
+    		  ›
+    		</button>
       </div>
 
     </div>
   );
 }
+
 
 
