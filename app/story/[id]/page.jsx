@@ -188,8 +188,10 @@ export default function StoryPage() {
 	      ›
 	    </button>
       </div>
+	</div>	
   );
 }
+
 
 
 
