@@ -1,161 +1,160 @@
 const CDN_BASE = "https://cdn.fastora.uz/tv";
-const TEST_HLS = "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/tracks-v1a1/mono.m3u8";
 
 const tvChannels = [
   {
     name: "BIZ TV",
     slug: "biz-tv",
-    stream: TEST_HLS,
+    stream: "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Setanta 1",
     slug: "setanta-1",
-    stream: TEST_HLS,
+    stream: "https://stream1.cinerama.uz/1263/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Россия 1",
     slug: "rossiya-1",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1020/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Россия 24",
     slug: "rossiya-24",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1021/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Первый канал",
     slug: "perviy-kanal",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1019/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Muloqot TV",
     slug: "muloqot-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1285/video.m3u8",
   },
   {
     name: "Istiqlol TV",
     slug: "istiqlol-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1283/video.m3u8",
   },
   {
     name: "ZO‘R TV",
     slug: "zor-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1016/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Renessans TV",
     slug: "renessans-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1221/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Futbol TV",
     slug: "futbol-tv",
-    stream: TEST_HLS,
+    stream: "https://stream1.cinerama.uz/1010/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Gold TV",
     slug: "gold-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//4007/tracks-v1a1/mono.m3u8",
   },
   {
     name: "NTV",
     slug: "ntv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1284/video.m3u8",
   },
   {
     name: "Sevimli TV",
     slug: "sevimli-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1017/tracks-v1a1/index.m3u8",
   },
   {
     name: "MY5",
     slug: "my5",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1217/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Milliy TV",
     slug: "milliy-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1014/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Dasturxon TV",
     slug: "dasturxon-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1206/tracks-v1a1/index.m3u8",
   },
   {
     name: "MYDAY TV",
     slug: "myday-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1265/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Madaniyat va Ma'rifat",
     slug: "madaniyat-marifat",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1005/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Toshkent TV",
     slug: "toshkent-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1003/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Dunyo Bo‘ylab",
     slug: "dunyo-boylab",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1006/tracks-v1a1/mono.m3u8",
   },
   {
     name: "FTV",
     slug: "ftv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1018/tracks-v1a1a2/mono.m3u8",
   },
   {
     name: "Bolajon TV",
     slug: "bolajon-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz/1007/video.m3u8",
   },
   {
     name: "Navo",
     slug: "navo",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1008/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Mahalla TV",
     slug: "mahalla-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1013/tracks-v1a1/mono.m3u8",
   },
   {
     name: "SPORT TV UZ",
     slug: "sport-tv-uz",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1004/tracks-v1a1/mono.m3u8",
   },
   {
     name: "O'zbekiston tarixi",
     slug: "ozbekiston-tarixi",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1209/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Kinoteatr",
     slug: "kinoteatr",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1009/tracks-v1a1/mono.m3u8",
   },
   {
     name: "UZ REPORT TV",
     slug: "uzreport-tv",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1015/tracks-v1a1/mono.m3u8",
   },
   {
     name: "O‘zbekiston 24",
     slug: "uzbekiston-24",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1011/tracks-v1a1/mono.m3u8",
   },
   {
     name: "O‘zbekiston 1",
     slug: "uzbekiston-1",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1001/tracks-v1a1/mono.m3u8",
   },
   {
     name: "Yoshlar",
     slug: "yoshlar",
-    stream: TEST_HLS,
+    stream: "https://stream8.cinerama.uz//1002/tracks-v1a1/mono.m3u8",
   },
 ].map((tv) => ({
   ...tv,
@@ -164,5 +163,4 @@ const tvChannels = [
 }));
 
 export default tvChannels;
-
 
