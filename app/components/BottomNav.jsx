@@ -17,7 +17,13 @@ export default function BottomNav() {
         <Image src="/icons/house.svg" width={24} height={24} alt="home" />
         <span className="text-xs">Asosiy</span>
       </Link>
-
+	  
+      {/* TV */}
+      <Link href="/tv" className="flex flex-col items-center active:scale-95">
+        <Image src="/icons/tv.svg" width={24} height={24} alt="tv" />
+        <span className="text-xs">TV</span>
+      </Link>
+	  
       {/* DONATE */}
 	  <Link
 	    href="/donate"
