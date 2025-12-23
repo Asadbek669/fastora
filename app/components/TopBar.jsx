@@ -89,7 +89,6 @@ export default function TopBar() {
             "
           />
           <span className="mt-1 font-medium tracking-wide">
-            Donate
           </span>
         </Link>
       </div>
