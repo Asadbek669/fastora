@@ -19,12 +19,13 @@ export default function PlayerClient({ src, title }) {
           backgroundPosition: "center",
         }}
       >
-        <button
-          onClick={openDirect}
-          className="flex items-center justify-center text-white text-4xl w-20 h-20 rounded-full bg-blue-600/80 shadow-lg hover:scale-105 transition z-10"
-        >
-          ▶
-        </button>
+		<button
+		  onClick={openDirect}
+		  className="flex items-center justify-center text-white text-3xl w-16 h-16 rounded-full bg-red-600/80 shadow-lg hover:scale-105 transition z-10"
+		>
+		  ▶
+		</button>
+
         {/* Agar fon ustiga qorong‘i overlay qo‘ymoqchi bo‘lsangiz */}
         <div className="absolute inset-0 bg-black/30"></div>
       </div>
@@ -35,3 +36,4 @@ export default function PlayerClient({ src, title }) {
     </div>
   );
 }
+
