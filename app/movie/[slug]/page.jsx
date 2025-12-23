@@ -114,13 +114,13 @@ export default async function MoviePage({ params }) {
 
           {/* POSTER + INFO */}
           <div className="flex gap-4 items-start">
-            <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
+            <div className="w-32 h-[48px*2.66] rounded-xl overflow-hidden shadow-xl border border-white/10">
               <Image
                 src={movie.poster}
-                width={300}
-                height={450}
+                width={128}
+                height={192}
                 alt={movie.title}
-                className="w-full object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
 
