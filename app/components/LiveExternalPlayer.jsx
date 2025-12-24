@@ -3,21 +3,16 @@
 import { useEffect } from "react";
 
 export default function LiveExternalPlayer({ src }) {
-  const vastUrl = "https://s.magsrv.com/v1/vast.php?idzone=5810604";
-
   useEffect(() => {
     if (!src || !window.Playerjs) return;
 
     new window.Playerjs({
       id: "player",
-      file: src, // bu sizning asli video faylingiz
+      file: src,
       autoplay: 0,
       controls: 1,
       mute: 0,
-      advertising: {
-        vast: vastUrl,
-        skip: 10, // ExoClick skip settings
-      },
+      poster: "https://cdn.fastora.uz/images/FASTORA.jpg", // <--- zastavka
     });
   }, [src]);
 
