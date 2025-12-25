@@ -96,23 +96,55 @@ export default function TopBar() {
       )}
 
       {/* ================= SIDEBAR ================= */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-full w-[260px]
-          bg-gradient-to-b from-[#111111] to-[#1a1a1a]
-          backdrop-blur-md
-          shadow-2xl z-50
-          transform transition-transform duration-500 ease-in-out
-          ${open ? "translate-x-0" : "-translate-x-full"}
-        `}
-      >
+	  <aside
+	    className={`
+		  fixed top-0 left-0 h-full w-[260px]
+		  bg-gradient-to-b from-[#111111] to-[#1a1a1a]
+		  backdrop-blur-md
+		  shadow-2xl z-50
+		  transform transition-transform duration-500 ease-in-out
+		  ${open ? "translate-x-0" : "-translate-x-full"}
+		  flex flex-col
+	    `}
+	  >
         {/* SIDEBAR HEADER */}
-        <div className="h-[52px] flex items-center px-4 border-b border-white/20 bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 text-white font-bold shadow-md">
-          <span>F A S T O R A</span>
-        </div>
+		{/* SIDEBAR HEADER */}
+		<div className="
+		  h-[60px] flex items-center justify-center px-5
+		  bg-black/90 backdrop-blur-md
+		  border-b border-white/10
+		  shadow-lg
+		  relative
+		">
+		  <h2 className="
+			text-xl font-bold 
+			bg-clip-text text-transparent
+			bg-gradient-to-r from-purple-400 via-pink-400 to-red-400
+		  ">
+			M E N Y U
+		  </h2>
+
+		  {/* Optional: Close button */}
+		  <button
+			onClick={() => setOpen(false)}
+			className="absolute right-4 p-1 rounded-md hover:bg-white/10 transition"
+		  >
+			<svg
+			  xmlns="http://www.w3.org/2000/svg"
+			  className="h-5 w-5 text-white"
+			  fill="none"
+			  viewBox="0 0 24 24"
+			  stroke="currentColor"
+			  strokeWidth={2}
+			>
+			  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+			</svg>
+		  </button>
+		</div>
+
 
         {/* SIDEBAR NAV */}
-		<nav className="flex flex-col px-4 py-4 gap-3 text-sm">
+		<nav className="flex-1 flex flex-col px-4 py-4 gap-3 overflow-y-auto pb-20">
 		  {/* Asosiy bo‘lim */}
 		  <CardSection title="Asosiy">
 			<MenuLink href="/" label="Bosh sahifa" onClick={() => setOpen(false)} />
