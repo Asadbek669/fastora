@@ -14,8 +14,8 @@ export const metadata = {
 };
 
 
-async function getSeries() {
-  const res = await fetch("https://fastora.vercel.app/api/series", {
+async function getMovies() {
+  const res = await fetch("https://fastora.vercel.app/api/movies", {
     cache: "no-store",
   });
 
@@ -24,7 +24,7 @@ async function getSeries() {
 }
 
 export default async function Page() {
-  const allSeries = await getSeries();
+  const allSeries = await getMovies();
   const series = allSeries.filter((s) => s.category === "multfilmlar");
 
   return (
@@ -39,13 +39,13 @@ export default async function Page() {
         {series.map((s) => (
           <Link
             key={s.id}
-            href={`/serial/${s.slug}`}
+            href={`/movie/${m.slug}`}
             className="rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
             <img src={s.poster} className="w-full h-40 object-cover" />
             <div className="p-1">
-              <p className="text-xs font-semibold truncate">{s.title}</p>
-              <p className="text-gray-400 text-[10px]">Season {s.season_count}</p>
+              <p className="text-xs font-semibold truncate">{m.title}</p>
+              <p className="text-gray-400 text-[10px]">{m.year}</p>
             </div>
           </Link>
         ))}
@@ -53,4 +53,5 @@ export default async function Page() {
     </div>
   );
 }
+
 
