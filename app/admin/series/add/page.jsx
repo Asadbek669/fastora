@@ -7,7 +7,7 @@ const CATEGORY_LIST = [
   { value: "korea-seriallari", label: "Koreya seriallari" },
   { value: "turk-seriallar", label: "Turk seriallari" },
   { value: "anime", label: "Anime (Serial)" },
-  { value: "multfilmlar", label: "Multseriallar" }, // ➕ QO‘SHILDI
+  { value: "multiserriallar", label: "Multseriallar" }, // ➕ QO‘SHILDI
 ];
 
 const GENRE_LIST = [
