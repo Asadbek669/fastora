@@ -10,7 +10,7 @@ export default function MovieRow({ title, movies = [], link = "/", badgeType = "
       "xorij-seriallar",
       "korea-seriallari",
       "turk-seriallar",
-      "multfilmlar",
+      "multiserriallar",
     ].includes(item.category);
 
   // Badge yozuvi
