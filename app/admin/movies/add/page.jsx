@@ -5,12 +5,9 @@ import { useState } from "react";
 const CATEGORY_LIST = [
   { value: "premyera", label: "Premyera" },
   { value: "tarjima", label: "Tarjima kinolar" },
-  { value: "xorij-seriallar", label: "Xorij seriallari" },
-  { value: "korea-seriallari", label: "Koreya seriallari" },
   { value: "hind", label: "Hind kinolar" },
-  { value: "turk-seriallar", label: "Turk seriallari" },
   { value: "anime", label: "Anime" },
-  { value: "multfilmlar", label: "Multseriallar" },
+  { value: "multfilmlar", label: "Multfimlar" },
   { value: "uzbek-film", label: "O‘zbek filmlar" },
 ];
 
