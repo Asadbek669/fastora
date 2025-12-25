@@ -1,9 +1,18 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+
+
+function CardSection({ title, children }) {
+  return (
+    <div className="bg-[#1a1a1a] p-3 rounded-xl shadow-md border border-white/10">
+      <h3 className="text-xs font-semibold uppercase text-white/60 mb-2">{title}</h3>
+      <div className="flex flex-col gap-1">{children}</div>
+    </div>
+  );
+}
 
 export default function TopBar() {
   const [open, setOpen] = useState(false);
@@ -21,14 +30,12 @@ export default function TopBar() {
       {/* ================= TOP BAR ================= */}
       <div
         className="
-          w-full
-          h-[40px] md:h-[52px]
+          w-full h-[40px] md:h-[52px]
           flex items-center
           px-3
           shadow-md
           bg-gradient-to-b from-[#2a2a2a] to-[#000000]
-          relative
-          z-50
+          relative z-50
         "
       >
         {/* LEFT — MENU BUTTON */}
@@ -36,12 +43,9 @@ export default function TopBar() {
           onClick={() => setOpen(true)}
           aria-label="Menu"
           className="
-            w-9 h-9
-            flex items-center justify-center
-            text-white
-            rounded-md
-            hover:bg-white/10
-            transition
+            w-9 h-9 flex items-center justify-center
+            text-white rounded-md
+            hover:bg-white/10 transition
           "
         >
           <div className="space-y-1.5">
@@ -69,12 +73,8 @@ export default function TopBar() {
           aria-label="Donate"
           className="
             flex flex-col items-center
-            text-white
-            text-[11px]
-            leading-none
-            active:scale-95
-            hover:opacity-90
-            transition
+            text-white text-[11px] leading-none
+            active:scale-95 hover:opacity-90 transition
           "
         >
           <Image
@@ -82,14 +82,8 @@ export default function TopBar() {
             width={28}
             height={28}
             alt="Donate"
-            className="
-              drop-shadow-[0_1px_3px_rgba(255,255,255,0.35)]
-              hover:scale-105
-              transition-transform
-            "
+            className="drop-shadow-[0_1px_3px_rgba(255,255,255,0.35)] hover:scale-105 transition-transform"
           />
-          <span className="mt-1 font-medium tracking-wide">
-          </span>
         </Link>
       </div>
 
@@ -104,42 +98,46 @@ export default function TopBar() {
       {/* ================= SIDEBAR ================= */}
       <aside
         className={`
-          fixed top-0 left-0
-          h-full w-[260px]
-          bg-[#0f0f0f]
-          shadow-xl
-          z-50
-          transform transition-transform duration-300 ease-out
+          fixed top-0 left-0 h-full w-[260px]
+          bg-gradient-to-b from-[#111111] to-[#1a1a1a]
+          backdrop-blur-md
+          shadow-2xl z-50
+          transform transition-transform duration-500 ease-in-out
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* SIDEBAR HEADER */}
-        <div className="h-[40px] md:h-[52px] flex items-center px-4 border-b border-white/10">
-          <span className="text-white font-semibold">Fastora</span>
+        <div className="h-[52px] flex items-center px-4 border-b border-white/20 bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 text-white font-bold shadow-md">
+          <span>F A S T O R A</span>
         </div>
 
         {/* SIDEBAR NAV */}
-        <nav className="flex flex-col px-4 py-4 gap-1 text-sm text-white/90">
-          <MenuLink href="/" label="Bosh sahifa" onClick={() => setOpen(false)} />
-          <MenuLink href="/search" label="Qidiruv" onClick={() => setOpen(false)} />
-          <MenuLink href="/premyera" label="Premyeralar" onClick={() => setOpen(false)} />
+		<nav className="flex flex-col px-4 py-4 gap-3 text-sm">
+		  {/* Asosiy bo‘lim */}
+		  <CardSection title="Asosiy">
+			<MenuLink href="/" label="Bosh sahifa" onClick={() => setOpen(false)} />
+			<MenuLink href="/search" label="Qidiruv" onClick={() => setOpen(false)} />
+			<MenuLink href="/premyera" label="Premyeralar" onClick={() => setOpen(false)} />
+		  </CardSection>
 
-          <Divider />
+		  {/* Filmlar va seriallar */}
+		  <CardSection title="Filmlar va seriallar">
+			<MenuLink href="/tarjima" label="Tarjima kinolar" onClick={() => setOpen(false)} />
+			<MenuLink href="/xorij-seriallar" label="Xorij seriallari" onClick={() => setOpen(false)} />
+			<MenuLink href="/korea-seriallari" label="Koreya seriallari" onClick={() => setOpen(false)} />
+			<MenuLink href="/turk-seriallar" label="Turk seriallari" onClick={() => setOpen(false)} />
+			<MenuLink href="/hind" label="Hind filmlari" onClick={() => setOpen(false)} />
+			<MenuLink href="/anime" label="Anime" onClick={() => setOpen(false)} />
+			<MenuLink href="/multfilmlar" label="Multfilmlar" onClick={() => setOpen(false)} />
+		  </CardSection>
 
-          <MenuLink href="/tarjima" label="Tarjima kinolar" onClick={() => setOpen(false)} />
-          <MenuLink href="/xorij-seriallar" label="Xorij seriallari" onClick={() => setOpen(false)} />
-          <MenuLink href="/korea-seriallari" label="Koreya seriallari" onClick={() => setOpen(false)} />
-          <MenuLink href="/turk-seriallar" label="Turk seriallari" onClick={() => setOpen(false)} />
-          <MenuLink href="/hind" label="Hind filmlari" onClick={() => setOpen(false)} />
-          <MenuLink href="/anime" label="Anime" onClick={() => setOpen(false)} />
-          <MenuLink href="/multfilmlar" label="Multfilmlar" onClick={() => setOpen(false)} />
-
-          <Divider />
-
-          <MenuLink href="/tv" label="Jonli TV" onClick={() => setOpen(false)} />
-          <MenuLink href="/donate" label="Loyihani qo‘llab-quvvatlash" onClick={() => setOpen(false)} />
-          <MenuLink href="/copyright" label="Mualliflik huquqi" onClick={() => setOpen(false)} />
-        </nav>
+		  {/* Boshqa */}
+		  <CardSection title="Boshqa">
+			<MenuLink href="/tv" label="Jonli TV" onClick={() => setOpen(false)} />
+			<MenuLink href="/donate" label="Loyihani qo‘llab-quvvatlash" onClick={() => setOpen(false)} />
+			<MenuLink href="/copyright" label="Mualliflik huquqi" onClick={() => setOpen(false)} />
+		  </CardSection>
+		</nav>
       </aside>
     </>
   );
@@ -152,13 +150,24 @@ function MenuLink({ href, label, onClick }) {
     <Link
       href={href}
       onClick={onClick}
-      className="px-3 py-2 rounded-md hover:bg-white/10 transition"
+      className="px-3 py-2 rounded-md flex items-center justify-between hover:bg-white/10 hover:scale-105 transition-all group"
     >
-      {label}
+      <span className="text-white">{label}</span>
+      <span className="text-white/40 group-hover:text-white transition-all">→</span>
     </Link>
   );
 }
 
+function Section({ title, children }) {
+  return (
+    <div className="mt-4">
+      <h3 className="px-3 text-xs font-semibold uppercase text-white/60 mb-2">{title}</h3>
+      <div className="flex flex-col gap-1">{children}</div>
+      <Divider />
+    </div>
+  );
+}
+
 function Divider() {
-  return <div className="my-2 border-t border-white/10" />;
+  return <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />;
 }
