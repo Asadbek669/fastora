@@ -24,25 +24,25 @@ async function getMovies() {
 }
 
 export default async function Page() {
-  const allSeries = await getMovies();
-  const series = allSeries.filter((s) => s.category === "multfilmlar");
+  const allMovies = await getMovies();
+  const movies = allMovies.filter((m) => m.category === "multfilmlar");
 
   return (
     <div className="p-4 pb-32">
       <h1 className="text-2xl font-semibold mb-4">Multfilmlar</h1>
 
-      {series.length === 0 && (
+      {movies.length === 0 && (
         <p className="text-gray-400">Hozircha multfilmlar mavjud emas.</p>
       )}
 
       <div className="grid grid-cols-3 gap-3 mt-4">
-        {series.map((s) => (
+        {movies.map((m) => (
           <Link
-            key={s.id}
+            key={m.id}
             href={`/movie/${m.slug}`}
             className="rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
-            <img src={s.poster} className="w-full h-40 object-cover" />
+            <img src={m.poster} className="w-full h-40 object-cover" />
             <div className="p-1">
               <p className="text-xs font-semibold truncate">{m.title}</p>
               <p className="text-gray-400 text-[10px]">{m.year}</p>
