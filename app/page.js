@@ -166,9 +166,15 @@ export default async function Page() {
 
         <MovieRow
           title="Multfilmlar"
-          movies={series.filter((s) => s.category === "multfilmlar")}
+          movies={movies.filter((m) => m.category === "multfilmlar")}
           link="/multfilmlar"
         />
+
+		<MovieRow
+          title="Multiserriallar"
+          movies={series.filter((s) => s.category === "multiserriallar")}
+          link="/multiserriallar"
+        />			  
 
         <MovieRow
           title="O‘zbek filmlar"
