@@ -1,10 +1,12 @@
 import { pool } from "@/services/db";
 
-export async function GET(req, props) {
-  const { slug } = await props.params;
+export const revalidate = 86400; // ⏱ 24 soat
+
+export async function GET(req, { params }) {
+  const { slug } = params;
 
   try {
-    // 1️⃣ Kino ma'lumotlari
+    // 1️⃣ Kino
     const movieRes = await pool.query(
       `SELECT * FROM movies WHERE slug = $1 LIMIT 1`,
       [slug]
@@ -24,7 +26,7 @@ export async function GET(req, props) {
 
     const comments_count = Number(commentRes.rows[0].count);
 
-    // 3️⃣ Natija
+    // 3️⃣ Javob
     return Response.json({
       ...movie,
       comments_count,
