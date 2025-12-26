@@ -1,6 +1,6 @@
 import { pool } from "@/services/db";
 
-export const revalidate = 86400; // ⏱ 24 soat
+export const revalidate = 20; // ⏱ 20 sec
 
 export async function GET(req, { params }) {
   const { slug } = params;
@@ -37,3 +37,4 @@ export async function GET(req, { params }) {
     return Response.json({ error: "Server error" }, { status: 500 });
   }
 }
+
