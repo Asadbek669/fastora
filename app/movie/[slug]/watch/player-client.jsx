@@ -1,4 +1,3 @@
-// PlayerClient.jsx
 "use client";
 
 export default function PlayerClient({ src, title }) {
@@ -14,26 +13,24 @@ export default function PlayerClient({ src, title }) {
       <div
         className="w-full aspect-video flex items-center justify-center rounded-xl border border-white/10 relative overflow-hidden bg-black"
         style={{
-          backgroundImage: "url('https://cdn.fastora.uz/images/FASTORA.jpg')",
+          backgroundImage: "url('https://cdn.fastora.uz/images/FASTORA-low.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-		<button
-		  onClick={openDirect}
-		  className="flex items-center justify-center text-white text-3xl w-16 h-16 rounded-full bg-red-600/80 shadow-lg hover:scale-105 transition z-10"
-		>
-		  ▶
-		</button>
+        <button
+          onClick={openDirect}
+          className="flex items-center justify-center text-white text-3xl w-16 h-16 rounded-full bg-red-600/80 shadow-lg hover:scale-105 transition z-10"
+          aria-label="Play video"
+        >
+          ▶
+        </button>
 
-        {/* Agar fon ustiga qorong‘i overlay qo‘ymoqchi bo‘lsangiz */}
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
-      {title && (
-        <h2 className="mt-3 text-center text-sm text-gray-300">{title}</h2>
-      )}
+      {title && <h2 className="mt-3 text-center text-sm text-gray-300 truncate">{title}</h2>}
     </div>
   );
 }
-
