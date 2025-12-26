@@ -1,3 +1,4 @@
+
 "use client";
 
 export default function PlayerClient({ src, title }) {
@@ -13,7 +14,7 @@ export default function PlayerClient({ src, title }) {
       <div
         className="w-full aspect-video flex items-center justify-center rounded-xl border border-white/10 relative overflow-hidden bg-black"
         style={{
-          backgroundImage: "url('https://cdn.fastora.uz/images/FASTORA-low.jpg')",
+          backgroundImage: "url('https://cdn.fastora.uz/images/FASTORA-low.jpg')", // low-quality placeholder
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -26,7 +27,6 @@ export default function PlayerClient({ src, title }) {
           ▶
         </button>
 
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
