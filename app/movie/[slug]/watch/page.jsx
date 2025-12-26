@@ -1,33 +1,17 @@
 
-"use client";
-
-import { useEffect, useState } from "react";
+// app/movie/[slug]/watch/page.jsx
 import PlayerClient from "./player-client";
 
-export default function WatchPage({ params }) {
-  const { slug } = params; // Client component uchun oddiy ob’ekt
+export default async function WatchPage({ params }) {
+  const { slug } = params;
 
-  const [movie, setMovie] = useState(null);
+  // Server component ichida fetch qilish
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/${slug}`, {
+    next: { revalidate: 10 } // ISR / caching
+  });
+  const movie = await res.json();
 
-  useEffect(() => {
-    async function getMovie() {
-      try {
-        const res = await fetch(`/api/movies/${slug}`);
-        const data = await res.json();
-        setMovie(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    getMovie();
-  }, [slug]);
-
-  if (!movie)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Loading...
-      </div>
-    );
+  if (!movie) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -35,6 +19,7 @@ export default function WatchPage({ params }) {
         <button
           onClick={() => history.back()}
           className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition transform hover:scale-105"
+          aria-label="Go back"
         >
           ‹ Orqaga
         </button>
