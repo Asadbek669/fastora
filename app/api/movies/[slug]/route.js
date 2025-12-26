@@ -1,12 +1,10 @@
 import { pool } from "@/services/db";
 
-export const revalidate = 20; // ⏱ 20 sec
-
-export async function GET(req, { params }) {
-  const { slug } = params;
+export async function GET(req, props) {
+  const { slug } = await props.params;
 
   try {
-    // 1️⃣ Kino
+    // 1️⃣ Kino ma'lumotlari
     const movieRes = await pool.query(
       `SELECT * FROM movies WHERE slug = $1 LIMIT 1`,
       [slug]
@@ -26,7 +24,7 @@ export async function GET(req, { params }) {
 
     const comments_count = Number(commentRes.rows[0].count);
 
-    // 3️⃣ Javob
+    // 3️⃣ Natija
     return Response.json({
       ...movie,
       comments_count,
@@ -37,4 +35,3 @@ export async function GET(req, { params }) {
     return Response.json({ error: "Server error" }, { status: 500 });
   }
 }
-
