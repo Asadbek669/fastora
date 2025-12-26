@@ -1,25 +1,40 @@
+
 "use client";
 
-import { use } from "react";
+import { useEffect, useState } from "react";
 import PlayerClient from "./player-client";
 
 export default function WatchPage({ params }) {
-  // Serverdan kelgan promise ni unwrap qilamiz
-  const { slug } = use(params);
+  const { slug } = params; // Client component uchun oddiy ob’ekt
 
-  // Movie ma'lumotini to'g'ridan-to'g'ri use() orqali olamiz
-  const movie = use(fetch(`/api/movies/${slug}`).then(res => res.json()));
+  const [movie, setMovie] = useState(null);
 
-  if (!movie) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+  useEffect(() => {
+    async function getMovie() {
+      try {
+        const res = await fetch(`/api/movies/${slug}`);
+        const data = await res.json();
+        setMovie(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    getMovie();
+  }, [slug]);
+
+  if (!movie)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      {/* Header */}
       <div className="px-4 py-3 bg-black/80 backdrop-blur-sm border-b border-white/20 flex items-center justify-between">
         <button
           onClick={() => history.back()}
           className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition transform hover:scale-105"
-          aria-label="Go back"
         >
           ‹ Orqaga
         </button>
@@ -29,7 +44,6 @@ export default function WatchPage({ params }) {
         </h1>
       </div>
 
-      {/* Player */}
       <div className="flex-1 flex items-center justify-center px-4 py-6">
         <PlayerClient src={movie.video} title={movie.title} />
       </div>
