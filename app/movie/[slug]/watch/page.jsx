@@ -1,54 +1,41 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import PlayerClient from "./player-client";
 
-export default function WatchPage({ params }) {
-  const { slug } = params; // ❗ use() olib tashlandi
+async function getMovie(slug) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/movies/${slug}`, {
+    cache: "no-store",
+  });
 
-  const [movie, setMovie] = useState(null);
+  if (!res.ok) return null;
+  return res.json();
+}
 
-  useEffect(() => {
-    let active = true;
-
-    fetch(`/api/movies/${slug}`, { cache: "no-store" })
-      .then(res => res.json())
-      .then(data => {
-        if (active) setMovie(data);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [slug]);
+export default async function WatchPage({ params }) {
+  const { slug } = params;
+  const movie = await getMovie(slug);
 
   if (!movie) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        Loading…
-      </div>
-    );
+    return <div className="text-white">Topilmadi</div>;
   }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      {/* Header */}
-      <div className="px-4 py-3 bg-black/80 backdrop-blur-sm border-b border-white/20 flex items-center justify-between">
+      
+      {/* HEADER */}
+      <div className="h-[72px] px-4 flex items-center border-b border-white/10">
         <button
           onClick={() => history.back()}
-          className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition hover:scale-105"
-          aria-label="Go back"
+          className="text-sm bg-red-600 px-3 py-1 rounded-full"
         >
           ‹ Orqaga
         </button>
 
-        <h1 className="flex-1 mx-4 text-center text-3xl md:text-5xl font-bold uppercase truncate">
+        <h1 className="flex-1 text-center text-xl md:text-3xl font-bold truncate">
           {movie.title}
         </h1>
       </div>
 
-      {/* Player */}
-      <div className="flex-1 flex items-center justify-center px-4">
+      {/* PLAYER */}
+      <div className="flex-1 flex items-center justify-center">
         <PlayerClient src={movie.video} title={movie.title} />
       </div>
     </div>
