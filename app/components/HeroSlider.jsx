@@ -21,15 +21,12 @@ export default async function HeroSlider() {
   return (
     <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden">
 
-      {/* 🔥 LCP */}
-      <Image
+      {/* 🔥 LCP */   
+      <img
         src={first.backdrop_url}
         alt={first.title}
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover"
+        className="w-full h-full object-cover rounded-xl"
+        loading="lazy"
       />
 
       {/* Overlay */}
