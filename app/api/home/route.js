@@ -9,7 +9,7 @@ export async function GET() {
        🎬 MOVIES (category balance)
        ========================= */
     const moviesResult = await pool.query(`
-      SELECT id, title, slug, poster, category, year
+      SELECT id, title, slug, poster, category, year, created_at
       FROM (
         SELECT
           id,
@@ -18,6 +18,7 @@ export async function GET() {
           poster,
           category,
           year,
+          created_at,
           ROW_NUMBER() OVER (
             PARTITION BY category
             ORDER BY created_at DESC
@@ -42,7 +43,7 @@ export async function GET() {
        📺 SERIES (category balance)
        ========================= */
     const seriesResult = await pool.query(`
-      SELECT id, title, slug, poster, category, year
+      SELECT id, title, slug, poster, category, year, created_at
       FROM (
         SELECT
           id,
@@ -51,6 +52,7 @@ export async function GET() {
           poster,
           category,
           year,
+          created_at,
           ROW_NUMBER() OVER (
             PARTITION BY category
             ORDER BY created_at DESC
@@ -106,3 +108,4 @@ export async function GET() {
     );
   }
 }
+
