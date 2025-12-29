@@ -21,7 +21,7 @@ export default async function HeroSlider() {
   return (
     <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden">
 
-      {/* 🔥 LCP */   
+      {/* 🔥 LCP */}
       <img
         src={first.backdrop_url}
         alt={first.title}
