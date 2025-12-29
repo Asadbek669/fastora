@@ -1,21 +1,17 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then(res => res.json());
 
 export default function StorySlider() {
-  const [stories, setStories] = useState(null);
   const router = useRouter();
-
-  useEffect(() => {
-    async function loadStories() {
-      const res = await fetch("/api/stories");
-      if (res.ok) setStories(await res.json());
-    }
-    loadStories();
-  }, []);
+  const { data: stories } = useSWR("/api/stories", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 300000, // 5 daqiqa ichida faqat 1 marta fetch
+  });
 
   // 🔹 Skeleton (CLS yo‘q)
   if (!stories) {
@@ -43,14 +39,14 @@ export default function StorySlider() {
             {/* Avatar */}
             <div className="w-20 h-20 rounded-full p-[3px] bg-gradient-to-tr from-yellow-400 to-red-500">
               <div className="relative w-full h-full rounded-full overflow-hidden bg-black">
-                <Image                  
+                <Image
                   src={s.poster_url}
                   alt={s.title}
                   fill
                   sizes="80px"
                   quality={60}
-                  loading="eager"          // 🔥 lazy EMAS
-                  fetchPriority="low"      // 🔥 hero’dan keyin
+                  loading="eager"      // 🔥 lazy emas
+                  fetchPriority="low"  // 🔥 hero’dan keyin
                   className="object-cover"
                 />
               </div>
