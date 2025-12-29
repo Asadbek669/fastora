@@ -97,7 +97,7 @@ export default async function Page() {
       className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
     >
       <img
-        src="https://cdn.fastora.uz/IMG_20251230_022813_613.jpg"
+        src="https://cdn.fastora.uz/12345.jpg"
         className="w-full h-24 object-cover"
         alt={g}
       />
