@@ -3,7 +3,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function HeroSliderClient({ items }) {
   const [index, setIndex] = useState(0);
@@ -60,9 +59,7 @@ export default function HeroSliderClient({ items }) {
     }, 4000);
   };
 
-  const resetAutoSwipe = () => {
-    startAutoSwipe();
-  };
+  const resetAutoSwipe = () => startAutoSwipe();
 
   // 🔹 Navigate with buttons
   const goPrev = () => {
@@ -79,21 +76,15 @@ export default function HeroSliderClient({ items }) {
     <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden">
       {/* Images */}
       {items.map((item, i) => (
-        <div
+        <img
           key={i}
-          className={`absolute inset-0 transition-opacity duration-700 ${
+          src={item.backdrop_url}
+          alt={item.title}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
             i === index ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
-        >
-          <Image
-            src={item.backdrop_url}
-            alt={item.title}
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority={i === 0} // first image is LCP
-          />
-        </div>
+          loading={i === 0 ? "eager" : "lazy"}
+        />
       ))}
 
       {/* Title */}
