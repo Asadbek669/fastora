@@ -2,7 +2,8 @@
 import Image from "next/image";
 import HeroSliderClient from "./HeroSliderClient";
 
-export const revalidate = 300;
+export const revalidate = 86400; // 1 kun = 24*60*60 sekund
+
 
 async function getHeroes() {
   const res = await fetch("https://fastora.uz/api/heroes", {
