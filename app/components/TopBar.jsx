@@ -168,6 +168,7 @@ export default function TopBar() {
 			<MenuLink href="/tv" label="Jonli TV" onClick={() => setOpen(false)} />
 			<MenuLink href="/donate" label="Loyihani qo‘llab-quvvatlash" onClick={() => setOpen(false)} />
 			<MenuLink href="/copyright" label="Mualliflik huquqi" onClick={() => setOpen(false)} />
+			<MenuLink href="https://t.me/fastora_admin" label="Yordam / Aloqa" onClick={() => setOpen(false)} />  
 		  </CardSection>
 		</nav>
       </aside>
