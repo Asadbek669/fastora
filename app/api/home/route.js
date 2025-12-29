@@ -1,42 +1,18 @@
 import { NextResponse } from "next/server";
-import { pool } from "@/services/db"; // ✅ TO‘G‘RI JOY
+import { pool } from "@/services/db";
 
-export const revalidate = 300; // 5 daqiqa cache
+export const revalidate = 3000; // 
 
 export async function GET() {
   try {
     /* =========================
-       🎬 MOVIES (category balance)
+       🎬 MOVIES (oxirgi qo‘shilgan 15 ta)
        ========================= */
     const moviesResult = await pool.query(`
       SELECT id, title, slug, poster, category, year, created_at
-      FROM (
-        SELECT
-          id,
-          title,
-          slug,
-          poster,
-          category,
-          year,
-          created_at,
-          ROW_NUMBER() OVER (
-            PARTITION BY category
-            ORDER BY created_at DESC
-          ) AS rn
-        FROM movies
-        WHERE category IN (
-          'premyera',
-          'tarjima',
-          'anime',
-          'hind',
-          'multfilmlar',
-          'uzbek-film'
-        )
-      ) t
-      WHERE
-        (category = 'premyera' AND rn <= 10)
-        OR (category != 'premyera' AND rn <= 15)
+      FROM movies
       ORDER BY created_at DESC
+      LIMIT 15
     `);
 
     /* =========================
@@ -80,24 +56,24 @@ export async function GET() {
       return map;
     };
 
-    const movies = groupBy(moviesResult.rows);
-    const series = groupBy(seriesResult.rows);
+    const moviesByCategory = groupBy(moviesResult.rows);
+    const seriesByCategory = groupBy(seriesResult.rows);
 
     /* =========================
        🚀 RESPONSE
        ========================= */
     return NextResponse.json({
-      premyera: movies["premyera"] ?? [],
-      tarjima: movies["tarjima"] ?? [],
-      anime: movies["anime"] ?? [],
-      hind: movies["hind"] ?? [],
-      multfilmlar: movies["multfilmlar"] ?? [],
-      uzbek: movies["uzbek-film"] ?? [],
+      premyera: moviesResult.rows ?? [], // oxirgi qo‘shilgan 15 ta kino
+      tarjima: moviesByCategory["tarjima"] ?? [],
+      anime: moviesByCategory["anime"] ?? [],
+      hind: moviesByCategory["hind"] ?? [],
+      multfilmlar: moviesByCategory["multfilmlar"] ?? [],
+      uzbek: moviesByCategory["uzbek-film"] ?? [],
 
-      xorijSeriallar: series["xorij-seriallar"] ?? [],
-      koreaSeriallar: series["korea-seriallari"] ?? [],
-      turkSeriallar: series["turk-seriallar"] ?? [],
-      multiserriallar: series["multiserriallar"] ?? [],
+      xorijSeriallar: seriesByCategory["xorij-seriallar"] ?? [],
+      koreaSeriallar: seriesByCategory["korea-seriallari"] ?? [],
+      turkSeriallar: seriesByCategory["turk-seriallar"] ?? [],
+      multiserriallar: seriesByCategory["multiserriallar"] ?? [],
     });
 
   } catch (err) {
