@@ -3,26 +3,19 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function HeroSliderClient({ items }) {
   const [index, setIndex] = useState(0);
   const router = useRouter();
-
   const startX = useRef(0);
   const startY = useRef(0);
   const startTime = useRef(0);
+  const autoSwipeRef = useRef();
 
-  // ✅ Auto swipe interval
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % items.length);
-    }, 4000); // 4 soniya
+  if (!items || items.length < 1) return null;
 
-    return () => clearInterval(interval);
-  }, [items.length]);
-
-  if (!items || items.length < 2) return null;
-
+  // 🔹 Touch handlers
   const onTouchStart = (e) => {
     startX.current = e.touches[0].clientX;
     startY.current = e.touches[0].clientY;
@@ -40,41 +33,70 @@ export default function HeroSliderClient({ items }) {
 
     if (Math.abs(dy) > SWIPE_Y) return;
 
+    // Swipe
     if (Math.abs(dx) > SWIPE_X && dt < 300) {
-      setIndex((i) =>
-        dx < 0
-          ? (i + 1) % items.length
-          : (i - 1 + items.length) % items.length
-      );
+      setIndex((i) => (dx < 0 ? (i + 1) % items.length : (i - 1 + items.length) % items.length));
+      resetAutoSwipe();
       return;
     }
 
+    // Tap
     if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && dt < TAP_TIME) {
       const url = items[index]?.page_url;
       if (url) router.push(url);
     }
   };
 
-  const goPrev = () =>
+  // 🔹 Auto swipe every 4s
+  useEffect(() => {
+    startAutoSwipe();
+    return () => clearInterval(autoSwipeRef.current);
+  }, [index, items.length]);
+
+  const startAutoSwipe = () => {
+    clearInterval(autoSwipeRef.current);
+    autoSwipeRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % items.length);
+    }, 4000);
+  };
+
+  const resetAutoSwipe = () => {
+    startAutoSwipe();
+  };
+
+  // 🔹 Navigate with buttons
+  const goPrev = () => {
     setIndex((i) => (i - 1 + items.length) % items.length);
-  const goNext = () => setIndex((i) => (i + 1) % items.length);
+    resetAutoSwipe();
+  };
+
+  const goNext = () => {
+    setIndex((i) => (i + 1) % items.length);
+    resetAutoSwipe();
+  };
 
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-xl">
-      {/* 🖼 IMAGES */}
+    <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden">
+      {/* Images */}
       {items.map((item, i) => (
-        <img
+        <div
           key={i}
-          src={item.backdrop_url}
-          alt={item.title}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          className={`absolute inset-0 transition-opacity duration-700 ${
             i === index ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
-          loading={i === 0 ? "eager" : "lazy"}
-        />
+        >
+          <Image
+            src={item.backdrop_url}
+            alt={item.title}
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority={i === 0} // first image is LCP
+          />
+        </div>
       ))}
 
-      {/* 🔤 TITLE */}
+      {/* Title */}
       <div className="absolute left-4 bottom-4 md:left-8 md:bottom-8 z-20 max-w-xl text-white">
         <h2 className="text-xl md:text-3xl font-semibold leading-tight line-clamp-2">
           {items[index].title}
@@ -86,14 +108,30 @@ export default function HeroSliderClient({ items }) {
         )}
       </div>
 
-      {/* 🖐 TOUCH LAYER */}
+      {/* Touch layer */}
       <div
         className="absolute inset-0 z-30"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       />
 
-      {/* 🔘 DOTS */}
+      {/* Navigation buttons */}
+      <button
+        onClick={goPrev}
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-40 bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
+        aria-label="Previous slide"
+      >
+        ◀
+      </button>
+      <button
+        onClick={goNext}
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-40 bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
+        aria-label="Next slide"
+      >
+        ▶
+      </button>
+
+      {/* Dots */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-40">
         {items.map((_, i) => (
           <button
@@ -101,6 +139,7 @@ export default function HeroSliderClient({ items }) {
             onClick={(e) => {
               e.stopPropagation();
               setIndex(i);
+              resetAutoSwipe();
             }}
             aria-label={`Slide ${i + 1}`}
             className={`h-1.5 rounded-full transition-all ${
@@ -109,20 +148,6 @@ export default function HeroSliderClient({ items }) {
           />
         ))}
       </div>
-
-      {/* ◀ / ▶ BUTTONS */}
-      <button
-        onClick={goPrev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-50 bg-black/40 hover:bg-black/60 p-2 rounded-full text-white"
-      >
-        ◀
-      </button>
-      <button
-        onClick={goNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-50 bg-black/40 hover:bg-black/60 p-2 rounded-full text-white"
-      >
-        ▶
-      </button>
     </div>
   );
 }
