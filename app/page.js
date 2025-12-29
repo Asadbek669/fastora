@@ -78,29 +78,33 @@ export default async function Page() {
 
 
   
-      {/* JANRLAR */}
-      <h2 className="text-xl font-semibold mt-6 mb-3 px-4">Janrlar</h2>
+{/* JANRLAR */}
+<h2 className="text-xl font-semibold mt-6 mb-3 px-4">Janrlar</h2>
 
-      <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
-        {[
-          "Drama",
-          "Fantastika",
-          "Tarixiy",
-          "Jangari",
-          "Komediya",
-          "Melodrama",
-          "Ujas",
-          "Sarguzasht",
-        ].map((g, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
-          >
-            <img src="/tez-orada.jpg" className="w-full h-24 object-cover" />
-            <p className="text-center py-2 text-sm truncate">{g}</p>
-          </div>
-        ))}
-      </div>
+<div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
+  {[
+    "Drama",
+    "Fantastika",
+    "Tarixiy",
+    "Jangari",
+    "Komediya",
+    "Melodrama",
+    "Ujas",
+    "Sarguzasht",
+  ].map((g, index) => (
+    <div
+      key={index}
+      className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
+    >
+      <img
+        src="https://cdn.fastora.uz/IMG_20251230_022813_613.jpg"
+        className="w-full h-24 object-cover"
+        alt={g}
+      />
+      <p className="text-center py-2 text-sm truncate">{g}</p>
+    </div>
+  ))}
+</div>
 
       {/* MOVIE ROWS */}
       <div className="mt-8 px-4 space-y-10">
