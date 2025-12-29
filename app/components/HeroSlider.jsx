@@ -5,7 +5,7 @@ import HeroSliderClient from "./HeroSliderClient";
 export const revalidate = 86400; // 1 kun
 
 async function getHeroes() {
-  const res = await fetch("https://fastora.uz/api/heroes", { next: { revalidate: 300 } });
+  const res = await fetch("https://fastora.uz/api/heroes", { next: { revalidate: 86400 } });
   return res.json();
 }
 
