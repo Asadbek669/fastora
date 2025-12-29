@@ -58,7 +58,7 @@ async function getHomeData() {
 export default async function Page() {
   const data = await getHomeData();
 
-  const premyeraMovies = (data.premyera ?? []).slice(0, 10);
+  const premyeraMovies = (data.premyera ?? []).slice(0, 15);
 
   return (
     <div>
