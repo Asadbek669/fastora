@@ -47,41 +47,30 @@ const BASE_URL =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
   "http://localhost:3000";
 
-// 🔥 Kinolarni olish
-async function getMovies() {
-  const res = await fetch(`${BASE_URL}/api/movies`, { cache: "no-store" });
-  if (!res.ok) return [];
-
-  const data = await res.json();
-  return Array.isArray(data) ? data : data.movies ?? [];
+// 🔥 HOME API dan barcha kinolar va seriallarni olish
+async function getHomeData() {
+  const res = await fetch(`${BASE_URL}/api/home`, { cache: "no-store" });
+  if (!res.ok) return {};
+  return res.json();
 }
 
-// 🔥 Seriallarni olish
-async function getSeries() {
-  const res = await fetch(`${BASE_URL}/api/series`, { cache: "no-store" });
-  if (!res.ok) return [];
-
-  const data = await res.json();
-  return Array.isArray(data) ? data : data.series ?? [];
-}
 
 export default async function Page() {
-  const movies = await getMovies();
-  const series = await getSeries();
+  const data = await getHomeData();
 
-  const premyeraMovies = [...movies].reverse().slice(0, 10);
+  const premyeraMovies = (data.premyera ?? []).slice(0, 10);
 
   return (
     <div>
 
       {/* STORY SLIDER */}
-      <div className="px-4 pt-4 min-h-[120px]">
-        <StorySlider testData={movies} />
+      <div className="px-4 pt-4">
+        <StorySlider testData={premyeraMovies} />
       </div>
 
       {/* HERO SLIDER */}
-      <div className="mt-3 px-4 min-h-[220px] md:min-h-[520px]">
-        <HeroSlider testData={movies} />
+      <div className="mt-3 px-4">
+        <HeroSlider testData={premyeraMovies} />
       </div>
 
 	  {/* 📺 TELEKANALLAR */}
@@ -107,12 +96,7 @@ export default async function Page() {
             key={index}
             className="flex-shrink-0 w-[110px] rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
-            <img
-              src="/tez-orada.jpg"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-24 object-cover"
-            />
+            <img src="/tez-orada.jpg" className="w-full h-24 object-cover" />
             <p className="text-center py-2 text-sm truncate">{g}</p>
           </div>
         ))}
@@ -130,57 +114,58 @@ export default async function Page() {
 
         <MovieRow
           title="Tarjima kinolar"
-          movies={movies.filter((m) => m.category === "tarjima")}
+          movies={data.tarjima ?? []}
           link="/tarjima"
         />
 
         <MovieRow
-          title="Xorij seriallari"
-          movies={series.filter((s) => s.category === "xorij-seriallar")}
-          link="/xorij-seriallar"
-        />
-
-        <MovieRow
-          title="Koreya seriallari"
-          movies={series.filter((s) => s.category === "korea-seriallari")}
-          link="/korea-seriallari"
-        />
-
-        <MovieRow
           title="Hind kinolar"
-          movies={movies.filter((m) => m.category === "hind")}
+          movies={data.hind ?? []}
           link="/hind"
         />
 
         <MovieRow
-          title="Turk seriallari"
-          movies={series.filter((s) => s.category === "turk-seriallar")}
-          link="/turk-seriallar"
-        />
-
-        <MovieRow
           title="Anime"
-          movies={movies.filter((m) => m.category === "anime")}
+          movies={data.anime ?? []}
           link="/anime"
         />
 
         <MovieRow
           title="Multfilmlar"
-          movies={movies.filter((m) => m.category === "multfilmlar")}
+          movies={data.multfilmlar ?? []}
           link="/multfilmlar"
         />
 
-		<MovieRow
-          title="Multiserriallar"
-          movies={series.filter((s) => s.category === "multiserriallar")}
-          link="/multiserriallar"
-        />			  
-
         <MovieRow
           title="O‘zbek filmlar"
-          movies={movies.filter((m) => m.category === "uzbek-film")}
+          movies={data.uzbek ?? []}
           link="/uzbek-film"
         />
+
+        <MovieRow
+          title="Xorij seriallari"
+          movies={data.xorijSeriallar ?? []}
+          link="/xorij-seriallar"
+        />
+
+        <MovieRow
+          title="Koreya seriallari"
+          movies={data.koreaSeriallar ?? []}
+          link="/korea-seriallari"
+        />
+
+        <MovieRow
+          title="Turk seriallari"
+          movies={data.turkSeriallar ?? []}
+          link="/turk-seriallar"
+        />
+
+        <MovieRow
+          title="Multiserriallar"
+          movies={data.multiserriallar ?? []}
+          link="/multiserriallar"
+        />
+
       </div>
 
       {/* ============================
