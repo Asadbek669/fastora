@@ -5,7 +5,7 @@ import AgeModal from "./AgeModal";
 
 export default function MovieDetail({ movie, slug }) {
   return (
-    <div className="text-white min-h-screen bg-black pb-28">
+    <div className="text-white min-h-screen bg-black">
 
       {/* BACKDROP */}
       <div className="relative w-full h-[250px] overflow-hidden">
@@ -132,5 +132,6 @@ export default function MovieDetail({ movie, slug }) {
     </div>
   );
 }
+
 
 
