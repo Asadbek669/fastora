@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import AgeModal from "./AgeModal";
-import MoviePageButton from "./MoviePageButton"; // watch button alohida component bo‘lsa
 
 export default function MovieDetail({ movie, slug }) {
   return (
@@ -133,4 +132,5 @@ export default function MovieDetail({ movie, slug }) {
     </div>
   );
 }
+
 
