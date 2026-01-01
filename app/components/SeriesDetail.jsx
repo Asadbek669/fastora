@@ -12,11 +12,11 @@ export default function SeriesDetail({ series }) {
         <img
           src={series.backdrop}
           alt={series.title}
-          className="object-cover w-full h-[250px]"
-          loading="lazy"
+          className="w-full h-full object-cover scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black" />
       </div>
+
 
       {/* CONTENT */}
       <div className="px-4 -mt-24 relative z-10">
