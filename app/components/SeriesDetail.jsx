@@ -21,32 +21,32 @@ export default function SeriesDetail({ series }) {
       {/* CONTENT */}
       <div className="px-4 -mt-24 relative z-10">
 
-        {/* POSTER + DETAILS */}
-        <div className="flex gap-4 items-start">
-
-          {/* POSTER */}
-          <div className="w-32 rounded-lg overflow-hidden shadow-lg border border-white/10">
-            <img
-              src={series.poster}
-              alt={series.title}
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </div>
-
-          {/* DETAILS */}
-          <div className="flex-1 mt-10">
-            <h1 className="text-2xl font-bold">{series.title}</h1>
-            <p className="text-gray-400 text-sm mt-1">📅 {series.year}</p>
-            <p className="text-gray-400 text-sm">🌍 {series.country}</p>
-            <p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
-
-            <div className="inline-flex items-center gap-2 bg-yellow-600/20 
-              text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
-              ⭐ IMDb: {series.imdb}
-            </div>
-          </div>
-        </div>
+      		{/* POSTER + DETAILS */}
+      		<div className="flex gap-4 items-end"> {/* items-start → items-end */}
+      
+      		  {/* POSTER */}
+      		  <div className="w-32 rounded-lg overflow-hidden shadow-lg border border-white/10">
+      		    <img
+      			  src={series.poster}   // <Image> o‘rniga oddiy img ishlatiladi
+      			  alt={series.title}
+      			  className="w-full h-auto object-cover"
+      		    /> 
+      		  </div>
+      
+      
+      		  {/* DETAILS */}
+      		  <div className="flex-1"> {/* mt-10 olib tashlandi */}
+      			<p className="text-gray-400 text-sm mt-1">📅 {series.year}</p>
+      			<p className="text-gray-400 text-sm">🌍 {series.country}</p>
+      			<p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
+      
+      			<div className="inline-flex items-center gap-2 bg-yellow-600/20 
+      			  text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
+      			  ⭐ IMDb: {series.imdb}
+      			</div>
+      		  </div>
+      
+      		</div>  
 
         {/* ACTION BUTTONS */}
         <div className="grid grid-cols-3 gap-2 mt-5">
@@ -71,6 +71,13 @@ export default function SeriesDetail({ series }) {
           <AgeModal age={series.age ?? "18+"} />
         </div>
 
+    		{/* TITLE */}
+    		<div className="mt-4 border-t border-white/10 pt-3">
+    		  <h1 className="text-[21px] font-medium leading-snug text-white/95">
+    			{series.title}
+    		  </h1>
+    		</div>
+        
         {/* GENRES */}
         <div className="mt-5">
           <h2 className="text-gray-300 text-lg mb-1">Janrlar:</h2>
