@@ -5,7 +5,7 @@ import AgeModal from "@/components/AgeModal";
 
 export default function SeriesDetail({ series }) {
   return (
-    <div className="text-white pb-24">
+    <div className="text-white">
 
       {/* BACKDROP */}
       <div className="relative w-full h-[250px] overflow-hidden">
