@@ -7,12 +7,15 @@ export default function AgeModal({ age }) {
 
   return (
     <>
-      {/* AGE BOX (bosiladigan joy) */}
+      {/* AGE BOX (tortburchak) ichida doira) */}
       <div
         onClick={() => setOpen(true)}
-        className="bg-red-600/20 border border-red-600/40 rounded-lg py-2 flex flex-col items-center cursor-pointer active:scale-95 transition"
+        className="bg-red-600/20 border border-red-600/40 rounded-lg py-2 px-3 flex items-center justify-center cursor-pointer active:scale-95 transition"
       >
-        <p className="text-lg font-bold mt-1">{age}</p>
+        {/* DOIRA ichida yosh */}
+        <div className="w-8 h-8 rounded-full bg-red-600/70 flex items-center justify-center">
+          <span className="text-white font-bold text-sm">{age}</span>
+        </div>
       </div>
 
       {/* MODAL */}
@@ -47,3 +50,5 @@ export default function AgeModal({ age }) {
     </>
   );
 }
+
+
