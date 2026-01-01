@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import AgeModal from "./AgeModal";
-import MoviePageButton from "./MoviePageButton"; // watch button alohida component bo‘lsa
 
 export default function MovieDetail({ movie, slug }) {
   return (
@@ -77,9 +76,12 @@ export default function MovieDetail({ movie, slug }) {
         </div>
 
         {/* WATCH BUTTON */}
-        <div className="mt-5">
-          <MoviePageButton age={movie.age} slug={slug} />
-        </div>
+    		<Link
+    		  href={`/movie/${slug}/watch`}
+    		  className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
+    		>
+    	  	  ▶ Tomosha qilish
+    		</Link>
 
         {/* GENRES */}
         <div className="mt-6">
@@ -121,3 +123,4 @@ export default function MovieDetail({ movie, slug }) {
     </div>
   );
 }
+
