@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import MovieDetail from "@/components/MovieDetail";
 
-const BASE_URL = "https://fastora.uz";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 // ================================
 //  API FUNCTION
