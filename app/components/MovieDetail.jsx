@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AgeModal from "./AgeModal";
+import MoviePageButton from "./MoviePageButton"; // watch button alohida component bo‘lsa
 
 export default function MovieDetail({ movie, slug }) {
   return (
@@ -19,31 +20,32 @@ export default function MovieDetail({ movie, slug }) {
 
       <div className="px-4 -mt-24 relative z-10">
 
-        {/* POSTER + INFO */}
-        <div className="flex gap-4 items-start">
-          
-          {/* POSTER */}
-          <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10 relative z-20">
-            <img
-              src={movie.poster}
-              alt={movie.title}
-              className="w-full h-auto object-cover"
-            />
-          </div>
+		{/* POSTER + INFO */}
+		<div className="flex gap-4 items-end">
 
-          {/* DETAILS */}
-          <div className="flex-1 mt-10">
-            <h1 className="text-2xl font-bold">{movie.title}</h1>
-            <p className="text-gray-400 text-sm mt-1">📅 {movie.year}</p>
-            <p className="text-gray-400 text-sm">🌍 {movie.country}</p>
-            <p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
+		  {/* POSTER */}
+		  <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
+			<img
+			  src={movie.poster}
+			  alt={movie.title}
+			  className="w-full h-auto object-cover"
+			/>
+		  </div>
 
-            <div className="inline-flex items-center gap-2 bg-yellow-600/20 
-              text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
-              ⭐ IMDb: {movie.imdb}
-            </div>
-          </div>
-        </div>
+		  {/* DETAILS */}
+		  <div className="flex-1">
+			<p className="text-gray-400 text-sm">📅 {movie.year}</p>
+			<p className="text-gray-400 text-sm">🌍 {movie.country}</p>
+			<p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
+
+			<div className="inline-flex items-center gap-2 bg-yellow-600/20 
+			  text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
+			  ⭐ IMDb: {movie.imdb}
+			</div>
+		  </div>
+
+		</div>
+
 
         {/* INFO PANEL */}
         <div className="mt-5 grid grid-cols-3 gap-2">
@@ -75,13 +77,21 @@ export default function MovieDetail({ movie, slug }) {
           <AgeModal age={movie.age ?? "18+"} />
         </div>
 
+		{/* TITLE (YANGI JOYI) */}
+		<h1
+		  className="mt-5 text-2xl font-bold leading-tight"
+		  style={{ fontFamily: "Montserrat, system-ui" }}
+		>
+		  {movie.title}
+		</h1>
+
         {/* WATCH BUTTON */}
-    		<Link
-    		  href={`/movie/${slug}/watch`}
-    		  className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
-    		>
-    	  	  ▶ Tomosha qilish
-    		</Link>
+		<Link
+		  href={`/movie/${slug}/watch`}
+		  className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
+		>
+	  	  ▶ Tomosha qilish
+		</Link>
 
         {/* GENRES */}
         <div className="mt-6">
