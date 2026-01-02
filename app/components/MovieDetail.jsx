@@ -63,7 +63,7 @@ export default function MovieDetail({ movie }) {
 
           {/* COMMENTS */}
           <Link
-            href={`/movie/${movie.slug}/watch`}
+            href={`/movie/${movie.slug}/comments`}
             className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="text-white">
@@ -132,6 +132,7 @@ export default function MovieDetail({ movie }) {
     </div>
   );
 }
+
 
 
 
