@@ -3,7 +3,7 @@
 import Link from "next/link";
 import AgeModal from "./AgeModal";
 
-export default function MovieDetail({ movie, slug }) {
+export default function MovieDetail({ movie }) {
   return (
     <div className="text-white min-h-screen bg-black">
 
@@ -132,6 +132,7 @@ export default function MovieDetail({ movie, slug }) {
     </div>
   );
 }
+
 
 
 
