@@ -11,7 +11,7 @@ export default function DonatePageClient() {
   ];
 
   return (
-    <div className="p-4 pt-6 text-white">
+    <div className="pt-6 text-white">
 
       {/* Avtomatik aylanadigan xabarlar paneli */}
       <DonateMessages messages={messages} />
