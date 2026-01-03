@@ -9,23 +9,23 @@ export async function POST(req) {
       title, slug, year, country, imdb,
       poster, backdrop, video,
       description, category, genres,
-      age, thumbs
+      age, thumbs, duration
     } = body;
 
     const query = `
       INSERT INTO movies (
         title, slug, year, country, imdb,
         poster, backdrop, video, description,
-        category, genres, age, thumbs
+        category, genres, age, thumbs, duration
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
       RETURNING *;
     `;
 
     const result = await pool.query(query, [
       title, slug, year, country, imdb,
       poster, backdrop, video, description,
-      category, genres, age, thumbs
+      category, genres, age, thumbs, duration 
     ]);
 
     return Response.json(
@@ -40,3 +40,4 @@ export async function POST(req) {
     );
   }
 }
+
