@@ -82,12 +82,15 @@ export default async function Page() {
                 </span>
               )}
 
-              {/* 🟢 YEAR + SEASON (poster ostiga overlay) */}
+              {/* 🟢 YEAR + SEASON / DURATION overlay */}
               <div className="absolute bottom-0 left-0 w-full bg-black/60 text-[10px] text-white flex justify-between px-2 py-[2px] font-semibold">
                 <span>{item.year}</span>
-                {item.type === "series" && item.last_season && (
+
+                {item.type === "movie" && item.duration ? (
+                  <span>{item.duration} min</span>
+                ) : item.type === "series" && item.last_season ? (
                   <span>{item.last_season}-sezon</span>
-                )}
+                ) : null}
               </div>
             </div>
 
