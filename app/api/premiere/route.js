@@ -12,6 +12,7 @@ export async function GET() {
         m.poster,
         m.year,
         m.imdb,
+        m.duration,          -- 🔹 Qo'shildi
         m.created_at,
         'movie' AS type,
         NULL AS last_season
@@ -26,6 +27,7 @@ export async function GET() {
         s.poster,
         s.year,
         s.imdb,
+        NULL AS duration,    -- serialda yo'q
         s.created_at,
         'series' AS type,
         (
