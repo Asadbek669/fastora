@@ -28,7 +28,9 @@ export default async function Page() {
 
   return (
     <div className="p-4 pb-32">
-      <h1 className="text-2xl font-semibold mb-4">Premyeralar</h1>
+      <h1 className="text-2xl font-semibold mb-4">
+        Premyeralar
+      </h1>
 
       {items.length === 0 && (
         <p className="text-gray-400">
@@ -43,12 +45,14 @@ export default async function Page() {
             href={
               item.type === "movie"
                 ? `/movie/${item.slug}`
-                : `/serial/${item.slug}` // ✅ TO‘G‘RILANDI
+                : `/serial/${item.slug}`
             }
-            className="rounded-xl overflow-hidden bg-[#111] shadow-lg active:scale-[0.98] transition"
+            className="rounded-xl overflow-hidden bg-[#111] shadow-lg
+                       active:scale-[0.98] transition-transform"
           >
+            {/* POSTER */}
             <div className="relative">
-              {/* 🔖 FILM / SERIAL BADGE */}
+              {/* 🔖 FILM / SERIAL */}
               <span
                 className={`absolute top-1 left-1 z-10 px-1.5 py-[2px]
                 text-[9px] font-bold rounded
@@ -79,13 +83,24 @@ export default async function Page() {
               />
             </div>
 
+            {/* INFO */}
             <div className="p-1">
               <p className="text-xs font-semibold truncate">
                 {item.title}
               </p>
-              <p className="text-gray-400 text-[10px]">
-                {item.year}
-              </p>
+
+              <div className="flex items-center justify-between">
+                <p className="text-gray-400 text-[10px]">
+                  {item.year}
+                </p>
+
+                {/* 🎬 OXIRGI SEZON (faqat serial) */}
+                {item.type === "series" && item.last_season && (
+                  <span className="text-[10px] text-green-400 font-semibold">
+                    {item.last_season}-sezon
+                  </span>
+                )}
+              </div>
             </div>
           </Link>
         ))}
