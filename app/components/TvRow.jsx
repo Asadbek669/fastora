@@ -22,7 +22,7 @@ export default function TvRow() {
       </div>
 
       {/* SLIDER */}
-      <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
+      <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
 
         {/* 🔹 1–10 kanallar */}
         {previewChannels.map((tv) => (
@@ -109,4 +109,5 @@ export default function TvRow() {
     </section>
   );
 }
+
 
