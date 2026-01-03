@@ -22,7 +22,7 @@ export default function TvClient() {
       </h1>
 
       {/* 🔍 QIDIRUV */}
-      <div className="px-4 mb-4">
+      <div className="mb-4">
         <input
           type="text"
           placeholder="Kanal nomini yozing..."
@@ -77,5 +77,6 @@ export default function TvClient() {
     </>
   );
 }
+
 
 
