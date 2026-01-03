@@ -50,9 +50,16 @@ export default async function Page() {
             className="rounded-xl overflow-hidden bg-[#111] shadow-lg
                        active:scale-[0.98] transition-transform"
           >
-            {/* POSTER */}
+            {/* POSTER + OVERLAY */}
             <div className="relative">
-              {/* 🔖 FILM / SERIAL */}
+              <img
+                src={item.poster}
+                alt={item.title}
+                className="w-full h-40 object-cover"
+                loading="lazy"
+              />
+
+              {/* 🔖 FILM / SERIAL BADGE */}
               <span
                 className={`absolute top-1 left-1 z-10 px-1.5 py-[2px]
                 text-[9px] font-bold rounded
@@ -75,12 +82,13 @@ export default async function Page() {
                 </span>
               )}
 
-              <img
-                src={item.poster}
-                alt={item.title}
-                className="w-full h-40 object-cover"
-                loading="lazy"
-              />
+              {/* 🟢 YEAR + SEASON (poster ostiga overlay) */}
+              <div className="absolute bottom-0 left-0 w-full bg-black/60 text-[10px] text-white flex justify-between px-2 py-[2px] font-semibold">
+                <span>{item.year}</span>
+                {item.type === "series" && item.last_season && (
+                  <span>{item.last_season}-sezon</span>
+                )}
+              </div>
             </div>
 
             {/* INFO */}
@@ -88,19 +96,6 @@ export default async function Page() {
               <p className="text-xs font-semibold truncate">
                 {item.title}
               </p>
-
-              <div className="flex items-center justify-between">
-                <p className="text-gray-400 text-[10px]">
-                  {item.year}
-                </p>
-
-                {/* 🎬 OXIRGI SEZON (faqat serial) */}
-                {item.type === "series" && item.last_season && (
-                  <span className="text-[10px] text-green-400 font-semibold">
-                    {item.last_season}-sezon
-                  </span>
-                )}
-              </div>
             </div>
           </Link>
         ))}
