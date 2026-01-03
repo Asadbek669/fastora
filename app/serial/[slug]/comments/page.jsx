@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { User, ArrowLeft } from "lucide-react";
 
 export default function SerialCommentsPage() {
   const { slug } = useParams();
@@ -178,29 +179,43 @@ export default function SerialCommentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white">
+  	<div className="min-h-screen bg-[#0e0e0e] text-white">
+  
+  	  {/* HEADER */}
+  	  <div className="p-4 bg-[#151515] border-b border-white/10 flex items-center justify-between relative">
+  		
+  		{/* Ortga tugma (chapda) */}
+  		<button
+  		  onClick={() => router.back()}
+  		  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition"
+  		>
+  		  <ArrowLeft className="w-4 h-4" />
+  		  Orqaga
+  		</button>
+  
+  		{/* Sarlavha markazda */}
+  		<h2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold uppercase text-white">
+  		  Izohlar
+  		</h2>
+  
+  		{/* Bo‘sh joy (right) */}
+  		<div className="w-20" /> {/* placeholder, agar keyin tugma qo‘ysangiz */}
 
-      {/* HEADER PREMIUM */}
-      <div className="p-4 bg-[#151515] flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="text-2xl">←</button>
-          <h2 className="text-xl font-bold">Izohlar (Serial)</h2>
-        </div>
-
-        <button
-          onClick={() => {
-            setTempName(username);
-            setShowNameModal(true);
-          }}
-          className="
-            px-3 py-1 rounded-lg text-sm
-            bg-white/10 border border-white/20
-            text-blue-300 hover:bg-white/20 
-            transition flex items-center gap-1
-          "
-        >
-          ✏️ {username}
-        </button>
+    		<button
+    		  onClick={() => {
+    			setTempName(username);
+    			setShowNameModal(true);
+    		  }}
+    		  className="
+    			px-3 py-1 rounded-lg text-sm
+    			bg-white/10 border border-white/20
+    			text-blue-300 hover:bg-white/20
+    			transition flex items-center gap-1
+    		  "
+    		>
+    		  <User className="w-4 h-4" />
+    		  <span>{username}</span>
+    		</button>
       </div>
 
       {/* INPUT PANEL */}
