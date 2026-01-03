@@ -78,21 +78,17 @@ export default function MovieDetail({ movie }) {
           </div>
         </div>
 
-		{/* INFO PANEL (original size, IMDb with stars) */}
+		{/* INFO PANEL (IMDb with stars, original size, vertical compact) */}
 		<div className="mt-5 grid grid-cols-4 gap-2">
 
 		  {/* DURATION */}
-		  <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
-			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-			  <path d="M8 3.5a.5.5 0 0 1 .5.5v4l3 1.5a.5.5 0 1 1-.5.866l-3.5-1.75A.5.5 0 0 1 7.5 8V4a.5.5 0 0 1 .5-.5z"/>
-			  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-1A7 7 0 1 1 8 1a7 7 0 0 1 0 14z"/>
-			</svg>
-			<p className="text-xs mt-1">{movie.duration}</p>
-		  </div>		
-		
+		  <div className="bg-white/5 border border-white/10 rounded-lg py-0.5 flex flex-col items-center justify-center">
+			<p className="text-[10px] text-gray-200 mb-0.5">Davomiyligi</p> {/* tepasida */}
+			<p className="text-xs mt-0.5">{movie.duration} daqiqa</p> {/* pastda */}
+		  </div>
+
 		  {/* IMDb WITH STARS */}
-		  <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
-			<p className="text-xs text-gray-200 mb-1">IMDb</p>
+		  <div className="bg-white/5 border border-white/10 rounded-lg py-0.5 flex flex-col items-center justify-center">
 			<div className="flex items-center justify-center">
 			  {Array.from({ length: 5 }, (_, i) => {
 				const rating = Math.round(movie.imdb / 2); // 10 ball → 5 yulduz
@@ -109,22 +105,24 @@ export default function MovieDetail({ movie }) {
 				);
 			  })}
 			</div>
-			<p className="text-xs mt-1 text-yellow-300">{movie.imdb}</p>
+
+			{/* IMDb SCORE PASTGA */}
+			<p className="text-xs mt-0.5 text-yellow-300">{movie.imdb}/10 IMDb</p>
 		  </div>
 
 		  {/* COMMENTS */}
 		  <Link
 			href={`/movie/${movie.slug}/comments`}
-			className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
+			className="bg-white/5 border border-white/10 rounded-lg py-0.5 flex flex-col items-center justify-center active:scale-95 transition"
 		  >
+			<p className="text-[10px] text-gray-200 mb-0.5">Izoh qoldirish</p> {/* tepasida */}
 			<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="text-white">
 			  <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
 			</svg>
-			<p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
 		  </Link>
 
 		  {/* AGE LIMIT */}
-		  <AgeModal age={movie.age ?? "18+"} />		  
+		  <AgeModal age={movie.age ?? "18+"} />
 		</div>
 
         {/* TITLE + WATCH BUTTON + DESCRIPTION (padding kerak) */}
