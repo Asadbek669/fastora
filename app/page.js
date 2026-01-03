@@ -107,7 +107,7 @@ export default async function Page() {
 </div>
 
       {/* MOVIE ROWS */}
-      <div className="mt-8 px-4 space-y-10">
+      <div className="mt-8 space-y-10">
 
         <MovieRow
           title="Premyera"
