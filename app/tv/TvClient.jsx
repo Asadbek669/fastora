@@ -17,7 +17,7 @@ export default function TvClient() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold px-4 pt-4 mb-3">
+      <h1 className="text-xl font-semibold pt-4 mb-3">
         Telekanallar
       </h1>
 
@@ -77,3 +77,4 @@ export default function TvClient() {
     </>
   );
 }
+
