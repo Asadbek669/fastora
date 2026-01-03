@@ -40,7 +40,7 @@ export default function TvClient() {
       {/* 📺 KANALLAR */}
       <div
         className="
-          grid gap-3 px-4
+          grid gap-3
           [grid-template-columns:repeat(auto-fit,minmax(90px,1fr))]
         "
       >
@@ -77,4 +77,5 @@ export default function TvClient() {
     </>
   );
 }
+
 
