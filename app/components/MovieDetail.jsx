@@ -1,26 +1,44 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import AgeModal from "./AgeModal";
 
 export default function MovieDetail({ movie }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentImage, setCurrentImage] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const openLightbox = (img) => {
-    setCurrentImage(img);
+  const openLightbox = (index) => {
+    setCurrentIndex(index);
     setLightboxOpen(true);
   };
 
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    setCurrentImage(null);
+  const closeLightbox = () => setLightboxOpen(false);
+
+  const prevImage = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? movie.thumbs.length - 1 : prev - 1));
   };
+
+  const nextImage = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === movie.thumbs.length - 1 ? 0 : prev + 1));
+  };
+
+  // ESC tugmasi bilan yopish
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") setCurrentIndex((prev) => (prev === 0 ? movie.thumbs.length - 1 : prev - 1));
+      if (e.key === "ArrowRight") setCurrentIndex((prev) => (prev === movie.thumbs.length - 1 ? 0 : prev + 1));
+    };
+    if (lightboxOpen) window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [lightboxOpen, movie.thumbs.length]);
 
   return (
     <div className="text-white min-h-screen bg-black">
+
       {/* BACKDROP */}
       <div className="relative w-full h-[250px] overflow-hidden">
         <img
@@ -32,6 +50,7 @@ export default function MovieDetail({ movie }) {
       </div>
 
       <div className="px-4 -mt-24 relative z-10">
+
         {/* POSTER + INFO */}
         <div className="flex gap-4 items-end">
           <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
@@ -110,7 +129,7 @@ export default function MovieDetail({ movie }) {
               <div
                 key={i}
                 className="min-w-[60%] aspect-video rounded-xl overflow-hidden bg-[#111] cursor-pointer"
-                onClick={() => openLightbox(img)}
+                onClick={() => openLightbox(i)}
               >
                 <img src={img} alt={`thumb-${i}`} className="w-full h-full object-cover" />
               </div>
@@ -125,7 +144,32 @@ export default function MovieDetail({ movie }) {
           className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
           onClick={closeLightbox}
         >
-          <img src={currentImage} alt="Full View" className="max-h-full max-w-full rounded-lg" />
+          {/* Chap raqam */}
+          <div className="absolute top-4 left-4 text-white text-sm font-semibold bg-black/40 px-2 py-1 rounded">
+            {currentIndex + 1} / {movie.thumbs.length}
+          </div>
+
+          {/* Chap tugma */}
+          <button
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold select-none"
+            onClick={prevImage}
+          >
+            ‹
+          </button>
+
+          {/* O‘ng tugma */}
+          <button
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold select-none"
+            onClick={nextImage}
+          >
+            ›
+          </button>
+
+          <img
+            src={movie.thumbs[currentIndex]}
+            alt={`thumb-${currentIndex}`}
+            className="max-h-full max-w-full rounded-lg"
+          />
         </div>
       )}
     </div>
