@@ -64,7 +64,7 @@ export default async function Page() {
     <div>
 
       {/* STORY SLIDER */}
-      <div className="px-4 pt-4">
+      <div className="pt-4">
         <StorySlider testData={premyeraMovies} />
       </div>
 
