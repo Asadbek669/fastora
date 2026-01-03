@@ -1,23 +1,22 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Premyera kinolar va seriallar — Fastora",
+  title: "Premyera filmlar va seriallar — Fastora",
   description:
     "Eng yangi premyera filmlar va seriallarni HD sifatda fastora.uz saytida bepul tomosha qiling.",
   openGraph: {
     title: "Premyera — Fastora",
-    description:
-      "Eng yangi filmlar va seriallar premyeralari.",
+    description: "Eng yangi filmlar va seriallar premyeralari.",
     url: "https://fastora.uz/premyera",
     siteName: "Fastora",
     type: "website",
   },
 };
 
-// 🔥 Bitta ECO API
+// 🔥 Bitta ECO API (ISR + CDN cache)
 async function getPremiere() {
   const res = await fetch("https://fastora.vercel.app/api/premiere", {
-    next: { revalidate: 300 }, // ISR + cache
+    next: { revalidate: 300 },
   });
 
   if (!res.ok) return [];
@@ -29,9 +28,7 @@ export default async function Page() {
 
   return (
     <div className="p-4 pb-32">
-      <h1 className="text-2xl font-semibold mb-4">
-        Premyeralar
-      </h1>
+      <h1 className="text-2xl font-semibold mb-4">Premyeralar</h1>
 
       {items.length === 0 && (
         <p className="text-gray-400">
@@ -46,12 +43,12 @@ export default async function Page() {
             href={
               item.type === "movie"
                 ? `/movie/${item.slug}`
-                : `/series/${item.slug}`
+                : `/serial/${item.slug}` // ✅ TO‘G‘RILANDI
             }
-            className="rounded-xl overflow-hidden bg-[#111] shadow-lg"
+            className="rounded-xl overflow-hidden bg-[#111] shadow-lg active:scale-[0.98] transition"
           >
             <div className="relative">
-              {/* 🔖 MOVIE / SERIES BADGE */}
+              {/* 🔖 FILM / SERIAL BADGE */}
               <span
                 className={`absolute top-1 left-1 z-10 px-1.5 py-[2px]
                 text-[9px] font-bold rounded
@@ -61,8 +58,18 @@ export default async function Page() {
                     : "bg-blue-600"
                 }`}
               >
-                {item.type.toUpperCase()}
+                {item.type === "movie" ? "FILM" : "SERIAL"}
               </span>
+
+              {/* ⭐ IMDb */}
+              {item.imdb && (
+                <span
+                  className="absolute top-1 right-1 z-10 px-1.5 py-[2px]
+                  text-[9px] font-bold rounded bg-black/70"
+                >
+                  ⭐ {Number(item.imdb).toFixed(1)}
+                </span>
+              )}
 
               <img
                 src={item.poster}
