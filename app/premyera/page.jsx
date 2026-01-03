@@ -36,7 +36,7 @@ export default async function Page() {
   const items = await getPremiere();
 
   return (
-    <div className="p-4 pb-32">
+    <div className="pt-4 pb-32">
       {/* TITLE */}
       <h1 className="text-2xl font-semibold mb-4">
         Premyeralar
