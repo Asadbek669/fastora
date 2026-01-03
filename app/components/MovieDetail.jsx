@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import AgeModal from "./AgeModal";
 
 export default function MovieDetail({ movie }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
 
   const openLightbox = (index) => {
     setCurrentIndex(index);
@@ -15,14 +17,24 @@ export default function MovieDetail({ movie }) {
 
   const closeLightbox = () => setLightboxOpen(false);
 
-  const prevImage = (e) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev === 0 ? movie.thumbs.length - 1 : prev - 1));
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].screenX;
   };
 
-  const nextImage = (e) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev === movie.thumbs.length - 1 ? 0 : prev + 1));
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].screenX;
+    handleSwipe();
+  };
+
+  const handleSwipe = () => {
+    if (touchStartX.current - touchEndX.current > 50) {
+      // Swipe left → next image
+      setCurrentIndex((prev) => (prev === movie.thumbs.length - 1 ? 0 : prev + 1));
+    }
+    if (touchEndX.current - touchStartX.current > 50) {
+      // Swipe right → prev image
+      setCurrentIndex((prev) => (prev === 0 ? movie.thumbs.length - 1 : prev - 1));
+    }
   };
 
   // ESC tugmasi bilan yopish
@@ -49,10 +61,10 @@ export default function MovieDetail({ movie }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black" />
       </div>
 
-      <div className="px-4 -mt-24 relative z-10">
+      <div className="-mt-24 relative z-10">
 
-        {/* POSTER + INFO */}
-        <div className="flex gap-4 items-end">
+        {/* POSTER + INFO (padding keraksiz) */}
+        <div className="flex gap-4 items-end px-4">
           <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
             <img src={movie.poster} alt={movie.title} className="w-full h-auto object-cover" />
           </div>
@@ -66,64 +78,86 @@ export default function MovieDetail({ movie }) {
           </div>
         </div>
 
-        {/* INFO PANEL */}
-        <div className="mt-5 grid grid-cols-3 gap-2">
-          <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 64 64" fill="none">
-              <rect width="64" height="64" rx="6" fill="#F5C518" />
-              <path
-                d="M14 18h6v28h-6V18Zm12 0h9l3 20 3-20h9v28h-6V26l-3 20h-6l-3-20v20h-6V18Zm27 0h9c2 0 4 2 4 4v20c0 2-2 4-4 4h-9V18Zm6 20c1 0 2-1 2-2V24c0-1-1-2-2-2h-3v16h3Z"
-                fill="#000"
-              />
-            </svg>
-            <p className="text-xs mt-1">{movie.imdb}</p>
-          </div>
+		{/* INFO PANEL (original size, IMDb with stars) */}
+		<div className="mt-5 grid grid-cols-4 gap-2">
+
+		  {/* DURATION */}
+		  <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+			  <path d="M8 3.5a.5.5 0 0 1 .5.5v4l3 1.5a.5.5 0 1 1-.5.866l-3.5-1.75A.5.5 0 0 1 7.5 8V4a.5.5 0 0 1 .5-.5z"/>
+			  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-1A7 7 0 1 1 8 1a7 7 0 0 1 0 14z"/>
+			</svg>
+			<p className="text-xs mt-1">{movie.duration}</p>
+		  </div>		
+		
+		  {/* IMDb WITH STARS */}
+		  <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
+			<p className="text-xs text-gray-200 mb-1">IMDb</p>
+			<div className="flex items-center justify-center">
+			  {Array.from({ length: 5 }, (_, i) => {
+				const rating = Math.round(movie.imdb / 2); // 10 ball → 5 yulduz
+				return (
+				  <svg
+					key={i}
+					className={`w-4 h-4 ${i < rating ? "text-yellow-400" : "text-gray-500"}`}
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				  >
+					<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.955a1 1 0 0 0 .95.69h4.17c.969 0 1.371 1.24.588 1.81l-3.376 2.455a1 1 0 0 0-.364 1.118l1.286 3.955c.3.921-.755 1.688-1.54 1.118l-3.376-2.455a1 1 0 0 0-1.176 0l-3.376 2.455c-.784.57-1.838-.197-1.539-1.118l1.285-3.955a1 1 0 0 0-.364-1.118L2.049 9.382c-.784-.57-.38-1.81.588-1.81h4.17a1 1 0 0 0 .95-.69l1.286-3.955z" />
+				  </svg>
+				);
+			  })}
+			</div>
+			<p className="text-xs mt-1 text-yellow-300">{movie.imdb}</p>
+		  </div>
+
+		  {/* COMMENTS */}
+		  <Link
+			href={`/movie/${movie.slug}/comments`}
+			className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
+		  >
+			<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="text-white">
+			  <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
+			</svg>
+			<p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
+		  </Link>
+
+		  {/* AGE LIMIT */}
+		  <AgeModal age={movie.age ?? "18+"} />		  
+		</div>
+
+        {/* TITLE + WATCH BUTTON + DESCRIPTION (padding kerak) */}
+        <div className="px-4">
+          <h1 className="mt-5 text-2xl font-bold leading-tight" style={{ fontFamily: "Montserrat, system-ui" }}>
+            {movie.title}
+          </h1>
 
           <Link
-            href={`/movie/${movie.slug}/comments`}
-            className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
+            href={`/movie/${movie.slug}/watch`}
+            className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="text-white">
-              <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
-            </svg>
-            <p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
+            ▶ Tomosha qilish
           </Link>
 
-          <AgeModal age={movie.age ?? "18+"} />
-        </div>
+          <div className="mt-6">
+            <h2 className="text-gray-300 mb-2 text-lg">Janr:</h2>
+            <div className="flex gap-2 flex-wrap">
+              {movie.genres?.map((g, i) => (
+                <span key={i} className="px-3 py-1 bg-white/10 border border-white/10 rounded-full text-sm">{g}</span>
+              ))}
+            </div>
+          </div>
 
-        {/* TITLE */}
-        <h1 className="mt-5 text-2xl font-bold leading-tight" style={{ fontFamily: "Montserrat, system-ui" }}>
-          {movie.title}
-        </h1>
-
-        {/* WATCH BUTTON */}
-        <Link
-          href={`/movie/${movie.slug}/watch`}
-          className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
-        >
-          ▶ Tomosha qilish
-        </Link>
-
-        {/* GENRES */}
-        <div className="mt-6">
-          <h2 className="text-gray-300 mb-2 text-lg">Janr:</h2>
-          <div className="flex gap-2 flex-wrap">
-            {movie.genres?.map((g, i) => (
-              <span key={i} className="px-3 py-1 bg-white/10 border border-white/10 rounded-full text-sm">{g}</span>
-            ))}
+          <div className="mt-6">
+            <h2 className="text-gray-300 mb-2">Film haqida:</h2>
+            <p className="text-gray-400 leading-relaxed whitespace-pre-line">{movie.description}</p>
           </div>
         </div>
 
-        {/* DESCRIPTION */}
+        {/* THUMBS (paddingsiz, swipe ishlaydi) */}
         <div className="mt-6">
-          <h2 className="text-gray-300 mb-2">Film haqida:</h2>
-          <p className="text-gray-400 leading-relaxed whitespace-pre-line">{movie.description}</p>
-        </div>
-
-        {/* THUMBS */}
-        <div className="mt-6">
-          <h2 className="text-gray-300 mb-2">Lavhalar:</h2>
+          <h2 className="text-gray-300 mb-2 px-4">Lavhalar:</h2>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-3">
             {movie.thumbs?.map((img, i) => (
               <div
@@ -143,28 +177,15 @@ export default function MovieDetail({ movie }) {
         <div
           className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
           onClick={closeLightbox}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Chap raqam */}
+          {/* Chap yuqori rasm indeksi */}
           <div className="absolute top-4 left-4 text-white text-sm font-semibold bg-black/40 px-2 py-1 rounded">
             {currentIndex + 1} / {movie.thumbs.length}
           </div>
 
-          {/* Chap tugma */}
-          <button
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold select-none"
-            onClick={prevImage}
-          >
-            ‹
-          </button>
-
-          {/* O‘ng tugma */}
-          <button
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold select-none"
-            onClick={nextImage}
-          >
-            ›
-          </button>
-
+          {/* Rasm */}
           <img
             src={movie.thumbs[currentIndex]}
             alt={`thumb-${currentIndex}`}
@@ -175,3 +196,4 @@ export default function MovieDetail({ movie }) {
     </div>
   );
 }
+
