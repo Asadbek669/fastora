@@ -1,23 +1,23 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Premyera kinolar — Eng yangi filmlar | Fastora",
+  title: "Premyera kinolar va seriallar — Fastora",
   description:
-    "Eng yangi premyera kinolarni HD sifatda fastora.uz saytida bepul tomosha qiling. O‘zbek tilida tarjima qilingan eng so‘nggi filmlar.",
+    "Eng yangi premyera filmlar va seriallarni HD sifatda fastora.uz saytida bepul tomosha qiling.",
   openGraph: {
-    title: "Premyera kinolar — Fastora",
+    title: "Premyera — Fastora",
     description:
-      "Eng yangi premyera kinolarni yuqori sifatda tomosha qiling.",
+      "Eng yangi filmlar va seriallar premyeralari.",
     url: "https://fastora.uz/premyera",
     siteName: "Fastora",
     type: "website",
   },
 };
 
-
-async function getAllMovies() {
-  const res = await fetch("https://fastora.vercel.app/api/movies", {
-    cache: "no-store",
+// 🔥 Bitta ECO API
+async function getPremiere() {
+  const res = await fetch("https://fastora.vercel.app/api/premiere", {
+    next: { revalidate: 300 }, // ISR + cache
   });
 
   if (!res.ok) return [];
@@ -25,35 +25,60 @@ async function getAllMovies() {
 }
 
 export default async function Page() {
-  const allMovies = await getAllMovies();
-
-  // 1) Eng yangi filmlar — oxirgi qo‘shilganlar
-  // API dan kelgan massiv odatda eski → yangi tarzda bo‘ladi,
-  // shuning uchun revers() qilib, oldiga eng yangilarni chiqaramiz:
-  const latest30 = allMovies.reverse().slice(0, 30);
+  const items = await getPremiere();
 
   return (
     <div className="p-4 pb-32">
-      <h1 className="text-2xl font-semibold mb-4">Premyeralar</h1>
+      <h1 className="text-2xl font-semibold mb-4">
+        Premyeralar
+      </h1>
 
-      {latest30.length === 0 && (
-        <p className="text-gray-400">Hozircha premyeralar mavjud emas.</p>
+      {items.length === 0 && (
+        <p className="text-gray-400">
+          Hozircha premyeralar mavjud emas.
+        </p>
       )}
 
       <div className="grid grid-cols-3 gap-3 mt-4">
-        {latest30.map((m) => (
+        {items.map((item) => (
           <Link
-            key={m.id}
-            href={`/movie/${m.slug}`}
+            key={`${item.type}-${item.id}`}
+            href={
+              item.type === "movie"
+                ? `/movie/${item.slug}`
+                : `/series/${item.slug}`
+            }
             className="rounded-xl overflow-hidden bg-[#111] shadow-lg"
           >
             <div className="relative">
-              <img src={m.poster} className="w-full h-40 object-cover" />
+              {/* 🔖 MOVIE / SERIES BADGE */}
+              <span
+                className={`absolute top-1 left-1 z-10 px-1.5 py-[2px]
+                text-[9px] font-bold rounded
+                ${
+                  item.type === "movie"
+                    ? "bg-red-600"
+                    : "bg-blue-600"
+                }`}
+              >
+                {item.type.toUpperCase()}
+              </span>
+
+              <img
+                src={item.poster}
+                alt={item.title}
+                className="w-full h-40 object-cover"
+                loading="lazy"
+              />
             </div>
 
             <div className="p-1">
-              <p className="text-xs font-semibold truncate">{m.title}</p>
-              <p className="text-gray-400 text-[10px]">{m.year}</p>
+              <p className="text-xs font-semibold truncate">
+                {item.title}
+              </p>
+              <p className="text-gray-400 text-[10px]">
+                {item.year}
+              </p>
             </div>
           </Link>
         ))}
