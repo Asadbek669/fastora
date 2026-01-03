@@ -27,7 +27,7 @@ async function getSeries() {
 
 export default async function Page() {
   const allSeries = await getSeries();
-  const series = allSeries.filter((s) => s.category === "turk-serialari");
+  const series = allSeries.filter((s) => s.category === "turk-seriallar");
 
   return (
     <div className="p-4 pb-32">
@@ -55,3 +55,4 @@ export default async function Page() {
     </div>
   );
 }
+
