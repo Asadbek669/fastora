@@ -39,6 +39,7 @@ export default function AddMoviePage() {
     genres: [],
     age: "18+",
     thumbs: [],
+    duration: "",
   });
 
   const [thumbInputs, setThumbInputs] = useState([""]);
@@ -72,6 +73,7 @@ export default function AddMoviePage() {
       const payload = {
         ...form,
         thumbs: thumbInputs.filter((t) => t.trim() !== ""),
+        duration: form.duration ? Number(form.duration) : null, // 🔹 Qo‘shildi
       };
 
       const res = await fetch("/api/movies/add", {
@@ -104,6 +106,7 @@ export default function AddMoviePage() {
         genres: [],
         age: "18+",
         thumbs: [],
+        duration: "",
       });
 
       setThumbInputs([""]);
@@ -199,6 +202,20 @@ export default function AddMoviePage() {
             type="number"
             value={form.year}
             onChange={(e) => setForm({ ...form, year: e.target.value })}
+          />
+        </div>
+
+        
+        {/* DURATION */}
+        <div>
+          <label className="block mb-1 text-sm">Duration (min)</label>
+          <input
+            className="input"
+            type="number"
+            min="1"
+            placeholder="Masalan: 120"
+            value={form.duration}
+            onChange={(e) => setForm({ ...form, duration: e.target.value })}
           />
         </div>
 
