@@ -3,7 +3,7 @@
 import Link from "next/link";
 import AgeModal from "@/components/AgeModal";
 import { Clapperboard } from "lucide-react";
-import { Calendar, Globe, Volume2 } from "lucide-react";
+import { Calendar, Globe, Volume2, MessageSquare } from "lucide-react";
 
 export default function SeriesDetail({ series }) {
   return (
@@ -97,15 +97,23 @@ export default function SeriesDetail({ series }) {
           </div>
 
           {/* COMMENTS */}
-          <Link
-            href={`/serial/${series.slug}/comments`}
-            className="bg-white/5 border border-white/10 rounded-lg py-0.5 flex flex-col items-center justify-center active:scale-95 transition"
-          >
-            <p className="text-[10px] text-gray-200 mb-0.5">Izoh qoldirish</p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="text-white">
-              <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-6 10H6v-2h8Zm4-4H6V6h12Z"/>
-            </svg>
-          </Link>
+		  <Link
+		    href={`/serial/${series.slug}/comments`} // yoki serial uchun
+		    className="bg-white/5 border border-white/10 rounded-lg py-1 px-2 flex flex-col items-center justify-center gap-1 hover:bg-white/10 active:scale-95 transition-all"
+		  >
+		    {/* Yuqorida label */}
+		    <p className="text-[10px] text-gray-200 font-medium">
+			  Izoh qoldirish
+		    </p>
+
+		    {/* Icon + izohlar soni bir qatorda */}
+		    <div className="flex items-center gap-1">
+			  <MessageSquare className="w-5 h-5 text-white" />
+			  <span className="text-[10px] text-gray-400">
+			    {series.comments_count ?? 0} izoh
+			  </span>
+		    </div>
+		  </Link>
 
           {/* AGE LIMIT */}
           <AgeModal age={series.age ?? "18+"} />
