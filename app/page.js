@@ -69,7 +69,7 @@ export default async function Page() {
       </div>
 
       {/* HERO SLIDER */}
-      <div className="mt-3 px-4">
+      <div className="mt-3">
         <HeroSlider testData={premyeraMovies} />
       </div>
 
