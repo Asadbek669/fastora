@@ -1,35 +1,39 @@
-// app/api/premiere/route.js
 import { pool } from "@/services/db";
 
-// ⏱ 5 daqiqa cache
 export const revalidate = 300;
 
 export async function GET() {
   try {
     const result = await pool.query(`
       SELECT 
-        id,
-        title,
-        slug,
-        poster,
-        year,
-        imdb, 
-        created_at,
-        'movie' AS type
-      FROM movies
+        m.id,
+        m.title,
+        m.slug,
+        m.poster,
+        m.year,
+        m.imdb,
+        m.created_at,
+        'movie' AS type,
+        NULL AS last_season
+      FROM movies m
 
       UNION ALL
 
       SELECT 
-        id,
-        title,
-        slug,
-        poster,
-        year,
-        imdb, 
-        created_at,
-        'series' AS type
-      FROM series
+        s.id,
+        s.title,
+        s.slug,
+        s.poster,
+        s.year,
+        s.imdb,
+        s.created_at,
+        'series' AS type,
+        (
+          SELECT MAX(season_number)
+          FROM seasons
+          WHERE series_id = s.id
+        ) AS last_season
+      FROM series s
 
       ORDER BY created_at DESC
       LIMIT 30
@@ -38,7 +42,6 @@ export async function GET() {
     return new Response(JSON.stringify(result.rows), {
       headers: {
         "Content-Type": "application/json",
-        // 🔥 CDN + Browser cache
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },
     });
