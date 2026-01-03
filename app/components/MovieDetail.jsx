@@ -1,13 +1,26 @@
 
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import AgeModal from "./AgeModal";
 
 export default function MovieDetail({ movie }) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState(null);
+
+  const openLightbox = (img) => {
+    setCurrentImage(img);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setCurrentImage(null);
+  };
+
   return (
     <div className="text-white min-h-screen bg-black">
-
       {/* BACKDROP */}
       <div className="relative w-full h-[250px] overflow-hidden">
         <img
@@ -19,38 +32,23 @@ export default function MovieDetail({ movie }) {
       </div>
 
       <div className="px-4 -mt-24 relative z-10">
-
-		{/* POSTER + INFO */}
-		<div className="flex gap-4 items-end">
-
-		  {/* POSTER */}
-		  <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
-			<img
-			  src={movie.poster}
-			  alt={movie.title}
-			  className="w-full h-auto object-cover"
-			/>
-		  </div>
-
-		  {/* DETAILS */}
-		  <div className="flex-1">
-			<p className="text-gray-400 text-sm">📅 {movie.year}</p>
-			<p className="text-gray-400 text-sm">🌍 {movie.country}</p>
-			<p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
-
-			<div className="inline-flex items-center gap-2 bg-yellow-600/20 
-			  text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
-			  ⭐ IMDb: {movie.imdb}
-			</div>
-		  </div>
-
-		</div>
-
+        {/* POSTER + INFO */}
+        <div className="flex gap-4 items-end">
+          <div className="w-32 rounded-xl overflow-hidden shadow-xl border border-white/10">
+            <img src={movie.poster} alt={movie.title} className="w-full h-auto object-cover" />
+          </div>
+          <div className="flex-1">
+            <p className="text-gray-400 text-sm">📅 {movie.year}</p>
+            <p className="text-gray-400 text-sm">🌍 {movie.country}</p>
+            <p className="text-gray-400 text-sm">🔊 O‘zbek tilida</p>
+            <div className="inline-flex items-center gap-2 bg-yellow-600/20 text-yellow-300 px-2 py-1 mt-2 rounded-lg text-sm">
+              ⭐ IMDb: {movie.imdb}
+            </div>
+          </div>
+        </div>
 
         {/* INFO PANEL */}
         <div className="mt-5 grid grid-cols-3 gap-2">
-
-          {/* IMDb */}
           <div className="bg-white/5 border border-white/10 rounded-lg py-1 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 64 64" fill="none">
               <rect width="64" height="64" rx="6" fill="#F5C518" />
@@ -62,7 +60,6 @@ export default function MovieDetail({ movie }) {
             <p className="text-xs mt-1">{movie.imdb}</p>
           </div>
 
-          {/* COMMENTS */}
           <Link
             href={`/movie/${movie.slug}/comments`}
             className="bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col items-center active:scale-95 transition"
@@ -73,34 +70,28 @@ export default function MovieDetail({ movie }) {
             <p className="text-xs mt-1">{movie.comments_count ?? 0}</p>
           </Link>
 
-          {/* AGE LIMIT */}
           <AgeModal age={movie.age ?? "18+"} />
         </div>
 
-		{/* TITLE (YANGI JOYI) */}
-		<h1
-		  className="mt-5 text-2xl font-bold leading-tight"
-		  style={{ fontFamily: "Montserrat, system-ui" }}
-		>
-		  {movie.title}
-		</h1>
+        {/* TITLE */}
+        <h1 className="mt-5 text-2xl font-bold leading-tight" style={{ fontFamily: "Montserrat, system-ui" }}>
+          {movie.title}
+        </h1>
 
         {/* WATCH BUTTON */}
-		<Link
-		  href={`/movie/${movie.slug}/watch`}
-		  className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
-		>
-	  	  ▶ Tomosha qilish
-		</Link>
+        <Link
+          href={`/movie/${movie.slug}/watch`}
+          className="block w-full mt-6 text-center bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition-all duration-300"
+        >
+          ▶ Tomosha qilish
+        </Link>
 
         {/* GENRES */}
         <div className="mt-6">
           <h2 className="text-gray-300 mb-2 text-lg">Janr:</h2>
           <div className="flex gap-2 flex-wrap">
             {movie.genres?.map((g, i) => (
-              <span key={i} className="px-3 py-1 bg-white/10 border border-white/10 rounded-full text-sm">
-                {g}
-              </span>
+              <span key={i} className="px-3 py-1 bg-white/10 border border-white/10 rounded-full text-sm">{g}</span>
             ))}
           </div>
         </div>
@@ -108,9 +99,7 @@ export default function MovieDetail({ movie }) {
         {/* DESCRIPTION */}
         <div className="mt-6">
           <h2 className="text-gray-300 mb-2">Film haqida:</h2>
-          <p className="text-gray-400 leading-relaxed whitespace-pre-line">
-            {movie.description}
-          </p>
+          <p className="text-gray-400 leading-relaxed whitespace-pre-line">{movie.description}</p>
         </div>
 
         {/* THUMBS */}
@@ -118,18 +107,27 @@ export default function MovieDetail({ movie }) {
           <h2 className="text-gray-300 mb-2">Lavhalar:</h2>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-3">
             {movie.thumbs?.map((img, i) => (
-              <div key={i} className="min-w-[60%] aspect-video rounded-xl overflow-hidden bg-[#111]">
-                <img
-                  src={img}
-                  alt={`thumb-${i}`}
-                  className="w-full h-full object-cover"
-                />
+              <div
+                key={i}
+                className="min-w-[60%] aspect-video rounded-xl overflow-hidden bg-[#111] cursor-pointer"
+                onClick={() => openLightbox(img)}
+              >
+                <img src={img} alt={`thumb-${i}`} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>
         </div>
-
       </div>
+
+      {/* LIGHTBOX MODAL */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+          onClick={closeLightbox}
+        >
+          <img src={currentImage} alt="Full View" className="max-h-full max-w-full rounded-lg" />
+        </div>
+      )}
     </div>
   );
 }
