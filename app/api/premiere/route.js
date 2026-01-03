@@ -13,6 +13,7 @@ export async function GET() {
         slug,
         poster,
         year,
+        imdb, 
         created_at,
         'movie' AS type
       FROM movies
@@ -25,6 +26,7 @@ export async function GET() {
         slug,
         poster,
         year,
+        imdb, 
         created_at,
         'series' AS type
       FROM series
