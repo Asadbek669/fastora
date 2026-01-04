@@ -98,11 +98,11 @@ export default function HeroSliderClient({ items }) {
         />
       ))}
 
-      {/* 🔹 PASTKI QORAMTIR STRIP */}
-      <div className="absolute bottom-0 left-0 w-full h-20 md:h-28 bg-black/70 z-20" />
+      {/* 🔹 FAOL TITLE OSTI QORAMTIR STRIP (KICHIK) */}
+      <div className="absolute bottom-2 left-0 w-full h-10 bg-black/50 z-20" />
 
       {/* 🔹 TITLE */}
-      <div className="absolute bottom-0 left-0 w-full h-20 md:h-28 z-30 flex items-center justify-center px-4">
+      <div className="absolute bottom-2 left-0 w-full h-10 z-30 flex items-center justify-center px-4">
         <h2 className="text-white text-lg md:text-2xl font-semibold drop-shadow text-center line-clamp-1">
           {items[index].title}
         </h2>
@@ -134,23 +134,8 @@ export default function HeroSliderClient({ items }) {
         ▶
       </button>
 
-      {/* DOTS */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-50">
-        {items.map((_, i) => (
-          <button
-            key={i}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIndex(i);
-              resetAutoSwipe();
-            }}
-            aria-label={`Slide ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all ${
-              i === index ? "w-6 bg-white" : "w-2 bg-white/40"
-            }`}
-          />
-        ))}
-      </div>
+      {/* ⚡ INDICATOR OLIB TASHLANDI */}
+
     </div>
   );
 }
