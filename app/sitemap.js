@@ -47,7 +47,7 @@ export default async function sitemap() {
   ];
 
   // 🔒 Static sahifalar uchun bitta sana
-  const STATIC_DATE = "2025-12-18";
+  const STATIC_DATE = "2026-01-04";
 
   const urls = [
     // 🏠 Asosiy sahifa (dynamic UI → new Date())
@@ -111,3 +111,4 @@ export default async function sitemap() {
 
   return urls;
 }
+
