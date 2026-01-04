@@ -12,7 +12,7 @@ export default function HeroSliderClient({ items }) {
   const startTime = useRef(0);
   const autoSwipeRef = useRef(null);
 
-  if (!items || items.length < 1) return null;
+  if (!items?.length) return null;
 
   // =====================
   // TOUCH HANDLERS
@@ -98,23 +98,14 @@ export default function HeroSliderClient({ items }) {
         />
       ))}
 
-      {/* GRADIENT OVERLAY */}
-      <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+      {/* 🔹 PASTKI QORAMTIR STRIP */}
+      <div className="absolute bottom-0 left-0 w-full h-20 md:h-28 bg-black/70 z-20" />
 
-      {/* TITLE BLOCK */}
-      <div
-        className="absolute left-4 bottom-4 md:left-8 md:bottom-8 z-30 max-w-xl
-        bg-black/30 backdrop-blur-md rounded-lg p-3 md:p-4 text-white"
-      >
-        <h2 className="text-lg md:text-2xl font-medium tracking-tight drop-shadow line-clamp-2">
+      {/* 🔹 TITLE */}
+      <div className="absolute bottom-0 left-0 w-full h-20 md:h-28 z-30 flex items-center justify-center px-4">
+        <h2 className="text-white text-lg md:text-2xl font-semibold drop-shadow text-center line-clamp-1">
           {items[index].title}
         </h2>
-
-        {items[index].subtitle && (
-          <p className="text-xs md:text-sm text-white/80 mt-1 drop-shadow line-clamp-2">
-            {items[index].subtitle}
-          </p>
-        )}
       </div>
 
       {/* TOUCH LAYER */}
