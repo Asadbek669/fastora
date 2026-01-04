@@ -10,11 +10,13 @@ export default function HeroSliderClient({ items }) {
   const startX = useRef(0);
   const startY = useRef(0);
   const startTime = useRef(0);
-  const autoSwipeRef = useRef();
+  const autoSwipeRef = useRef(null);
 
   if (!items || items.length < 1) return null;
 
-  // 🔹 Touch handlers
+  // =====================
+  // TOUCH HANDLERS
+  // =====================
   const onTouchStart = (e) => {
     startX.current = e.touches[0].clientX;
     startY.current = e.touches[0].clientY;
@@ -34,7 +36,11 @@ export default function HeroSliderClient({ items }) {
 
     // Swipe
     if (Math.abs(dx) > SWIPE_X && dt < 300) {
-      setIndex((i) => (dx < 0 ? (i + 1) % items.length : (i - 1 + items.length) % items.length));
+      setIndex((i) =>
+        dx < 0
+          ? (i + 1) % items.length
+          : (i - 1 + items.length) % items.length
+      );
       resetAutoSwipe();
       return;
     }
@@ -46,7 +52,9 @@ export default function HeroSliderClient({ items }) {
     }
   };
 
-  // 🔹 Auto swipe every 4s
+  // =====================
+  // AUTO SLIDE
+  // =====================
   useEffect(() => {
     startAutoSwipe();
     return () => clearInterval(autoSwipeRef.current);
@@ -61,7 +69,9 @@ export default function HeroSliderClient({ items }) {
 
   const resetAutoSwipe = () => startAutoSwipe();
 
-  // 🔹 Navigate with buttons
+  // =====================
+  // NAVIGATION
+  // =====================
   const goPrev = () => {
     setIndex((i) => (i - 1 + items.length) % items.length);
     resetAutoSwipe();
@@ -73,8 +83,9 @@ export default function HeroSliderClient({ items }) {
   };
 
   return (
-    <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden">
-      {/* Images */}
+    <div className="relative w-full aspect-[16/9] md:h-[500px] rounded-xl overflow-hidden bg-black">
+      
+      {/* IMAGES */}
       {items.map((item, i) => (
         <img
           key={i}
@@ -87,43 +98,53 @@ export default function HeroSliderClient({ items }) {
         />
       ))}
 
-      {/* Title */}
-      <div className="absolute left-4 bottom-4 md:left-8 md:bottom-8 z-20 max-w-xl text-white">
-        <h2 className="text-xl md:text-3xl font-semibold leading-tight line-clamp-2">
+      {/* GRADIENT OVERLAY */}
+      <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+
+      {/* TITLE BLOCK */}
+      <div
+        className="absolute left-4 bottom-4 md:left-8 md:bottom-8 z-30 max-w-xl
+        bg-black/30 backdrop-blur-md rounded-lg p-3 md:p-4 text-white"
+      >
+        <h2 className="text-lg md:text-2xl font-medium tracking-tight drop-shadow line-clamp-2">
           {items[index].title}
         </h2>
+
         {items[index].subtitle && (
-          <p className="text-sm md:text-base text-white/75 mt-1 line-clamp-2">
+          <p className="text-xs md:text-sm text-white/80 mt-1 drop-shadow line-clamp-2">
             {items[index].subtitle}
           </p>
         )}
       </div>
 
-      {/* Touch layer */}
+      {/* TOUCH LAYER */}
       <div
-        className="absolute inset-0 z-30"
+        className="absolute inset-0 z-40"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       />
 
-      {/* Navigation buttons */}
+      {/* NAV BUTTONS */}
       <button
         onClick={goPrev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-40 bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-50
+        bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
         aria-label="Previous slide"
       >
         ◀
       </button>
+
       <button
         onClick={goNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-40 bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-50
+        bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
         aria-label="Next slide"
       >
         ▶
       </button>
 
-      {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-40">
+      {/* DOTS */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-50">
         {items.map((_, i) => (
           <button
             key={i}
