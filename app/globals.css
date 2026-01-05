@@ -179,17 +179,3 @@ video::-webkit-media-controls-panel {
 video::-webkit-media-controls-fullscreen-button {
   display: none;
 }
-
-
-:focus {
-  outline: none;
-}
-
-.tv-focus:focus,
-a:focus,
-button:focus {
-  outline: 4px solid #00ffd5;
-  outline-offset: 4px;
-  border-radius: 12px;
-  transform: scale(1.05);
-}
