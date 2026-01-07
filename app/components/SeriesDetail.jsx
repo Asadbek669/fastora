@@ -14,9 +14,13 @@ export default function SeriesDetail({ series }) {
         <img
           src={series.backdrop}
           alt={series.title}
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          width="1280"
+          height="720"
           className="w-full h-full object-cover scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black" />
       </div>
 
 
