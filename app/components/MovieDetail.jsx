@@ -53,14 +53,20 @@ export default function MovieDetail({ movie }) {
     <div className="text-white min-h-screen bg-black">
 
       {/* BACKDROP */}
-      <div className="relative w-full h-[250px] overflow-hidden">
-        <img
-          src={movie.backdrop}
-          alt={movie.title}
-          className="object-cover w-full h-full scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black" />
-      </div>
+<div className="relative w-full h-[240px] md:h-[420px] overflow-hidden">
+  {/* BACKDROP IMAGE */}
+  <img
+    src={movie.backdrop}
+    alt={movie.title}
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* QORA GRADIENT (info panel ostiga) */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+</div>
 
       <div className="-mt-24 relative z-10">
 
@@ -213,4 +219,5 @@ export default function MovieDetail({ movie }) {
     </div>
   );
 }
+
 
