@@ -28,7 +28,7 @@ export default async function Page() {
   const items = await getPremiere();
 
   return (
-    <div className="pt-12 pb-6">
+    <div className="pt-3 pb-6">
       <PageHeader title="Premyeralar" />
 
       {items.length === 0 && (
