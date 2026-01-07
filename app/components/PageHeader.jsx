@@ -22,7 +22,8 @@ export default function PageHeader({ title, showBack = true }) {
       )}
 
       {/* Sarlavha markazda */}
-      <h1 className="text-white text-base md:text-lg font-semibold tracking-wide truncate text-center">
+      {/* Sarlavha markazda */}
+      <h1 className="text-white text-lg md:text-xl font-semibold tracking-wide uppercase truncate text-center">
         {title}
       </h1>
 
