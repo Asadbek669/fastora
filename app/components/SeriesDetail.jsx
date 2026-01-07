@@ -10,18 +10,22 @@ export default function SeriesDetail({ series }) {
     <div className="text-white">
 
       {/* BACKDROP */}
-      <div className="relative w-full h-[250px] overflow-hidden">
-        <img
-          src={series.backdrop}
-          alt={series.title}
-          fetchpriority="high"
-          loading="eager"
-          decoding="async"
-          width="1280"
-          height="720"
-          className="w-full h-full object-cover scale-110"
-        />
-      </div>
+<div className="relative w-full h-[240px] md:h-[420px] overflow-hidden">
+
+  <img
+    src={series.backdrop}
+    alt={series.title}
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* QORA GRADIENT */}
+  <div className="absolute inset-0 bg-gradient-to-t
+    from-black/90 via-black/50 to-transparent" />
+
+</div>
 
 
       {/* CONTENT */}
