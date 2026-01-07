@@ -27,7 +27,7 @@ export default async function Page() {
   const items = await getPremiere();
 
   return (
-    <div className="pt-4 pb-32">
+    <div className="pt-4 pb-6">
       <h1 className="text-2xl font-semibold mb-4">
         Premyeralar
       </h1>
@@ -38,7 +38,7 @@ export default async function Page() {
         </p>
       )}
 
-      <div className="grid grid-cols-3 gap-3 mt-4">
+      <div className="grid grid-cols-3 gap-2 mt-2">
         {items.map((item) => (
           <Link
             key={`${item.type}-${item.id}`}
