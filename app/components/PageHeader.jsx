@@ -8,7 +8,7 @@ export default function PageHeader({ title, showBack = true }) {
   const router = useRouter();
 
   return (
-    <div className="relative bg-black flex items-center justify-center h-10 md:h-12 px-3 border-b border-white/10 font-montserrat">
+    <div className="sticky top-0 z-50 bg-black bg-opacity-95 backdrop-blur-md border-b border-white/10 flex items-center justify-center h-12 md:h-16 px-4">
       
       {/* Ortga tugma (faqat ikonka) */}
       {showBack && (
