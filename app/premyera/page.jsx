@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
 
 export const metadata = {
   title: "Premyera filmlar va seriallar — Fastora",
@@ -28,9 +29,7 @@ export default async function Page() {
 
   return (
     <div className="pt-4 pb-6">
-      <h1 className="text-2xl font-semibold mb-4">
-        Premyeralar
-      </h1>
+      <PageHeader title="Premyeralar" />
 
       {items.length === 0 && (
         <p className="text-gray-400">
