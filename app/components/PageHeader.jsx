@@ -8,22 +8,27 @@ export default function PageHeader({ title, showBack = true }) {
   const router = useRouter();
 
   return (
-    <div className="p-4 bg-[#151515] border-b border-white/10 flex items-center justify-between relative">
+    <div className="relative bg-[#151515] border-b border-white/10 flex items-center justify-center h-12 md:h-14 px-4">
       
-      {/* Ortga tugma */}
+      {/* Ortga tugma (faqat ikonka) */}
       {showBack && (
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition"
+          className="absolute left-4 flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
+          aria-label="Go Back"
         >
           <ArrowLeft className="w-4 h-4" />
-          Orqaga
         </button>
       )}
 
       {/* Sarlavha markazda */}
-      <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
-                     text-xl md:text-2xl font-bold uppercase text-white tracking-wide">
+      <h1
+        className="text-base md:text-lg font-bold uppercase text-white tracking-wider text-center truncate"
+        style={{
+          fontFamily: "Montserrat, system-ui, sans-serif",
+          textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+        }}
+      >
         {title}
       </h1>
 
