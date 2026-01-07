@@ -9,9 +9,12 @@ export default function ClientWrapper({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
+  // Premyera sahifasida TopBarni yashirish
+  const hideTopBar = pathname.startsWith("/premyera");
+
   return (
     <>
-      <TopBar />
+      {!hideTopBar && <TopBar />}   {/* 🔹 shart qo‘shildi */}
 
       {children}
 
@@ -20,4 +23,3 @@ export default function ClientWrapper({ children }) {
     </>
   );
 }
-
