@@ -1,3 +1,4 @@
+import { cache } from "react";
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 
