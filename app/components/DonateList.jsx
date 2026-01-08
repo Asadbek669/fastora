@@ -66,13 +66,25 @@ export default function DonateList({ donations }) {
               </div>
             </div>
 
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed mb-4">
               {active.message}
             </p>
+
+            {/* Admin javobi */}
+			{active.adminReply && (
+			  <div className="mt-4 p-4 bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl border-l-4 border-green-400 shadow-md">
+				<p className="text-sm text-gray-300 font-semibold mb-2 flex items-center gap-2">
+				  <span className="bg-green-500 w-2 h-2 rounded-full animate-pulse" />
+				  Fastora ADMIN:
+				</p>
+				<p className="text-green-400 text-sm leading-relaxed">
+				  {active.adminReply}
+				</p>
+			  </div>
+			)}
           </div>
         </div>
       )}
     </>
   );
 }
-
