@@ -1,4 +1,4 @@
-
+import { cache } from "react";
 
 import { redirect } from "next/navigation";
 import MovieDetail from "@/components/MovieDetail";
@@ -8,14 +8,16 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 // ================================
 //  API FUNCTION
 // ================================
-async function getMovie(slug) {
+/* ================= API FUNCTION (1 KUN CACHE) ================= */
+
+export const getMovie = cache(async (slug) => {
   const res = await fetch(`${BASE_URL}/api/movies/${slug}`, {
-    cache: "no-store",
+    next: { revalidate: 86400 }, // 1 kun
   });
 
   if (!res.ok) return null;
   return res.json();
-}
+});
 
 // ================================
 // ⭐⭐⭐ SEO METADATA (Google + Telegram + OG)
