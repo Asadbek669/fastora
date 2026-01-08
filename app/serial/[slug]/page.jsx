@@ -6,16 +6,28 @@ const base = process.env.NEXT_PUBLIC_SITE_URL;
 // ================================
 //  API FUNCTIONS
 // ================================
-async function getSeries(slug) {
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+
+
+export const getSeries = cache(async (slug) => {
+  const res = await fetch(`${base}/api/series/${slug}`, {
+    next: {
+      revalidate: 86400, // ✅ 1 KUN
+    },
+  });
+
   if (!res.ok) return null;
   return res.json();
-}
+});
 
-async function getSeasons(slug) {
-  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
+export const getSeasons = cache(async (slug) => {
+  const res = await fetch(`${base}/api/season?slug=${slug}`, {
+    next: {
+      revalidate: 86400, // ✅ 1 KUN
+    },
+  });
+
   return res.json();
-}
+});
 
 
 // ================================
