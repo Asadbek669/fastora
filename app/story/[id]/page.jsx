@@ -135,16 +135,20 @@ export default function StoryPage() {
       </div>
 
       {/* TITLE with GRADIENT BACKGROUND */}
-      <div
-        className="absolute bottom-32 w-full text-center text-white text-xl font-semibold px-6
-        bg-gradient-to-t from-black/70 to-transparent py-4"
-      >
-        {story.title}
-      </div>
+	  <div
+	    className="
+		  absolute bottom-15 w-full text-center
+		  text-white text-[18px] sm:text-[20px]  /* px bilan aniq o‘lcham */
+		  font-semibold tracking-wide font-sans  /* font-sans → chiroyli sans serif */
+		  px-4 sm:px-6 py-2
+		  bg-gradient-to-t from-black/70 to-transparent
+	    "
+	  >
+	    {story.title}
+	  </div>
 
-      {/* CONTROL BUTTONS */}
 	  {/* CONTROL BUTTONS */}
-	  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-50">
+	  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-3 z-50">
 	
 	  {/* PREVIOUS */}
 	    <button
@@ -195,6 +199,7 @@ export default function StoryPage() {
 	</div>	
   );
 }
+
 
 
 
