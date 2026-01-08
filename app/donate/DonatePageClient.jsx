@@ -1,6 +1,7 @@
 "use client";
 
 import DonateMessages from "@/components/DonateMessages";
+import PageHeader from "@/components/PageHeader";
 
 export default function DonatePageClient() {
   const messages = [
@@ -17,7 +18,7 @@ export default function DonatePageClient() {
       <DonateMessages messages={messages} />
 
       {/* Sarlavha */}
-      <h1 className="text-xl font-semibold mb-4">Homiylik</h1>
+      <PageHeader title="HOMIYLIK" />
 
       {/* Statistik vidjet */}
       <iframe
