@@ -47,7 +47,7 @@ export default async function sitemap() {
   ];
 
   // 🔒 Static sahifalar uchun bitta sana
-  const STATIC_DATE = "2026-01-04";
+  const STATIC_DATE = "2026-01-08";
 
   const urls = [
     // 🏠 Asosiy sahifa (dynamic UI → new Date())
@@ -61,14 +61,6 @@ export default async function sitemap() {
     // 📂 Kategoriya sahifalari (STATIC)
     ...categories.map((cat) => ({
       url: `${baseUrl}/${cat}`,
-      lastModified: STATIC_DATE,
-      changefreq: "monthly",
-      priority: 0.9,
-    })),
-
-    // 📡 Jonli telekanallar (STATIC)
-    ...tvChannels.map((tv) => ({
-      url: `${baseUrl}/live/${tv.slug}`,
       lastModified: STATIC_DATE,
       changefreq: "monthly",
       priority: 0.9,
@@ -111,4 +103,5 @@ export default async function sitemap() {
 
   return urls;
 }
+
 
