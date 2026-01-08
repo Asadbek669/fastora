@@ -10,16 +10,19 @@ export default function DonatePageClient() {
       name: "Anonim",
       amount: 5000,
       message: "Omad! Loyihangiz zo‘r 👏",
+	  adminReply: "Biz sizning qo‘llab-quvvatlashingizni juda qadrlaymiz! ❤️✨"
     },
     {
       name: "Anonim",
       amount: 5000,
       message: "Avatar 2 sezon qachon chiqadi?",
+	  adminReply: "Avatar 2 sezon tez orada, 2026 yilda premyera qilinadi! 🎬✨"
     },
     {
       name: "Feruza",
       amount: 7350,
       message: "Dramalarni ko‘proq chiqaringlar 😍❤️",
+	  adminReply: "Albatta, yangi dramalar tez orada chiqadi! 😊"
     },
   ];
 
@@ -73,9 +76,6 @@ export default function DonatePageClient() {
         </div>
       </div>
 
-      {/* Donate list */}
-      <DonateList donations={donations} />
-
       {/* DONATE tugmasi */}
       <a
         href="https://tirikchilik.uz/kino_olami"
@@ -90,6 +90,10 @@ export default function DonatePageClient() {
       >
         DONATE
       </a>
+
+      {/* Donate list */}
+      <DonateList donations={donations} />
+
 	  
       {/* Izoh */}
       <p className="mt-6 text-center text-gray-400 leading-relaxed px-2">
@@ -137,4 +141,3 @@ export default function DonatePageClient() {
     </div>
   );
 }
-
