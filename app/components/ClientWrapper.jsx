@@ -9,12 +9,15 @@ export default function ClientWrapper({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
-  // Premyera sahifasida TopBarni yashirish
-  const hideTopBar = pathname.startsWith("/premyera");
+  // 🔹 Sahifalar ro'yxati, qaysi sahifalarda TopBar yashirin bo'lishi kerak
+  const hideTopBarPages = ["/premyera", "/tv", "/donate"];
+
+  // 🔹 pathname ushbu ro'yxatdan biron biri bilan boshlanadimi?
+  const hideTopBar = hideTopBarPages.some((path) => pathname.startsWith(path));
 
   return (
     <>
-      {!hideTopBar && <TopBar />}   {/* 🔹 shart qo‘shildi */}
+      {!hideTopBar && <TopBar />}
 
       {children}
 
