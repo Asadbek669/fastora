@@ -13,15 +13,23 @@ export default function PageHeader({ title, showBack = true }) {
       {/* Ortga tugma (faqat ikonka) */}
       {showBack && (
         <button
-          onClick={() => router.back()}
-          className="absolute left-3 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+          onClick={() => router.push("/")} // 🔹 Home ga yo‘naltiradi
+          className="
+            absolute left-3 
+            flex items-center justify-center 
+            w-8 h-8 md:w-9 md:h-9 
+            rounded-md       /* 🔹 yumshoq burchaklar */
+            bg-white/10 
+            hover:bg-white/20 
+            text-white 
+            transition-all duration-200
+          "
           aria-label="Orqaga"
         >
           <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
         </button>
       )}
 
-      {/* Sarlavha markazda */}
       {/* Sarlavha markazda */}
       <h1 className="text-white text-lg md:text-xl font-semibold tracking-wide uppercase truncate text-center">
         {title}
