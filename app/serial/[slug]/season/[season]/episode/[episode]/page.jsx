@@ -1,3 +1,4 @@
+import { cache } from "react";
 import SeriesDetail from "@/components/SeriesDetail";
 import Player from "@/components/Player";
 import SeasonList from "@/components/SeasonList";
@@ -5,15 +6,34 @@ import EpisodeList from "@/components/EpisodeList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-async function getSeries(slug) {
-  return fetch(`${base}/api/series/${slug}`, { cache: "no-store" }).then(r => r.json());
-}
-async function getSeasons(slug) {
-  return fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" }).then(r => r.json());
-}
-async function getEpisodesBySeason(id) {
-  return fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" }).then(r => r.json());
-}
+/* ================= API HELPERS (1 KUN CACHE) ================= */
+
+// Series ma'lumotini olish
+export const getSeries = cache(async (slug) => {
+  const res = await fetch(`${base}/api/series/${slug}`, {
+    next: { revalidate: 86400 }, // 86400 sekund = 1 kun
+  });
+  if (!res.ok) return null;
+  return res.json();
+});
+
+// Seasons ma'lumotini olish
+export const getSeasons = cache(async (slug) => {
+  const res = await fetch(`${base}/api/season?slug=${slug}`, {
+    next: { revalidate: 86400 }, // 1 kun
+  });
+  if (!res.ok) return [];
+  return res.json();
+});
+
+// Episode’larni season bo‘yicha olish
+export const getEpisodesBySeason = cache(async (seasonId) => {
+  const res = await fetch(`${base}/api/episode/season/${seasonId}`, {
+    next: { revalidate: 86400 }, // 1 kun
+  });
+  if (!res.ok) return [];
+  return res.json();
+});
 
 export default async function EpisodePage({ params }) {
   const { slug, season, episode } = await params;
