@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import convertToEmbed from "@/utils/convertEmbed";
@@ -104,19 +105,22 @@ export default function StoryPage() {
       </div>
 
       {/* BACK BUTTON */}
-	    <button
-	      onClick={() => router.push("/")}
-	      className="
-  		  absolute top-4 left-4 z-50
-  		  flex items-center gap-2
-  		  bg-red-600 hover:bg-red-700
-  		  text-white px-4 py-2 rounded-full
-  		  transition-all active:scale-95
-  	    "
-  	  >
-  	    <span className="text-xl">‹</span>
-  	    Orqaga
-  	  </button>
+	{/* BACK BUTTON */}
+	<button
+	  onClick={() => router.push("/")}  // <- home sahifaga yo‘naltiradi
+	  className="
+		absolute top-6 left-4 z-50
+		flex items-center gap-2
+		bg-red-600 hover:bg-red-700
+		text-white px-4 py-2 rounded-full
+		font-medium text-sm
+		shadow-md
+		transition-all active:scale-95
+	  "
+	>
+	  <ArrowLeft className="w-5 h-5" />
+	  Orqaga
+	</button>
 
       {/* VIDEO PLAYER */}
       <div
@@ -191,6 +195,7 @@ export default function StoryPage() {
 	</div>	
   );
 }
+
 
 
 
