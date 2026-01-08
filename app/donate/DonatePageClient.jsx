@@ -21,11 +21,17 @@ export default function DonatePageClient() {
       <PageHeader title="HOMIYLIK" />
 
       {/* Statistik vidjet */}
-      <iframe
-        src="https://tirikchilik.uz/widgets/statistics/?token=0ca731d1154c41cb9c85680e28965c30"
-        className="w-full"
-        style={{ height: "220px", border: "none" }}
-      ></iframe>
+<iframe
+  src="https://tirikchilik.uz/widgets/statistics/?token=0ca731d1154c41cb9c85680e28965c30"
+  className="w-full"
+  style={{
+    height: "400px", // minimal katta
+    minHeight: "400px",
+    maxHeight: "600px",
+    border: "none",
+    overflow: "auto" // scroll paydo bo'ladi
+  }}
+></iframe>
 
       {/* DONATE tugmasi */}
       <a
