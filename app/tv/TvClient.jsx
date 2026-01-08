@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import tvChannels from "./tvConfig";
+import PageHeader from "@/components/PageHeader";
 
 export default function TvClient() {
   const [query, setQuery] = useState("");
@@ -16,9 +17,7 @@ export default function TvClient() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold pt-4 mb-3">
-        Telekanallar
-      </h1>
+      <PageHeader title="Telekanallar" />
 
       {/* 🔍 QIDIRUV */}
       <div className="mb-4">
@@ -86,3 +85,4 @@ export default function TvClient() {
     </>
   );
 }
+
