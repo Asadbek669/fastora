@@ -1,3 +1,4 @@
+import { cache } from "react";
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 import EpisodeList from "@/components/EpisodeList";
@@ -5,21 +6,33 @@ import EpisodeList from "@/components/EpisodeList";
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
 /* ----------------- API HELPERS ------------------ */
-
-async function getSeries(slug) {
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+const getSeries = cache(async (slug) => {
+  const res = await fetch(`${base}/api/series/${slug}`, {
+    next: {
+      revalidate: 86400, // ✅ 1 kun
+    },
+  });
   return res.json();
-}
+});
 
-async function getSeasons(slug) {
-  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
-  return res.json();
-}
 
-async function getEpisodesBySeason(id) {
-  const res = await fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" });
+const getSeasons = cache(async (slug) => {
+  const res = await fetch(`${base}/api/season?slug=${slug}`, {
+    next: {
+      revalidate: 86400, // ✅ 1 kun
+    },
+  });
   return res.json();
-}
+});
+
+const getEpisodesBySeason = cache(async (id) => {
+  const res = await fetch(`${base}/api/episode/season/${id}`, {
+    next: {
+      revalidate: 43200, // ✅ 0.5 kun
+    },
+  });
+  return res.json();
+});
 
 /* ----------------- SEO METADATA ------------------ */
 
