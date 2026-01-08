@@ -148,7 +148,11 @@ export default function StoryPage() {
 	  </div>
 
 	  {/* CONTROL BUTTONS */}
-	  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-3 z-50">
+	  <div
+	    className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50
+				   bg-gradient-to-t from-black/50 via-black/70 to-black/90
+				   px-4 py-2 rounded-xl backdrop-blur-sm"
+	  >
 	
 	  {/* PREVIOUS */}
 	    <button
@@ -199,6 +203,7 @@ export default function StoryPage() {
 	</div>	
   );
 }
+
 
 
 
