@@ -1,48 +1,54 @@
+import { cache } from "react";
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
 import EpisodeList from "@/components/EpisodeList";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-/* ----------------- API HELPERS ------------------ */
+/* ================= API HELPERS (1 KUN CACHE) ================= */
 
-async function getSeries(slug) {
-  const res = await fetch(`${base}/api/series/${slug}`, { cache: "no-store" });
+const getSeries = cache(async (slug) => {
+  const res = await fetch(`${base}/api/series/${slug}`, {
+    next: { revalidate: 86400 }, // 1 kun
+  });
   return res.json();
-}
+});
 
-async function getSeasons(slug) {
-  const res = await fetch(`${base}/api/season?slug=${slug}`, { cache: "no-store" });
+const getSeasons = cache(async (slug) => {
+  const res = await fetch(`${base}/api/season?slug=${slug}`, {
+    next: { revalidate: 86400 }, // 1 kun
+  });
   return res.json();
-}
+});
 
-async function getEpisodesBySeason(id) {
-  const res = await fetch(`${base}/api/episode/season/${id}`, { cache: "no-store" });
+const getEpisodesBySeason = cache(async (id) => {
+  const res = await fetch(`${base}/api/episode/season/${id}`, {
+    next: { revalidate: 86400 }, // 1 kun
+  });
   return res.json();
-}
+});
 
-/* ----------------- SEO METADATA ------------------ */
+/* ================= SEO METADATA ================= */
 
 export async function generateMetadata({ params }) {
-  const { slug, season } = await params;
+  const { slug, season } = params;
 
   const series = await getSeries(slug);
 
   return {
     title: `${series.title} — ${season}-sezon | Fastora`,
-    description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online tomosha qiling.`,
+    description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali tomosha qiling.`,
     openGraph: {
       title: `${series.title} — ${season}-sezon`,
-      description: `${series.title} ${season}-sezon 1, 2, 3, 4, 5, 6, 7, 8 - qismlar.`,
       images: [series.poster],
     },
   };
 }
 
-/* ----------------- MAIN PAGE ------------------ */
+/* ================= MAIN PAGE ================= */
 
 export default async function SeasonPage({ params }) {
-  const { slug, season } = await params;
+  const { slug, season } = params;
 
   const series = await getSeries(slug);
   const seasons = await getSeasons(slug);
@@ -57,35 +63,30 @@ export default async function SeasonPage({ params }) {
 
   const episodes = await getEpisodesBySeason(selectedSeason.id);
 
-  /* ⭐⭐⭐ TVSeason STRUCTURED DATA — IMDb YO‘Q ⭐⭐⭐ */
   const seasonSchema = {
     "@context": "https://schema.org",
     "@type": "TVSeason",
-    "name": `${series.title} — ${season}-sezon`,
-    "seasonNumber": Number(season),
-    "numberOfEpisodes": episodes.length,
-    "image": series.poster,
-    "description": series.description,
-
-    "partOfSeries": {
+    name: `${series.title} — ${season}-sezon`,
+    seasonNumber: Number(season),
+    numberOfEpisodes: episodes.length,
+    image: series.poster,
+    description: series.description,
+    partOfSeries: {
       "@type": "TVSeries",
-      "name": series.title,
-      "image": series.poster,
-      "genre": series.genres
-      // ❗ IMDb va AggregateRating butunlay olib tashlandi
-    }
+      name: series.title,
+      image: series.poster,
+      genre: series.genres,
+    },
   };
 
   return (
     <>
-      {/* ⭐ Google Rich Results uchun Schema ⭐ */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(seasonSchema) }}
       />
 
-      {/* ⭐ Sahifa UI ⭐ */}
-      <div className="bg-black text-white pb-24">
+      <div className="bg-black text-white">
         <SeriesDetail series={series} />
 
         <div className="px-4 mt-6">
