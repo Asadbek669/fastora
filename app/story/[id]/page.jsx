@@ -150,8 +150,8 @@ export default function StoryPage() {
 	  {/* CONTROL BUTTONS */}
 	  <div
 	    className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50
-				   bg-gradient-to-t from-black/50 via-black/70 to-black/90
-				   px-4 py-2 rounded-xl backdrop-blur-sm"
+				   bg-gradient-to-t from-black/90 via-black/70 to-black/50
+				   px-4 py-2 backdrop-blur-sm"
 	  >
 	
 	  {/* PREVIOUS */}
@@ -180,7 +180,7 @@ export default function StoryPage() {
 	        transition-all active:scale-95
 	      "
 	    >
-	      Batafsil
+	      Tomosha qilish
 	    </button>
 	
 	    {/* NEXT */}
@@ -203,6 +203,7 @@ export default function StoryPage() {
 	</div>	
   );
 }
+
 
 
 
