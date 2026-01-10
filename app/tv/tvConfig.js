@@ -159,6 +159,7 @@ const tvChannels = [
 ].map((tv) => ({
   ...tv,
   image: `${CDN_BASE}/${tv.slug}.webp`,
+  alt: tv.name,
   live: true,
 }));
 
