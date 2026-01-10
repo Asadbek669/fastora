@@ -17,7 +17,7 @@ export default function TvRow() {
           href="/tv"
           className="text-sm text-white/70 hover:text-white transition"
         >
-          Barchasini ko‘rish ➤
+          aria-label="Barchasini ko‘rish — Telekanallar">Barchasini ko‘rish ➤
         </Link>
       </div>
 
@@ -109,6 +109,7 @@ export default function TvRow() {
     </section>
   );
 }
+
 
 
 
