@@ -101,10 +101,10 @@ export default function HeroSliderClient({ items }) {
       ))}
 
       {/* 🔹 FAOL TITLE OSTI QORAMTIR STRIP (KICHIK) */}
-      <div className="absolute bottom-2 left-0 w-full h-10 bg-black/50 z-20" />
+      <div className="absolute bottom-0 left-0 w-full h-10 bg-black/50 z-20" />
 
       {/* 🔹 TITLE */}
-      <div className="absolute bottom-2 left-0 w-full h-10 z-30 flex items-center justify-center px-4">
+      <div className="absolute bottom-0 left-0 w-full h-10 z-30 flex items-center justify-center px-4">
         <h2 className="text-white text-lg md:text-2xl font-semibold drop-shadow text-center line-clamp-1">
           {items[index].title}
         </h2>
