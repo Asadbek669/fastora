@@ -2,25 +2,30 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import tvChannels from "./tvConfig";
 import PageHeader from "@/components/PageHeader";
+import { useDebounce } from "use-debounce"; // npm install use-debounce
 
 export default function TvClient() {
   const [query, setQuery] = useState("");
 
+  // 🔹 Debounce qilingan query, typing sekinligi performance uchun
+  const [debouncedQuery] = useDebounce(query, 250);
+
+  // 🔹 Filterlangan kanallar
   const filteredChannels = useMemo(() => {
-    if (!query) return tvChannels;
-    const q = query.toLowerCase();
+    if (!debouncedQuery) return tvChannels;
+    const q = debouncedQuery.toLowerCase();
     return tvChannels.filter((tv) => tv.name.toLowerCase().includes(q));
-  }, [query]);
+  }, [debouncedQuery]);
 
   return (
     <>
+      {/* Page Header */}
       <PageHeader title="Telekanallar" />
 
       {/* 🔍 QIDIRUV */}
-      <div className="mb-4">
+      <div className="mb-4 px-4">
         <div className="flex items-center w-full bg-[#111] rounded-xl overflow-hidden">
           <input
             type="text"
@@ -35,24 +40,19 @@ export default function TvClient() {
             "
           />
           <button className="px-3">
-            <Image
+            <img
               src="/icons/search.svg"
+              alt="search icon"
               width={24}
               height={24}
-              alt="search"
             />
           </button>
         </div>
       </div>
 
-      {/* 📺 KANALLAR */}
-      <div
-        className="
-          grid gap-3
-          [grid-template-columns:repeat(auto-fit,minmax(90px,1fr))]
-        "
-      >
-        {filteredChannels.map((tv) => (
+      {/* 📺 KANALLAR GRID */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 px-4">
+        {filteredChannels.map((tv, i) => (
           <Link
             key={tv.slug}
             href={`/live/${tv.slug}`}
@@ -68,7 +68,9 @@ export default function TvClient() {
               src={tv.image}
               alt={tv.name}
               className="w-full h-24 object-cover"
-              loading="lazy"
+              loading={i < 4 ? "eager" : "lazy"} // LCP uchun birinchi 4 rasm eager
+              width={160}
+              height={96}
             />
             <div className="py-1 text-center text-xs truncate">
               {tv.name}
@@ -85,4 +87,3 @@ export default function TvClient() {
     </>
   );
 }
-
