@@ -87,15 +87,17 @@ export default function HeroSliderClient({ items }) {
       
       {/* IMAGES */}
       {items.map((item, i) => (
-        <img
-          key={i}
-          src={item.backdrop_url}
-          alt={item.title}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-            i === index ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-          loading={i === 0 ? "eager" : "lazy"}
-        />
+<img
+  key={i}
+  src={item.backdrop_url}
+  alt={item.title}
+  fetchpriority={i === 0 ? "high" : "auto"}
+  loading={i === 0 ? "eager" : "lazy"}
+  decoding="async"
+  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+    i === index ? "opacity-100 z-10" : "opacity-0 z-0"
+  }`}
+/>
       ))}
 
       {/* 🔹 FAOL TITLE OSTI QORAMTIR STRIP (KICHIK) */}
@@ -115,24 +117,7 @@ export default function HeroSliderClient({ items }) {
         onTouchEnd={onTouchEnd}
       />
 
-      {/* NAV BUTTONS */}
-      <button
-        onClick={goPrev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-50
-        bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
-        aria-label="Previous slide"
-      >
-        ◀
-      </button>
-
-      <button
-        onClick={goNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-50
-        bg-black/30 hover:bg-black/50 text-white rounded-full p-2"
-        aria-label="Next slide"
-      >
-        ▶
-      </button>
+  
 
       {/* ⚡ INDICATOR OLIB TASHLANDI */}
 
