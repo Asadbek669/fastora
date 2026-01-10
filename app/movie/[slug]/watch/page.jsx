@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import PlayerClient from "./player-client";
 import { use } from "react";
+import SeriesAd from "@/components/SeriesAd";
 
 export default function WatchPage({ params }) {
   const { slug } = use(params);
@@ -46,7 +47,10 @@ export default function WatchPage({ params }) {
           {movie.title}
         </h1>
       </div>
-
+      {/* 🔥 QUGE5 REKLAMA */}
+      <div className="my-6">
+        <SeriesAd />
+      </div>
       {/* PLAYER */}
       <div className="flex-1 flex items-center justify-center px-4">
         <PlayerClient src={movie.video} title={movie.title} />
@@ -55,4 +59,5 @@ export default function WatchPage({ params }) {
     </div>
   );
 }
+
 
