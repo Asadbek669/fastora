@@ -57,11 +57,16 @@ export default function InstallAppButton() {
   if (!showButton) return null;
 
   return (
-    <button
-      onClick={installApp}
-      className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-5 py-3 rounded-xl shadow-xl z-50"
-    >
-      📥 Ilovani o‘rnatish
-    </button>
+<button
+  onClick={installApp}
+  aria-label="Ilovani o‘rnatish"
+  className="fixed bottom-24 left-1/2 -translate-x-1/2
+             bg-green-700 text-white
+             text-base font-semibold
+             px-5 py-3 rounded-xl shadow-xl z-50"
+>
+  📥 Ilovani o‘rnatish
+</button>
   );
 }
+
