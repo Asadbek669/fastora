@@ -6,7 +6,7 @@ import Link from "next/link";
 
 
 
-const BASE_URL = "https://www.fastora.uz";
+const BASE_URL = "https://fastora.uz";
 
 export const dynamic = "force-dynamic";
 
