@@ -53,11 +53,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="bg-black text-white">
-        {/* ✅ PLAYERJS */}
-        <Script
-          src="/player/playerjs.min.js"
-          strategy="afterInteractive"
-        />
+
 
         {/* ORGANIZATION SCHEMA */}
         <script
