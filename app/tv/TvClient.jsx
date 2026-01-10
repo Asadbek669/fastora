@@ -4,20 +4,16 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import tvChannels from "./tvConfig";
 import PageHeader from "@/components/PageHeader";
-import { useDebounce } from "use-debounce"; // npm install use-debounce
 
 export default function TvClient() {
   const [query, setQuery] = useState("");
 
-  // 🔹 Debounce qilingan query, typing sekinligi performance uchun
-  const [debouncedQuery] = useDebounce(query, 250);
-
-  // 🔹 Filterlangan kanallar
+  // 🔹 Filterlangan kanallar (static, tez ishlaydi)
   const filteredChannels = useMemo(() => {
-    if (!debouncedQuery) return tvChannels;
-    const q = debouncedQuery.toLowerCase();
+    if (!query) return tvChannels;
+    const q = query.toLowerCase();
     return tvChannels.filter((tv) => tv.name.toLowerCase().includes(q));
-  }, [debouncedQuery]);
+  }, [query]);
 
   return (
     <>
