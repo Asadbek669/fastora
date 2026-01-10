@@ -2,7 +2,7 @@ import Link from "next/link";
 import tvChannels from "../tv/tvConfig";
 
 export default function TvRow() {
-  const previewChannels = tvChannels.slice(0, 10);
+  const previewChannels = tvChannels.slice(0, 15);
 
   return (
     <section className="mt-6">
@@ -42,7 +42,7 @@ export default function TvRow() {
             <div className="w-full h-[96px] bg-black">
               <img
                 src={tv.image}
-                alt={tv.name}
+                alt=""
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -109,5 +109,6 @@ export default function TvRow() {
     </section>
   );
 }
+
 
 
