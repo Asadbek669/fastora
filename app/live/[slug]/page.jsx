@@ -3,7 +3,7 @@ import tvChannels from "../../tv/tvConfig";
 import { notFound } from "next/navigation";
 import ClientPlayer from "./ClientPlayer";
 import Link from "next/link";
-
+import Script from "next/script";
 
 
 const BASE_URL = "https://fastora.uz";
@@ -274,7 +274,13 @@ export default async function LiveChannelPage({ params }) {
                 Real vaqt rejimi
               </div>
             </div>
-            
+			
+            {/* PlayerJS script faqat shu sahifaga yuklanadi */}
+		        <Script
+      			  src="/player/playerjs.min.js"
+      			  strategy="afterInteractive"
+    		    />
+			            
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
               <ClientPlayer src={tv.stream} />         
