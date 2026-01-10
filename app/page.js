@@ -36,6 +36,12 @@ export const metadata = {
   },
 };
 
+import {
+  Instagram,
+  Send,
+  Youtube,
+  Music2, // TikTok o‘rniga
+} from "lucide-react";
 import StorySlider from "./components/StorySlider";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
@@ -175,61 +181,54 @@ export default async function Page() {
       {/* ============================
           ⭐ RESPONSIVE SOCIAL FOOTER 
           ============================ */}
-      <div className="mt-12 px-4 pb-10">
-        <h2 className="text-lg font-semibold mb-3">Bizni kuzating</h2>
+<div className="mt-12 px-4 pb-10">
+  <h2 className="text-lg font-semibold mb-3">Bizni kuzating</h2>
 
-        <div className="flex items-center justify-between gap-4">
+  <div className="flex items-center justify-between gap-4">
 
-          {/* Instagram */}
-          <a
-            href="https://instagram.com/fastora_uz"
-            target="_blank"
-            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
-          >
-            <img
-              src="/icons/instagram.svg"
-              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
-            />
-          </a>
+    {/* Instagram */}
+    <a
+      href="https://instagram.com/fastora_uz"
+      target="_blank"
+      aria-label="Fastora Instagram sahifasi"
+      className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+    >
+      <Instagram className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+    </a>
 
-          {/* Telegram */}
-          <a
-            href="https://t.me/fastora_uz"
-            target="_blank"
-            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
-          >
-            <img
-              src="/icons/telegram.svg"
-              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
-            />
-          </a>
+    {/* Telegram */}
+    <a
+      href="https://t.me/fastora_uz"
+      target="_blank"
+      aria-label="Fastora Telegram kanali"
+      className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+    >
+      <Send className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+    </a>
 
-          {/* YouTube */}
-          <a
-            href="https://youtube.com/@fastora_uz"
-            target="_blank"
-            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
-          >
-            <img
-              src="/icons/youtube.svg"
-              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
-            />
-          </a>
+    {/* YouTube */}
+    <a
+      href="https://youtube.com/@fastora_uz"
+      target="_blank"
+      aria-label="Fastora YouTube kanali"
+      className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+    >
+      <Youtube className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+    </a>
 
-          {/* TikTok */}
-          <a
-            href="https://tiktok.com/@fastora"
-            target="_blank"
-            className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
-          >
-            <img
-              src="/icons/tiktok.svg"
-              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
-            />
-          </a>
+    {/* TikTok */}
+    <a
+      href="https://tiktok.com/@fastora"
+      target="_blank"
+      aria-label="Fastora TikTok sahifasi"
+      className="p-3 rounded-xl bg-[#111] hover:bg-[#222] transition"
+    >
+      <Music2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+    </a>
 
-        </div>
-      </div>
+  </div>
+</div>
+   
 
     </div>
   );
