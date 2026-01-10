@@ -22,16 +22,15 @@ export default function MovieRow({ title, movies = [], link = "/", badgeType = "
       {/* HEADER */}
       <div className="flex items-center justify-between mb-3 px-1">
         <h2 className="text-[20px] font-semibold">{title}</h2>
-
-// MovieRow.jsx
-<Link
-  href={link}
-  className="text-sm text-white/80 flex items-center gap-1"
-  aria-label={`Barchasini ko‘rish — ${title}`}
->
-  Barchasini ko‘rish
-  <span className="text-lg">➤</span>
-</Link>
+        
+        <Link
+          href={link}
+          className="text-sm text-white/80 flex items-center gap-1"
+          aria-label={`Barchasini ko‘rish — ${title}`}
+        >
+          Barchasini ko‘rish
+          <span className="text-lg">➤</span>
+        </Link>
       </div>
 
       {/* MOVIE LIST */}
