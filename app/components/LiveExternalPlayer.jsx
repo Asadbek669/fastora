@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 
-export default function LiveExternalPlayer({ src }) {
+export default function LiveExternalPlayer({ src, vastUrl }) {
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!src) return;
+    if (!src && !vastUrl) return;
 
     const interval = setInterval(() => {
       if (window.Playerjs && !initialized.current) {
@@ -14,11 +14,12 @@ export default function LiveExternalPlayer({ src }) {
 
         new window.Playerjs({
           id: "player",
-          file: src,
+          file: vastUrl ? vastUrl : src,   // 🔥 VAST bo'lsa pre-roll
+          type: vastUrl ? "vast" : "video", // 🔥 VAST yoki oddiy video
           autoplay: 0,
           controls: 1,
           mute: 0,
-          poster: "https://cdn.fastora.uz/images/FASTORA.jpg", // 🔥 relative
+          poster: "https://cdn.fastora.uz/images/FASTORA.jpg",
         });
 
         clearInterval(interval);
@@ -26,12 +27,12 @@ export default function LiveExternalPlayer({ src }) {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [src]);
+  }, [src, vastUrl]);
 
-  if (!src) {
+  if (!src && !vastUrl) {
     return (
       <div className="w-full aspect-video rounded-xl bg-[#111] flex items-center justify-center text-gray-500 text-sm">
-        Bu kanal uchun live stream mavjud emas
+        Bu kanal uchun live stream yoki pre-roll mavjud emas
       </div>
     );
   }
@@ -42,6 +43,3 @@ export default function LiveExternalPlayer({ src }) {
     </div>
   );
 }
-
-
-
