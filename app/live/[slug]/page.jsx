@@ -6,12 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 
-import { headers } from "next/headers";
-
-const host = headers().get("host");
-const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-const BASE_URL = `${protocol}://${host}`;
-
+const BASE_URL = "https://fastora.uz";
 
 export const dynamic = "force-dynamic";
 
