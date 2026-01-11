@@ -6,8 +6,6 @@ import Link from "next/link";
 import Script from "next/script";
 
 
-const BASE_URL = "https://fastora.uz";
-
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
@@ -26,14 +24,14 @@ export async function generateMetadata({ params }) {
     title: `${tv.name} — Jonli efir | Fastora`,
     description: `${tv.name} telekanalini Fastora platformasida jonli efirda bepul tomosha qiling.`,
 
-    alternates: {
-      canonical: `${BASE_URL}/live/${tv.slug}`,
-    },
+	alternates: {
+	  canonical: `/live/${tv.slug}`,
+	},
 
     openGraph: {
       title: `${tv.name} — Jonli efir`,
       description: `${tv.name} telekanalini Fastora orqali jonli tomosha qiling.`,
-      url: `${BASE_URL}/live/${tv.slug}`,
+      url: `/live/${tv.slug}`,
       siteName: "Fastora",
       locale: "uz_UZ",
       type: "video.other",
