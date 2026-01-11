@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export default function LiveExternalPlayer({ src, vastUrl }) {
+export default function LiveExternalPlayer({ src }) {
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -14,12 +14,11 @@ export default function LiveExternalPlayer({ src, vastUrl }) {
 
         new window.Playerjs({
           id: "player",
-          file: src,               // jonli stream
-          vast: vastUrl,           // pre-roll VAST URL
-          autoplay: 1,             // autoplay pre-roll uchun
-          mute: 1,                 // brauzer autoplay ishlashi uchun
+          file: src,
+          autoplay: 0,
           controls: 1,
-          poster: "https://cdn.fastora.uz/images/FASTORA.jpg",
+          mute: 0,
+          poster: "https://cdn.fastora.uz/images/FASTORA.jpg", // 🔥 relative
         });
 
         clearInterval(interval);
@@ -27,7 +26,7 @@ export default function LiveExternalPlayer({ src, vastUrl }) {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [src, vastUrl]);
+  }, [src]);
 
   if (!src) {
     return (
@@ -43,3 +42,5 @@ export default function LiveExternalPlayer({ src, vastUrl }) {
     </div>
   );
 }
+
+
