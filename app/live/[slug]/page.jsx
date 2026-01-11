@@ -281,7 +281,7 @@ export default async function LiveChannelPage({ params }) {
 			            
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
-              <ClientPlayer src={tv.stream} />         
+              <ClientPlayer src={tv.stream} vastUrl="https://s.magsrv.com/v1/vast.php?idzone=5824612" />         
             </div>
           </div>
 
