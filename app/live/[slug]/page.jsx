@@ -6,7 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 
-const BASE_URL = "https://fastora.uz";
+const BASE_URL = "";
 
 export const dynamic = "force-dynamic";
 
