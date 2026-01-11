@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import LiveExternalPlayer from "@/components/LiveExternalPlayer";
 
-export default function ClientPlayer({ src }) {
+export default function ClientPlayer({ src, vastUrl }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -18,5 +18,5 @@ export default function ClientPlayer({ src }) {
     );
   }
 
-  return <LiveExternalPlayer src={src} />;
+  return <LiveExternalPlayer src={src} vastUrl={vastUrl} />;
 }
