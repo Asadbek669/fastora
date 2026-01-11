@@ -6,7 +6,12 @@ import Link from "next/link";
 import Script from "next/script";
 
 
-const BASE_URL = "";
+import { headers } from "next/headers";
+
+const host = headers().get("host");
+const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+const BASE_URL = `${protocol}://${host}`;
+
 
 export const dynamic = "force-dynamic";
 
