@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  // Telekanalni topamiz
+
   const tv = tvChannels.find((c) => c.slug === slug);
 
   if (!tv) {
@@ -24,19 +24,9 @@ export async function generateMetadata({ params }) {
     title: `${tv.name} — Jonli efir | Fastora`,
     description: `${tv.name} telekanalini Fastora platformasida jonli efirda bepul tomosha qiling.`,
 
-    // Canonical URL
-    alternates: {
-      canonical: `/live/${tv.slug}`,
-    },
-
-    // Pre-roll reklama uchun Client Hints meta
-    other: [
-      {
-        name: "Delegate-CH",
-        content:
-          "Sec-CH-UA https://s.magsrv.com; Sec-CH-UA-Mobile https://s.magsrv.com; Sec-CH-UA-Arch https://s.magsrv.com; Sec-CH-UA-Model https://s.magsrv.com; Sec-CH-UA-Platform https://s.magsrv.com; Sec-CH-UA-Platform-Version https://s.magsrv.com; Sec-CH-UA-Bitness https://s.magsrv.com; Sec-CH-UA-Full-Version-List https://s.magsrv.com; Sec-CH-UA-Full-Version https://s.magsrv.com;"
-      }
-    ],
+	alternates: {
+	  canonical: `/live/${tv.slug}`,
+	},
 
     openGraph: {
       title: `${tv.name} — Jonli efir`,
@@ -291,7 +281,7 @@ export default async function LiveChannelPage({ params }) {
 			            
             {/* 🎬 LIVE PLAYER - O'zgarmagan */}
             <div className="relative">
-              <ClientPlayer src={tv.stream} vastUrl="https://s.magsrv.com/v1/vast.php?idzone=5824612" />         
+              <ClientPlayer src={tv.stream} />         
             </div>
           </div>
 
@@ -316,6 +306,5 @@ export default async function LiveChannelPage({ params }) {
     </div>
   );
 }
-
 
 
