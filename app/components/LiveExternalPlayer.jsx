@@ -1,19 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function LiveExternalPlayer({ src }) {
-  useEffect(() => {
-    if (!src || !window.Playerjs) return;
+  const initialized = useRef(false);
 
-    new window.Playerjs({
-      id: "player",
-      file: src,
-      autoplay: 0,
-      controls: 1,
-      mute: 0,
-      poster: "https://cdn.fastora.uz/images/FASTORA.jpg", // <--- zastavka
-    });
+  useEffect(() => {
+    if (!src) return;
+
+    const interval = setInterval(() => {
+      if (window.Playerjs && !initialized.current) {
+        initialized.current = true;
+
+        new window.Playerjs({
+          id: "player",
+          file: src,
+          autoplay: 0,
+          controls: 1,
+          mute: 0,
+          poster: "/images/FASTORA.jpg", // 🔥 relative
+        });
+
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
   }, [src]);
 
   if (!src) {
@@ -30,3 +42,4 @@ export default function LiveExternalPlayer({ src }) {
     </div>
   );
 }
+
