@@ -18,7 +18,7 @@ export default function LiveExternalPlayer({ src }) {
           autoplay: 0,
           controls: 1,
           mute: 0,
-          poster: "/images/FASTORA.jpg", // 🔥 relative
+          poster: "https://cdn.fastora.uz/FASTORA.jpg", // 🔥 relative
         });
 
         clearInterval(interval);
@@ -42,4 +42,5 @@ export default function LiveExternalPlayer({ src }) {
     </div>
   );
 }
+
 
