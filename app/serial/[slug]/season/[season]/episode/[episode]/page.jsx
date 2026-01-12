@@ -30,7 +30,7 @@ export const getSeasons = cache(async (slug) => {
 // Episode’larni season bo‘yicha olish
 export const getEpisodesBySeason = cache(async (seasonId) => {
   const res = await fetch(`${base}/api/episode/season/${seasonId}`, {
-    next: { revalidate: 1 }, // 1 kun
+    next: { revalidate: 86400 }, // 1 kun
   });
   if (!res.ok) return [];
   return res.json();
