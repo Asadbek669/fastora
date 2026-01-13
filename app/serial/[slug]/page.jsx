@@ -1,7 +1,6 @@
 import { cache } from "react";
 import SeriesDetail from "@/components/SeriesDetail";
 import SeasonList from "@/components/SeasonList";
-import SeriesAd from "@/components/SeriesAd";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -120,11 +119,6 @@ export default async function SeriesPage({ params }) {
       {/* ASOSIY SERIAL PAGE */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
-        
-        {/* 🔥 QUGE5 REKLAMA */}
-        <div className="my-6">
-          <SeriesAd />
-        </div>
 
         <div className="px-4 mt-6">
           <SeasonList slug={slug} seasons={seasons} />
