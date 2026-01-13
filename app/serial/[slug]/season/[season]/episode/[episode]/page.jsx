@@ -3,7 +3,6 @@ import SeriesDetail from "@/components/SeriesDetail";
 import Player from "@/components/Player";
 import SeasonList from "@/components/SeasonList";
 import EpisodeList from "@/components/EpisodeList";
-import SeriesAd from "@/components/SeriesAd";
 
 const base = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -102,12 +101,7 @@ export default async function EpisodePage({ params }) {
       {/* ASOSIY UI */}
       <div className="bg-black text-white pb-24">
         <SeriesDetail series={series} />
-        
-        {/* 🔥 QUGE5 REKLAMA */}
-        <div className="my-6">
-          <SeriesAd />
-        </div>
-        
+
         <Player src={currentEpisode.video_url} title={currentEpisode.title} />
 
         <div className="px-4 mt-6">
