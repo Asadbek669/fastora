@@ -9,7 +9,7 @@ const base = process.env.NEXT_PUBLIC_SITE_URL;
 const getSeries = cache(async (slug) => {
   const res = await fetch(`${base}/api/series/${slug}`, {
     next: {
-      revalidate: 1, // ✅ 1 kun
+      revalidate: 86400, // ✅ 1 kun
     },
   });
   return res.json();
