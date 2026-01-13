@@ -42,8 +42,8 @@ export async function generateMetadata({ params }) {
   const series = await getSeries(slug);
 
   return {
-    title: `${series.title} — ${season}-sezon | Fastora`,
-    description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online tomosha qiling.`,
+    title: `${series.title} — ${season}-mavsun 1, 2, 3, 4, 5, 6, 7, 8.... - qismlar`,
+    description: `${series.title} ${season}-sezon barcha qismlar. Fastora orqali online o'zbek tilida tomosha qiling.`,
     openGraph: {
       title: `${series.title} — ${season}-sezon`,
       description: `${series.title} ${season}-sezon 1, 2, 3, 4, 5, 6, 7, 8 - qismlar.`,
