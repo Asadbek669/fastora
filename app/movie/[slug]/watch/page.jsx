@@ -1,55 +1,48 @@
+
+"use client";
+
+import { useEffect, useState } from "react";
 import PlayerClient from "./player-client";
+import { use } from "react"; // React 18 use() hook Next.js 16 da
 
-// 1 KUNLIK CACHE (ISR)
-export const revalidate = 86400; // 24 soat
+export default function WatchPage({ params }) {
+  // params Promise bo‘ladi, use() bilan unwrap qilamiz
+  const { slug } = use(params);
 
-export default async function WatchPage({ params }) {
-  const { slug } = params;
+  const [movie, setMovie] = useState(null);
 
-  // SERVER TOMONDA FETCH (CACHE BILAN)
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/${slug}`,
-    {
-      next: { revalidate: 86400 },
-    }
-  );
+  useEffect(() => {
+    fetch(`/api/movies/${slug}`)
+      .then(res => res.json())
+      .then(data => setMovie(data));
+  }, [slug]);
 
-  if (!res.ok) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        Topilmadi
-      </div>
-    );
-  }
-
-  const movie = await res.json();
+  if (!movie) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
+	  <div className="px-4 py-3 bg-black/80 backdrop-blur-sm border-b border-white/20 flex items-center justify-between">
+	  
+	    {/* Orqaga tugma */}
+	    <button
+		  onClick={() => history.back()}
+		  className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition transform hover:scale-105"
+	    >
+		  ‹ Orqaga
+	    </button>
 
-      {/* HEADER */}
-      <div className="px-4 py-3 bg-black/80 backdrop-blur-sm border-b border-white/20 flex items-center justify-between">
+		{/* Movie title */}
+		<h1 className="flex-1 mx-4 text-center text-3xl md:text-5xl font-bold uppercase text-white bg-white/0 drop-shadow-lg truncate">
+		  {movie.title}
+		</h1>
 
-        {/* Orqaga */}
-        <button
-          onClick={() => history.back()}
-          className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-md transition hover:scale-105"
-        >
-          ‹ Orqaga
-        </button>
 
-        {/* Sarlavha */}
-        <h1 className="flex-1 mx-4 text-center text-3xl md:text-5xl font-bold uppercase truncate drop-shadow-lg">
-          {movie.title}
-        </h1>
+	  </div>
 
-      </div>
 
-      {/* PLAYER */}
       <div className="flex-1 flex items-center justify-center px-4">
         <PlayerClient src={movie.video} title={movie.title} />
       </div>
-
     </div>
   );
 }
