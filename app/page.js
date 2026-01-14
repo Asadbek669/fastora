@@ -16,7 +16,7 @@ export const metadata = {
   openGraph: {
     title: "Fastora — Eng yangi filmlar va seriallar",
     description:
-      "Fastora — o‘zbek tilidagi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
+      "Online telekanallar, o‘zbek tilidagi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
     url: "https://fastora.uz",
     siteName: "Fastora",
     images: [
@@ -31,7 +31,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Fastora — Bepul kino va seriallar",
     description:
-      "Fastora — yangi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
+      "Online telekanallar, yangi multfilm, anime, kino va seriallarni bepul tomosha qiling.",
     images: ["https://fastora.uz/icons/icon-192.png"],
   },
 };
