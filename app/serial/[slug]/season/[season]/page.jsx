@@ -28,7 +28,7 @@ const getSeasons = cache(async (slug) => {
 const getEpisodesBySeason = cache(async (id) => {
   const res = await fetch(`${base}/api/episode/season/${id}`, {
     next: {
-      revalidate: 1, // ✅ 0.5 kun
+      revalidate: 86400, // ✅ 0.5 kun
     },
   });
   return res.json();
