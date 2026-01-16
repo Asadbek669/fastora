@@ -2,10 +2,10 @@
 // HeroSlider.jsx
 import HeroSliderClient from "./HeroSliderClient";
 
-export const revalidate = 3600; // 1 kun
+export const revalidate = 86400; // 1 kun
 
 async function getHeroes() {
-  const res = await fetch("https://fastora.uz/api/heroes", { next: { revalidate: 3600 } });
+  const res = await fetch("https://fastora.uz/api/heroes", { next: { revalidate: 86400 } });
   return res.json();
 }
 
