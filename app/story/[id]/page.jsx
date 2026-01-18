@@ -110,7 +110,7 @@ export default function StoryPage() {
   const hasNext = currentIndex < allStories.length - 1;
 
   return (
-    <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-start">
+    <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
       {/* TOP PROGRESS BARS */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
@@ -136,7 +136,7 @@ export default function StoryPage() {
       </button>
 
       {/* VIDEO PLAYER */}
-      <div className="relative w-full max-w-[430px]" style={{ paddingTop: "177.77%" }}>
+      <div className="relative w-full max-w-[430px] -translate-y-12" style={{ paddingTop: "177.77%" }}>
         <iframe
           className="absolute inset-0 w-full h-full rounded-xl"
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
@@ -181,4 +181,5 @@ export default function StoryPage() {
     </div>
   );
 }
+
 
