@@ -24,27 +24,44 @@ export default function StoryPage() {
     };
   }, []);
 
-  // Load all stories
+  // Load all stories (server-side cached)
   useEffect(() => {
     async function loadAll() {
       const base = "https://fastora.uz";
-      const res = await fetch(`${base}/api/stories`, { cache: "no-store" });
+      const res = await fetch(`${base}/api/stories`, {
+        next: { revalidate: 86400 }, // 1 kunlik server cache
+      });
       const data = await res.json();
       setAllStories(data);
     }
     loadAll();
   }, []);
 
-  // Load current story
+  // Load current story (server + client cache)
   useEffect(() => {
     if (!id) return;
 
     async function loadStory() {
+      const cacheKey = `story-${id}`;
+      const cached = localStorage.getItem(cacheKey);
+
+      if (cached) {
+        const data = JSON.parse(cached);
+        const now = new Date().getTime();
+        if (now - data.timestamp < 1000 * 60 * 60 * 24) {
+          setStory(data.story);
+          const index = allStories.findIndex((s) => String(s.id) === String(id));
+          setCurrentIndex(index >= 0 ? index : 0);
+          return;
+        }
+      }
+
       const base = typeof window !== "undefined"
         ? window.location.origin
         : "https://fastora.uz";
+
       const res = await fetch(`${base}/api/stories/${id}`, {
-        cache: "no-store",
+        next: { revalidate: 86400 }, // 1 kunlik server cache
       });
 
       if (!res.ok) {
@@ -57,6 +74,12 @@ export default function StoryPage() {
 
       const index = allStories.findIndex((s) => String(s.id) === String(id));
       setCurrentIndex(index >= 0 ? index : 0);
+
+      // Client cache
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({ story: data, timestamp: new Date().getTime() })
+      );
     }
 
     loadStory();
@@ -88,7 +111,6 @@ export default function StoryPage() {
 
   return (
     <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
-
       {/* TOP PROGRESS BARS */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
@@ -105,28 +127,16 @@ export default function StoryPage() {
       </div>
 
       {/* BACK BUTTON */}
-	{/* BACK BUTTON */}
-	<button
-	  onClick={() => router.push("/")}  // <- home sahifaga yo‘naltiradi
-	  className="
-		absolute top-6 left-4 z-50
-		flex items-center gap-2
-		bg-red-600 hover:bg-red-700
-		text-white px-4 py-2 rounded-full
-		font-medium text-sm
-		shadow-md
-		transition-all active:scale-95
-	  "
-	>
-	  <ArrowLeft className="w-5 h-5" />
-	  Orqaga
-	</button>
+      <button
+        onClick={() => router.push("/")}
+        className="absolute top-6 left-4 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full font-medium text-sm shadow-md transition-all active:scale-95"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Orqaga
+      </button>
 
       {/* VIDEO PLAYER */}
-      <div
-        className="relative w-full max-w-[430px]"
-        style={{ paddingTop: "177.77%" }}
-      >
+      <div className="relative w-full max-w-[430px]" style={{ paddingTop: "177.77%" }}>
         <iframe
           className="absolute inset-0 w-full h-full rounded-xl"
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
@@ -134,81 +144,40 @@ export default function StoryPage() {
         ></iframe>
       </div>
 
-      {/* TITLE with GRADIENT BACKGROUND */}
-	  <div
-	    className="
-		  absolute bottom-15 w-full text-center
-		  text-white text-[18px] sm:text-[20px]  /* px bilan aniq o‘lcham */
-		  font-semibold tracking-wide font-sans  /* font-sans → chiroyli sans serif */
-		  px-4 sm:px-6 py-2
-		  bg-gradient-to-t from-black/70 to-transparent
-	    "
-	  >
-	    {story.title}
-	  </div>
-
-	  {/* CONTROL BUTTONS */}
-	  <div
-	    className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50
-				   bg-gradient-to-t from-black/90 via-black/70 to-black/50
-				   px-4 py-2 backdrop-blur-sm"
-	  >
-	
-	  {/* PREVIOUS */}
-	    <button
-	      disabled={!hasPrev}
-	      onClick={gotoPrevStory}
-	      className={`
-	        w-12 h-12 rounded-full text-white text-2xl
-	        transition-all active:scale-95
-	        ${
-	          hasPrev
-	            ? "bg-red-600 hover:bg-red-700"
-	            : "bg-red-900/40 opacity-40 cursor-not-allowed"
-	        }
-	      `}
-	    >
-	      ‹
-	    </button>
-	
-	    {/* DETAILS */}
-	    <button
-	      onClick={() => (window.location.href = story.page_url)}
-	      className="
-	        bg-red-600 hover:bg-red-700
-	        text-white px-6 py-3 rounded-full
-	        transition-all active:scale-95
-	      "
-	    >
-	      Tomosha qilish
-	    </button>
-	
-	    {/* NEXT */}
-	    <button
-	      disabled={!hasNext}
-	      onClick={gotoNextStory}
-	      className={`
-	        w-12 h-12 rounded-full text-white text-2xl
-	        transition-all active:scale-95
-	        ${
-	          hasNext
-	      	    ? "bg-red-600 hover:bg-red-700"
-	            : "bg-red-900/40 opacity-40 cursor-not-allowed"
-	        }
-	      `}
-	    >
-	      ›
-	    </button>
+      {/* TITLE */}
+      <div className="absolute bottom-15 w-full text-center text-white text-[18px] sm:text-[20px] font-semibold tracking-wide font-sans px-4 sm:px-6 py-2 bg-gradient-to-t from-black/70 to-transparent">
+        {story.title}
       </div>
-	</div>	
+
+      {/* CONTROL BUTTONS */}
+      <div className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50 bg-gradient-to-t from-black/90 via-black/70 to-black/50 px-4 py-2 backdrop-blur-sm">
+        <button
+          disabled={!hasPrev}
+          onClick={gotoPrevStory}
+          className={`w-12 h-12 rounded-full text-white text-2xl transition-all active:scale-95 ${
+            hasPrev ? "bg-red-600 hover:bg-red-700" : "bg-red-900/40 opacity-40 cursor-not-allowed"
+          }`}
+        >
+          ‹
+        </button>
+
+        <button
+          onClick={() => (window.location.href = story.page_url)}
+          className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-all active:scale-95"
+        >
+          Tomosha qilish
+        </button>
+
+        <button
+          disabled={!hasNext}
+          onClick={gotoNextStory}
+          className={`w-12 h-12 rounded-full text-white text-2xl transition-all active:scale-95 ${
+            hasNext ? "bg-red-600 hover:bg-red-700" : "bg-red-900/40 opacity-40 cursor-not-allowed"
+          }`}
+        >
+          ›
+        </button>
+      </div>
+    </div>
   );
 }
-
-
-
-
-
-
-
-
-
