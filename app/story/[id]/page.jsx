@@ -96,6 +96,32 @@ export default function StoryPage() {
     if (prev) router.push(`/story/${prev.id}`);
   };
 
+useEffect(() => {
+  if (!story) return;
+
+  // YouTube API yuklash
+  if (!window.YT) {
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  }
+
+  let player;
+
+  window.onYouTubeIframeAPIReady = () => {
+    player = new window.YT.Player("yt-player", {
+      events: {
+        onStateChange: (event) => {
+          // VIDEO TUGAGANDA
+          if (event.data === window.YT.PlayerState.ENDED) {
+            gotoNextStory();
+          }
+        },
+      },
+    });
+  };
+}, [story]);
+  
   if (!id || !story)
     return (
       <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>
@@ -138,8 +164,9 @@ export default function StoryPage() {
       {/* VIDEO PLAYER */}
       <div className="relative w-full max-w-[430px] -translate-y-6" style={{ paddingTop: "177.77%" }}>
         <iframe
+          id="yt-player"
           className="absolute inset-0 w-full h-full rounded-xl"
-          src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
+          src={`${convertToEmbed(story.youtube_url)}?autoplay=1&enablejsapi=1`}
           allow="autoplay; encrypted-media"
         ></iframe>
       </div>
@@ -181,6 +208,7 @@ export default function StoryPage() {
     </div>
   );
 }
+
 
 
 
