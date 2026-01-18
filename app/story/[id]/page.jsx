@@ -110,7 +110,7 @@ export default function StoryPage() {
   const hasNext = currentIndex < allStories.length - 1;
 
   return (
-    <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
+    <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-start">
       {/* TOP PROGRESS BARS */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
@@ -181,3 +181,4 @@ export default function StoryPage() {
     </div>
   );
 }
+
