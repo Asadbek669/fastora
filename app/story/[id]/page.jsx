@@ -136,7 +136,7 @@ export default function StoryPage() {
       </button>
 
       {/* VIDEO PLAYER */}
-      <div className="relative w-full max-w-[430px] -translate-y-12" style={{ paddingTop: "177.77%" }}>
+      <div className="relative w-full max-w-[430px] -translate-y-6" style={{ paddingTop: "177.77%" }}>
         <iframe
           className="absolute inset-0 w-full h-full rounded-xl"
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1`}
@@ -181,5 +181,6 @@ export default function StoryPage() {
     </div>
   );
 }
+
 
 
