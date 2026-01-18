@@ -12,9 +12,11 @@ export default function StoryPage() {
   const [story, setStory] = useState(null);
   const [allStories, setAllStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [videoProgress, setVideoProgress] = useState(0);
 
   const playerRef = useRef(null);
   const iframeRef = useRef(null);
+  const progressInterval = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -25,6 +27,7 @@ export default function StoryPage() {
     return () => {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
+      clearInterval(progressInterval.current);
     };
   }, []);
 
@@ -91,7 +94,7 @@ export default function StoryPage() {
     if (Math.abs(diff) > 50) diff > 0 ? gotoNextStory() : gotoPrevStory();
   };
 
-  // YouTube API + auto next
+  // YouTube API + progress
   useEffect(() => {
     if (!story) return;
     if (!iframeRef.current) return;
@@ -102,8 +105,21 @@ export default function StoryPage() {
       playerRef.current = new window.YT.Player(iframeRef.current, {
         events: {
           onStateChange: (event) => {
+            // Auto next on video end
             if (event.data === window.YT.PlayerState.ENDED) {
               gotoNextStory();
+            }
+
+            // Start/stop progress
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              const duration = playerRef.current.getDuration();
+              clearInterval(progressInterval.current);
+              progressInterval.current = setInterval(() => {
+                const current = playerRef.current.getCurrentTime();
+                setVideoProgress(Math.min((current / duration) * 100, 100));
+              }, 100);
+            } else {
+              clearInterval(progressInterval.current);
             }
           },
         },
@@ -120,6 +136,7 @@ export default function StoryPage() {
     }
 
     return () => {
+      clearInterval(progressInterval.current);
       if (playerRef.current) playerRef.current.destroy();
     };
   }, [story]);
@@ -172,7 +189,7 @@ export default function StoryPage() {
       </div>
 
       {/* Control Buttons */}
-      <div className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50 bg-gradient-to-t from-black/90 via-black/70 to-black/50 px-4 py-2 backdrop-blur-sm">
+      <div className="absolute bottom-10 inset-x-0 flex justify-center gap-3 z-50 bg-gradient-to-t from-black/90 via-black/70 to-black/50 px-4 py-2 backdrop-blur-sm">
         <button
           disabled={!hasPrev}
           onClick={gotoPrevStory}
@@ -199,6 +216,14 @@ export default function StoryPage() {
         >
           ›
         </button>
+      </div>
+
+      {/* Bottom Video Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/20">
+        <div
+          className="h-full bg-red-600"
+          style={{ width: `${videoProgress}%`, transition: "width 0.1s linear" }}
+        ></div>
       </div>
     </div>
   );
