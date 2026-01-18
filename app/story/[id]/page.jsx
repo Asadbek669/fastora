@@ -14,6 +14,7 @@ export default function StoryPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const playerRef = useRef(null);
+  const iframeRef = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -21,30 +22,26 @@ export default function StoryPage() {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
-
     return () => {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
     };
   }, []);
 
-  // Load all stories (server-side cached)
+  // Load all stories
   useEffect(() => {
     async function loadAll() {
       const base = "https://fastora.uz";
-      const res = await fetch(`${base}/api/stories`, {
-        next: { revalidate: 86400 }, // 1 kunlik server cache
-      });
+      const res = await fetch(`${base}/api/stories`, { next: { revalidate: 86400 } });
       const data = await res.json();
       setAllStories(data);
     }
     loadAll();
   }, []);
 
-  // Load current story (server + client cache)
+  // Load current story
   useEffect(() => {
     if (!id) return;
-
     async function loadStory() {
       const cacheKey = `story-${id}`;
       const cached = localStorage.getItem(cacheKey);
@@ -60,32 +57,19 @@ export default function StoryPage() {
         }
       }
 
-      const base = typeof window !== "undefined"
-        ? window.location.origin
-        : "https://fastora.uz";
-
-      const res = await fetch(`${base}/api/stories/${id}`, {
-        next: { revalidate: 86400 },
-      });
-
+      const base = typeof window !== "undefined" ? window.location.origin : "https://fastora.uz";
+      const res = await fetch(`${base}/api/stories/${id}`, { next: { revalidate: 86400 } });
       if (!res.ok) {
         setStory({ error: true });
         return;
       }
-
       const data = await res.json();
       setStory(data);
-
       const index = allStories.findIndex((s) => String(s.id) === String(id));
       setCurrentIndex(index >= 0 ? index : 0);
 
-      // Client cache
-      localStorage.setItem(
-        cacheKey,
-        JSON.stringify({ story: data, timestamp: new Date().getTime() })
-      );
+      localStorage.setItem(cacheKey, JSON.stringify({ story: data, timestamp: new Date().getTime() }));
     }
-
     loadStory();
   }, [id, allStories]);
 
@@ -94,37 +78,28 @@ export default function StoryPage() {
     const next = allStories[currentIndex + 1];
     if (next) router.push(`/story/${next.id}`);
   };
-
   const gotoPrevStory = () => {
     const prev = allStories[currentIndex - 1];
     if (prev) router.push(`/story/${prev.id}`);
   };
 
   // Swipe gesture
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.changedTouches[0].screenX;
-  };
-
+  const handleTouchStart = (e) => (touchStartX.current = e.changedTouches[0].screenX);
   const handleTouchEnd = (e) => {
     touchEndX.current = e.changedTouches[0].screenX;
     const diff = touchStartX.current - touchEndX.current;
-
-    if (Math.abs(diff) > 50) { // threshold
-      if (diff > 0) gotoNextStory();
-      else gotoPrevStory();
-    }
+    if (Math.abs(diff) > 50) diff > 0 ? gotoNextStory() : gotoPrevStory();
   };
 
-  // YouTube API + auto next on video end
+  // YouTube API + auto next
   useEffect(() => {
     if (!story) return;
+    if (!iframeRef.current) return;
 
     const initPlayer = () => {
-      if (playerRef.current) {
-        playerRef.current.destroy();
-      }
+      if (playerRef.current) playerRef.current.destroy();
 
-      playerRef.current = new window.YT.Player("yt-player", {
+      playerRef.current = new window.YT.Player(iframeRef.current, {
         events: {
           onStateChange: (event) => {
             if (event.data === window.YT.PlayerState.ENDED) {
@@ -139,7 +114,6 @@ export default function StoryPage() {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
-
       window.onYouTubeIframeAPIReady = initPlayer;
     } else {
       initPlayer();
@@ -150,37 +124,24 @@ export default function StoryPage() {
     };
   }, [story]);
 
-  if (!id || !story)
-    return (
-      <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>
-    );
-
-  if (story.error)
-    return (
-      <h1 className="text-red-500 text-center text-xl mt-10">Story topilmadi</h1>
-    );
+  if (!id || !story) return <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>;
+  if (story.error) return <h1 className="text-red-500 text-center text-xl mt-10">Story topilmadi</h1>;
 
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < allStories.length - 1;
 
   return (
     <div className="fixed inset-0 bg-black z-[9999] flex justify-center items-center">
-      {/* TOP PROGRESS BARS */}
+      {/* Top Progress */}
       <div className="absolute top-4 left-0 right-0 flex gap-2 px-6 z-50">
         {allStories.map((s, i) => (
           <div key={s.id} className="w-full h-[3px] bg-white/30 rounded overflow-hidden">
-            <div
-              className="h-full bg-white"
-              style={{
-                width: i === currentIndex ? "100%" : "0%",
-                transition: "width .3s",
-              }}
-            ></div>
+            <div className="h-full bg-white" style={{ width: i === currentIndex ? "100%" : "0%", transition: "width .3s" }}></div>
           </div>
         ))}
       </div>
 
-      {/* BACK BUTTON */}
+      {/* Back Button */}
       <button
         onClick={() => router.push("/")}
         className="absolute top-6 left-4 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full font-medium text-sm shadow-md transition-all active:scale-95"
@@ -189,7 +150,7 @@ export default function StoryPage() {
         Orqaga
       </button>
 
-      {/* VIDEO PLAYER */}
+      {/* Video Player */}
       <div
         className="relative w-full max-w-[430px] -translate-y-6"
         style={{ paddingTop: "177.77%" }}
@@ -197,6 +158,7 @@ export default function StoryPage() {
         onTouchEnd={handleTouchEnd}
       >
         <iframe
+          ref={iframeRef}
           id="yt-player"
           className="absolute inset-0 w-full h-full rounded-xl"
           src={`${convertToEmbed(story.youtube_url)}?autoplay=1&enablejsapi=1`}
@@ -204,12 +166,12 @@ export default function StoryPage() {
         ></iframe>
       </div>
 
-      {/* TITLE */}
+      {/* Title */}
       <div className="absolute bottom-15 w-full text-center text-white text-[18px] sm:text-[20px] font-semibold tracking-wide font-sans px-4 sm:px-6 py-2 bg-gradient-to-t from-black/70 to-transparent">
         {story.title}
       </div>
 
-      {/* CONTROL BUTTONS */}
+      {/* Control Buttons */}
       <div className="absolute bottom-0 inset-x-0 flex justify-center gap-3 z-50 bg-gradient-to-t from-black/90 via-black/70 to-black/50 px-4 py-2 backdrop-blur-sm">
         <button
           disabled={!hasPrev}
