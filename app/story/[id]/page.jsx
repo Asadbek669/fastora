@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import convertToEmbed from "@/utils/convertEmbed";
 
@@ -12,6 +12,10 @@ export default function StoryPage() {
   const [story, setStory] = useState(null);
   const [allStories, setAllStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const playerRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   // Disable scroll
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function StoryPage() {
         : "https://fastora.uz";
 
       const res = await fetch(`${base}/api/stories/${id}`, {
-        next: { revalidate: 86400 }, // 1 kunlik server cache
+        next: { revalidate: 86400 },
       });
 
       if (!res.ok) {
@@ -96,32 +100,56 @@ export default function StoryPage() {
     if (prev) router.push(`/story/${prev.id}`);
   };
 
-useEffect(() => {
-  if (!story) return;
-
-  // YouTube API yuklash
-  if (!window.YT) {
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  }
-
-  let player;
-
-  window.onYouTubeIframeAPIReady = () => {
-    player = new window.YT.Player("yt-player", {
-      events: {
-        onStateChange: (event) => {
-          // VIDEO TUGAGANDA
-          if (event.data === window.YT.PlayerState.ENDED) {
-            gotoNextStory();
-          }
-        },
-      },
-    });
+  // Swipe gesture
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].screenX;
   };
-}, [story]);
-  
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].screenX;
+    const diff = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(diff) > 50) { // threshold
+      if (diff > 0) gotoNextStory();
+      else gotoPrevStory();
+    }
+  };
+
+  // YouTube API + auto next on video end
+  useEffect(() => {
+    if (!story) return;
+
+    const initPlayer = () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+      }
+
+      playerRef.current = new window.YT.Player("yt-player", {
+        events: {
+          onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.ENDED) {
+              gotoNextStory();
+            }
+          },
+        },
+      });
+    };
+
+    if (!window.YT || !window.YT.Player) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(tag);
+
+      window.onYouTubeIframeAPIReady = initPlayer;
+    } else {
+      initPlayer();
+    }
+
+    return () => {
+      if (playerRef.current) playerRef.current.destroy();
+    };
+  }, [story]);
+
   if (!id || !story)
     return (
       <div className="text-white p-6 text-center text-xl">Yuklanmoqda...</div>
@@ -162,7 +190,12 @@ useEffect(() => {
       </button>
 
       {/* VIDEO PLAYER */}
-      <div className="relative w-full max-w-[430px] -translate-y-6" style={{ paddingTop: "177.77%" }}>
+      <div
+        className="relative w-full max-w-[430px] -translate-y-6"
+        style={{ paddingTop: "177.77%" }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <iframe
           id="yt-player"
           className="absolute inset-0 w-full h-full rounded-xl"
@@ -208,7 +241,3 @@ useEffect(() => {
     </div>
   );
 }
-
-
-
-
